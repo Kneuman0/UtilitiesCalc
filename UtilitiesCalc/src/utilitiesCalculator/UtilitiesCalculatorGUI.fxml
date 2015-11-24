@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utilitiesCalculator.UtilitiesCalcController">
+   <children>
+      <TabPane prefHeight="474.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="tenantTab" text="Tenant Info">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="214.0" layoutY="14.0" prefHeight="37.0" prefWidth="173.0" text="Tenant Information">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="41.0" layoutY="81.0" prefHeight="32.0" prefWidth="92.0" style="-fx-font-weight: bold; -fx-font-size: 20px;" text="Name:">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="372.0" layoutY="81.0" prefHeight="32.0" prefWidth="127.0" style="-fx-font-weight: bold; -fx-font-size: 20;" text="Size of room:">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="38.0" layoutY="191.0" prefHeight="32.0" prefWidth="148.0" style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Sharing room?">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <TextField layoutX="33.0" layoutY="316.0" prefHeight="25.0" prefWidth="306.0" promptText="Possibly tokenize options if this is what its purpose was" />
+                        <TextField fx:id="roomSize" layoutX="361.0" layoutY="113.0" promptText="square feet" />
+                        <RadioButton layoutX="36.0" layoutY="230.0" mnemonicParsing="false" text="Yes">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="sharing" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <TextField fx:id="nameTextBox" layoutX="37.0" layoutY="113.0" />
+                        <RadioButton layoutX="114.0" layoutY="230.0" mnemonicParsing="false" text="No" toggleGroup="$sharing" />
+                        <Label layoutX="36.0" layoutY="272.0" prefHeight="32.0" prefWidth="177.0" style="-fx-font-weight: bold; -fx-font-size: 16px;" text="If yes, please list below">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="addTenantButton" layoutX="217.0" layoutY="377.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="167.0" text="Add new Tenant" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="housingTab" text="Housing Info">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.35545023696682465" layoutX="12.0" layoutY="12.0" orientation="VERTICAL" prefHeight="424.0" prefWidth="577.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <Label alignment="CENTER" layoutX="244.0" prefHeight="28.0" prefWidth="88.0" style="-fx-font-weight: bold;" text="Utilities:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="heating" layoutX="14.0" layoutY="42.0" prefWidth="150.0" promptText="Central Heating" />
+                                    <ComboBox fx:id="cooling" layoutX="14.0" layoutY="100.0" prefWidth="150.0" promptText="Central Cooling" />
+                                    <ComboBox fx:id="waterHeater" layoutX="213.0" layoutY="100.0" prefWidth="150.0" promptText="Water Heater" />
+                                    <ComboBox fx:id="trashType" layoutX="411.0" layoutY="100.0" prefWidth="150.0" promptText="Trash Type" />
+                                    <ComboBox fx:id="stoveType" layoutX="213.0" layoutY="42.0" prefWidth="150.0" promptText="Stove Type" />
+                                    <ComboBox fx:id="watertype" layoutX="411.0" layoutY="42.0" prefWidth="150.0" promptText="Water Type" />
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="157.0" prefWidth="369.0">
+                                 <children>
+                                    <Label layoutX="14.0" layoutY="52.0" prefHeight="27.0" prefWidth="82.0" text="Address:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="5.0" layoutY="146.0" prefHeight="27.0" prefWidth="100.0" text="Num of rooms:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="addressInput" layoutX="121.0" layoutY="55.0" promptText="1234 Main Street Rd." />
+                                    <TextField fx:id="numberOfRooms" layoutX="121.0" layoutY="147.0" />
+                                    <ComboBox fx:id="buildingType" layoutX="121.0" layoutY="99.0" prefWidth="150.0" promptText="Building Type" />
+                                    <RadioButton fx:id="seasonalBtn" layoutX="460.0" layoutY="146.0" mnemonicParsing="false" text="Seasonal">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="availability" />
+                                       </toggleGroup>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </RadioButton>
+                                    <RadioButton fx:id="fullTimeBtn" layoutX="363.0" layoutY="146.0" mnemonicParsing="false" text="Full Time" toggleGroup="$availability">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </RadioButton>
+                                    <Label layoutX="5.0" layoutY="98.0" prefHeight="27.0" prefWidth="100.0" text="Residence Type:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="4.0" layoutY="197.0" prefHeight="27.0" prefWidth="102.0" text="Square Footage:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="numberOfRooms1" layoutX="121.0" layoutY="198.0" />
+                                    <Label layoutX="391.0" layoutY="45.0" text="Number of Tenants">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="numOfTenants" layoutX="376.0" layoutY="68.0" />
+                                    <Label layoutX="394.0" layoutY="112.0" prefHeight="27.0" prefWidth="133.0" text="Occupational Period">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" layoutX="216.0" layoutY="14.0" prefHeight="28.0" prefWidth="143.0" style="-fx-font-weight: bold;" text="General Information">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Button fx:id="submitHouseInfo" alignment="CENTER" layoutX="393.0" layoutY="197.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="103.0" text="Submit">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Utilities Calculator">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab fx:id="summaryTable" text="Summary Table">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="table" layoutX="12.0" layoutY="12.0" prefHeight="421.0" prefWidth="577.0">
+                          <columns>
+                            <TableColumn fx:id="tenantName" prefWidth="126.0" text="Name" />
+                            <TableColumn fx:id="address" prefWidth="126.0" text="Address" />
+                              <TableColumn fx:id="tenantColumn" prefWidth="112.0" text="Num. of Tenants" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
