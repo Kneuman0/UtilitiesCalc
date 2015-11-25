@@ -101,25 +101,39 @@ public class UtilitiesCalcController {
     	//If these values will never be editied by the user we can keep them the way they are
     	// if we choose to make them editable, we should cue them up from the DB
     	// and add the changes to the DB
+    	
+    	//Heating Options
     	ObservableList<String> heatingOptions = FXCollections.observableArrayList(
     			"Wood", "Natural Gas", "Propane", "Oil/Boiler", "Heat Pump", "Electric Radiator",
     			"Geothermal", "None");
     	heating.setItems(heatingOptions);
+    	
+    	//Cooling System AC types
     	ObservableList<String> coolingOptions = FXCollections.observableArrayList(
     			"Central Cooling", "Geothermal", "Local AC Unit", "Evaporative Cooling Unit");
     	cooling.setItems(coolingOptions);
+    	
+    	//Water Source Types
     	ObservableList<String> waterSource = FXCollections.observableArrayList(
     			"Municipal", "Well Pump", "Bottled");
     	watertype.setItems(waterSource);
+    	
+    	//Building Type
     	ObservableList<String> structures = FXCollections.observableArrayList(
     			"Condo", "Appartment", "House", "Bungalo", "Shed", "Dog House");
     	buildingType.setItems(structures);
+    	
+    	//Stove options
     	ObservableList<String> stoveOptions = FXCollections.observableArrayList(
     			"Natural Gas", "Propane", "Wood Buring", "Electric");
     	stoveType.setItems(stoveOptions);
+    	
+    	//Water heater types
     	ObservableList<String> waterHeaterOptions = FXCollections.observableArrayList(
     			"Boiler", "Natural Gas", "Propane", "Electric");
     	waterHeater.setItems(waterHeaterOptions);
+    	
+    	//Trash collection types
     	ObservableList<String> trashOptions = FXCollections.observableArrayList(
     			"municipal", "Commercial", "Personal");
     	trashType.setItems(trashOptions);
@@ -128,20 +142,27 @@ public class UtilitiesCalcController {
 //    	for(int i = 0; i < methodThatReturnsArrayListOfTenantFromDB.size(); i++){
 //    		tenants.add(methodThatReturnsArrayListOfTenantFromDB.get(i));
 //    	}
-    	
     }
     
     public void addTenantButtonListener(){
-    	String tenant =  nameTextBox.getText();
-    	double sqftOfRoom = Double.parseDouble(this.roomSize.getText());
-    	Tenant newTenant = new Tenant(tenant, sqftOfRoom);
-//    	String addTenant = "SQL code to add new tenant";
-//    	methodThatAddsANewTenantToDB();
-    	tenants.add(newTenant);
+//    	String tenant =  nameTextBox.getText();
+//    	double sqftOfRoom = Double.parseDouble(this.roomSize.getText());
+//    	Tenant newTenant = new Tenant(tenant, sqftOfRoom);
+////    	String addTenant = "SQL code to add new tenant";
+////    	methodThatAddsANewTenantToDB();
+//    	tenants.add(newTenant);
+    	
+//    	DatabaseUtility addTenant = new DatabaseUtility();
+//    	addTenant.addTenant(nameTextBox.getText(), position, payRate, ID);
     	
     }
     
-    
+    public void addHouseInfoListener(){
+    	
+    	DatabaseUtility houseInfo;
+    	
+    	
+    }
     
     
 
