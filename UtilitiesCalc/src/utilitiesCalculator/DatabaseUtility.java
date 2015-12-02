@@ -32,7 +32,16 @@ public class DatabaseUtility {
 				System.out.println("Database already exists");
 				this.createEmployeeTable();
 				System.out.println(e.getMessage());
+			}finally{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
+		
 		}
 
 		/**
@@ -128,21 +137,21 @@ public class DatabaseUtility {
 			}
 		}
 
-		public ResultSet retriveTable() {
-			Connection conn = null;
-			ResultSet results = null;
-			String firstRow = "SELECT * FROM Employee";
-			// + "WHERE name='Kyle Neuman'";
-			try {
-				conn = DriverManager.getConnection(DB_URL);
-				Statement stmt = conn.createStatement();
-				results = stmt.executeQuery(firstRow);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return results;
-		}
+//		public Employee retriveTable() {
+//			Connection conn = null;
+//			ResultSet results = null;
+//			String firstRow = "SELECT * FROM Employee";
+//			// + "WHERE name='Kyle Neuman'";
+//			try {
+//				conn = DriverManager.getConnection(DB_URL);
+//				Statement stmt = conn.createStatement();
+//				results = stmt.executeQuery(firstRow);
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return results;
+//		}
 
 //		public ArrayList<Employee> fetchSelection(String SQLStatement) throws InvalidHourlyRateException {
 //			Connection conn = null;
