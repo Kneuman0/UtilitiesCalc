@@ -33,7 +33,7 @@ public class DatabaseUtility {
 
 		}
 		
-		static void addHouseInfo(House house) {
+		public void addHouseInfo(House house) {
 			
 			
 			
