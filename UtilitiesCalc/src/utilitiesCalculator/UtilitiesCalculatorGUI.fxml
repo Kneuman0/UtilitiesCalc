@@ -33,21 +33,21 @@
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="33.0" layoutY="316.0" prefHeight="25.0" prefWidth="306.0" promptText="Possibly tokenize options if this is what its purpose was" />
+                        <TextField layoutX="33.0" layoutY="316.0" prefHeight="25.0" prefWidth="306.0" />
                         <TextField fx:id="roomSize" layoutX="361.0" layoutY="113.0" promptText="square feet" />
-                        <RadioButton layoutX="36.0" layoutY="230.0" mnemonicParsing="false" text="Yes">
+                        <RadioButton fx:id="shareYes" layoutX="36.0" layoutY="230.0" mnemonicParsing="false" text="Yes">
                            <toggleGroup>
                               <ToggleGroup fx:id="sharing" />
                            </toggleGroup>
                         </RadioButton>
                         <TextField fx:id="nameTextBox" layoutX="37.0" layoutY="113.0" />
-                        <RadioButton layoutX="114.0" layoutY="230.0" mnemonicParsing="false" text="No" toggleGroup="$sharing" />
+                        <RadioButton fx:id="shareNo" layoutX="114.0" layoutY="230.0" mnemonicParsing="false" text="No" toggleGroup="$sharing" />
                         <Label layoutX="36.0" layoutY="272.0" prefHeight="32.0" prefWidth="177.0" style="-fx-font-weight: bold; -fx-font-size: 16px;" text="If yes, please list below">
                            <font>
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Button fx:id="addTenantButton" layoutX="217.0" layoutY="377.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="167.0" text="Add new Tenant" />
+                        <Button fx:id="addTenantButton" layoutX="217.0" layoutY="377.0" mnemonicParsing="false" onAction="#addTenantButtonListener" prefHeight="43.0" prefWidth="167.0" text="Add new Tenant" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -127,7 +127,7 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="submitHouseInfo" alignment="CENTER" layoutX="393.0" layoutY="197.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="103.0" text="Submit">
+                                    <Button fx:id="submitHouseInfo" alignment="CENTER" layoutX="393.0" layoutY="197.0" mnemonicParsing="false" onAction="#addHouseInfoListener" prefHeight="38.0" prefWidth="103.0" text="Submit">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
