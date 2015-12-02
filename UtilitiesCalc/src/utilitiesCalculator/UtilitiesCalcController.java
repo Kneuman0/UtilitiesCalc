@@ -164,7 +164,7 @@ public class UtilitiesCalcController {
     	House house = new House(addressInput.getText(), buildingType.getValue(), 
     			Integer.parseInt(numberOfRooms.getText()), Integer.parseInt(numOfTenants.getText()),
     			fullTimeBtn.isSelected());
-    	dbUtil.
+    	dbUtil.addHouseInfo(house);
     	
     	
     }
