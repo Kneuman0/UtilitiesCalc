@@ -48,6 +48,9 @@
                            </font>
                         </Label>
                         <Button fx:id="addTenantButton" layoutX="217.0" layoutY="377.0" mnemonicParsing="false" onAction="#addTenantButtonListener" prefHeight="43.0" prefWidth="167.0" text="Add new Tenant" />
+                        <Label layoutX="42.0" layoutY="145.0" text="Delete Tenant" />
+                        <ComboBox layoutX="37.0" layoutY="166.0" prefWidth="150.0" promptText="Tenants" />
+                        <Label layoutX="199.0" layoutY="170.0" text="*Tenants cannot be undeleted!" textFill="#f80101" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -142,7 +145,16 @@
           </Tab>
             <Tab text="Utilities Calculator">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField layoutX="115.0" layoutY="75.0" />
+                        <ComboBox layoutX="115.0" layoutY="140.0" prefWidth="150.0" promptText="Sublet Tenants" />
+                        <TextField layoutX="277.0" layoutY="140.0" promptText="Portion of Month Occupied" />
+                        <Button layoutX="434.0" layoutY="140.0" mnemonicParsing="false" text="Save Sublet Occupancy" />
+                        <Label layoutX="14.0" layoutY="79.0" text="Bill Amount" />
+                        <Label layoutX="115.0" layoutY="123.0" text="Select Any Sublets From the List" />
+                        <Label layoutX="277.0" layoutY="172.0" text="*1 week = .25" textFill="#f50505" />
+                     </children></AnchorPane>
               </content>
             </Tab>
             <Tab fx:id="summaryTable" text="Summary Table">
