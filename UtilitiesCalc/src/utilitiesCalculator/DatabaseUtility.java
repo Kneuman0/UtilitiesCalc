@@ -146,7 +146,11 @@ public class DatabaseUtility {
 			}
 			return ten;
 		}
-		
+		/**
+		 * Returns ArrayList of House objects based on SQL statement passed in
+		 * @param SQLStatement
+		 * @return
+		 */
 		public ArrayList<House> fetchHouseSelection(String SQLStatement){
 			Connection conn = null;
 			ResultSet result = null;
@@ -172,6 +176,11 @@ public class DatabaseUtility {
 			return hou;
 		}
 		
+		/**
+		 * Returns ArrayList on BillMonth objects based on SQL Statement passed in
+		 * @param SQLStatement
+		 * @return
+		 */
 		public ArrayList<BillMonth> fetchBillMonth(String SQLStatement){
 			Connection conn = null;
 			ResultSet result = null;
@@ -197,6 +206,11 @@ public class DatabaseUtility {
 			return bm;
 		}
 		
+		/**
+		 * Returns ArrayList of BillPerTenant objects based on SQL statement passed in
+		 * @param SQLStatement
+		 * @return
+		 */
 		public ArrayList<BillPerTenant> fetchBillPerMonth(String SQLStatement){
 			Connection conn = null;
 			ResultSet result = null;
@@ -222,6 +236,7 @@ public class DatabaseUtility {
 			return bpt;
 		}
 
+		
 		public void updateDatabase(String SQLStatement) {
 			Connection conn = null;
 			try {
