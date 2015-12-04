@@ -1,17 +1,38 @@
 package utilitiesCalculator;
 
 public class BillMonth {
+	private String date;
 	private double fossilFuelBill;
 	private double electricityBill;
 	private double otherBill;
 	
-	public BillMonth(double fossilFuelBill, double electricityBill, double otherBill){
+	public BillMonth(String date, double fossilFuelBill, double electricityBill, double otherBill){
+		this.date = date;
 		this.fossilFuelBill = fossilFuelBill;
 		this.electricityBill = electricityBill;
 		this.otherBill = otherBill;
 	}
 	
 	
+	
+	/**
+	 * @return the date
+	 */
+	public String getDate() {
+		return date;
+	}
+
+
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+
+
 	/**
 	 * @return the fossilFuelBill
 	 */

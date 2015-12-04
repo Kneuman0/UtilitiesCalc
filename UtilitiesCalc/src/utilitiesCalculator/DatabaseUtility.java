@@ -11,16 +11,15 @@ public class DatabaseUtility {
 
 		final static String DB_URL = "jdbc:derby:db/Tenant";
 
+		/**
+		 * Populates tenant table using Tenant object passed in
+		 * @param tenant
+		 */
 		public void addTenant(Tenant tenant){
-			
-			
 			try {
-
 				
-	    		Connection conn = DriverManager.getConnection(DB_URL);
-	    		
+				Connection conn = DriverManager.getConnection(DB_URL);
 	    		Statement stmt = conn.createStatement();
-	    		
 	    		String insertTenant = "insert into tenant (name)"
 	    				+ String.format(" values (%s)" , tenant.getName());
 	    		
@@ -33,6 +32,10 @@ public class DatabaseUtility {
 
 		}
 		
+		/**
+		 * Populates house table with house object passed in
+		 * @param house
+		 */
 		public void addHouseInfo(House house) {
 			
 			try {
@@ -52,27 +55,69 @@ public class DatabaseUtility {
 	    	}
 		}
 		
-		
 		/**
-		 * Utility method for dropping a table named Employee
+		 * Populates billingMonth table with billMonth object passed in
+		 * @param billMonth
 		 */
-		public void dropEmployeeTableFromPersonnelDB() {
-			Connection connDrop = null;
+		public void addBillingMonthEntry(BillMonth billMonth){
+
 			try {
-				connDrop = DriverManager.getConnection(DB_URL);
-				Statement stmt = connDrop.createStatement();
-				stmt.execute("DROP TABLE Tenant");
-			} catch (SQLException e) {
-				System.out.println("Tenant table does not exist");
-			} finally {
-				try {
-					connDrop.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+	    		Connection conn = DriverManager.getConnection("jdbc:derby:db/Tenant;");
+	    		
+	    		Statement stmt = conn.createStatement();
+	    		
+	    		String insertBillMonthEntry = "insert into billingMonth(date, numRooms, sqFt)"
+	    				+ String.format(" values ('%s', %.2f, %.2f,%.2f)" , billMonth.getDate(), billMonth.getFossilFuelBill(),
+	    						billMonth.getElectricityBill(), billMonth.getOtherBill());
+	    		
+	    		stmt.execute(insertBillMonthEntry);
+	    		
+	    		conn.close();
+	    	} catch (SQLException e){
+	    		e.printStackTrace();
+	    	}
 		}
 		
+		/**
+		 * Need to think about how to get accurate FTE. Possibly process in controller and from observable arraylists then pass
+		 * the value to this method. Other option is to put blank values in for bill and process the bill when its time
+		 * to print the receipt by nest nesting a method in the receipt method that calculates the bill and then stores it
+		 * @param billPerTenant
+		 * @param billMonth
+		 */
+		public void addBillPerTenantEntry(BillPerTenant billPerTenant, BillMonth billMonth){
+
+			try {
+	    		Connection conn = DriverManager.getConnection("jdbc:derby:db/Tenant;");
+	    		
+	    		Statement stmt = conn.createStatement();
+	    		String getTenantID = String.format("SELECT tenant_ID FROM tenant WHERE name = '%s'",
+	    				billPerTenant.getTenantName());
+	    		Tenant tenant =  fetchTenantSelection(getTenantID).get(0);
+	    		String getBillMonthID = String.format("SELECT billMonth_ID FROM billMonth"
+	    				+ "WHERE date = '%s'", billMonth.getDate());
+	    		BillMonth bm = fetchBillMonth(getBillMonthID).get(0);
+	    		
+	    		String getHouse = String.format("SELECT * FROM house");
+	    		ResultSet result = stmt.executeQuery(getHouse);
+	    		
+	    		double bill = (billMonth.getFossilFuelBill() + billMonth.getElectricityBill()
+	    				+ billMonth.getOtherBill()) * billPerTenant.getFte();
+	    		
+//	    		String insertBillPerTenant = "insert into billingMonth(date, numRooms, sqFt)"
+//	    				+ String.format(" values ('%s', %.2f, %.2f,%.2f)" , bm.getDate(), result.getString(4),
+//	    						billPerTenant.getTenantType(), billPerTenant.getFte(), 
+//	    						);
+//	    		
+//	    		stmt.execute(insertBillPerTenant);
+	    		
+	    		conn.close();
+	    	} catch (SQLException e){
+	    		e.printStackTrace();
+	    	}
+		}
+		
+				
 		/**
 		 * Inserts 5 sample rows into the database, one with the name Kyle Neuman
 		 */
@@ -102,21 +147,7 @@ public class DatabaseUtility {
 			}
 		}
 
-//		public Employee retriveTable() {
-//			Connection conn = null;
-//			ResultSet results = null;
-//			String firstRow = "SELECT * FROM Employee";
-//			// + "WHERE name='Kyle Neuman'";
-//			try {
-//				conn = DriverManager.getConnection(DB_URL);
-//				Statement stmt = conn.createStatement();
-//				results = stmt.executeQuery(firstRow);
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return results;
-//		}
+
 		/**
 		 * Returns an ArrayList of tenant based on SQL string passed in
 		 * @param SQLStatement
@@ -146,6 +177,7 @@ public class DatabaseUtility {
 			}
 			return ten;
 		}
+		
 		/**
 		 * Returns ArrayList of House objects based on SQL statement passed in
 		 * @param SQLStatement
@@ -190,7 +222,7 @@ public class DatabaseUtility {
 				Statement stmt = conn.createStatement();
 				result = stmt.executeQuery(SQLStatement);
 				while(result.next()){
-					bm.add(new BillMonth(result.getInt(1), result.getInt(2), result.getInt(3)));
+					bm.add(new BillMonth(result.getString(1), result.getInt(2), result.getInt(3), result.getInt(4)));
 				}
 				
 			} catch (SQLException e) {

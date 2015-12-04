@@ -19,7 +19,7 @@ public class createDB {
 			Connection conn = DriverManager.getConnection(DB_URL);
 			
 			createTenantTable(conn, DROP_TABLE);
-			createBillingMonthTable(conn, DROP_TABLE);
+			createBillMonthTable(conn, DROP_TABLE);
 			createBillMonthPerTenant(conn, DROP_TABLE);
 			createTenantTable(conn, DROP_TABLE);
 			
@@ -78,22 +78,22 @@ public class createDB {
 		stmt.execute(createTableSQL);
 	}
 	
-	private static void createBillingMonthTable(Connection conn, boolean input) throws SQLException {
+	private static void createBillMonthTable(Connection conn, boolean input) throws SQLException {
 		
 		Statement stmt = conn.createStatement();
 		if(input){
 			try 
 			{
-				String dropTable = "drop table billingMonth";
+				String dropTable = "drop table billMonth";
 				stmt.execute(dropTable);
-				System.out.println("billingMonth table dropped.");
+				System.out.println("billMonth table dropped.");
 			} catch (Exception e) {
 				
-				System.out.println("billingMonth table does not exist");
+				System.out.println("billMonth table does not exist");
 			}
 		}
 			
-		String createTableSQL = "CREATE TABLE billingMonth (" 
+		String createTableSQL = "CREATE TABLE billMonth (" 
 				+ " date char(7),"
 				+ " fossilFuel double,"
 				+ " electric double,"
@@ -124,7 +124,6 @@ public class createDB {
 				+ " house_ID integer,"
 				+ " tenantType varchar(100),"
 				+ " fte double,"
-				+ " tenant varchar(100),"
 				+ " bill double,"
 				+ " tenant_ID integer" + ")";
 		
