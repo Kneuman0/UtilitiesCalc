@@ -23,34 +23,13 @@
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Label layoutX="372.0" layoutY="81.0" prefHeight="32.0" prefWidth="127.0" style="-fx-font-weight: bold; -fx-font-size: 20;" text="Size of room:">
-                           <font>
-                              <Font size="24.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="38.0" layoutY="191.0" prefHeight="32.0" prefWidth="148.0" style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Sharing room?">
-                           <font>
-                              <Font size="24.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="33.0" layoutY="316.0" prefHeight="25.0" prefWidth="306.0" />
-                        <TextField fx:id="roomSize" layoutX="361.0" layoutY="113.0" promptText="square feet" />
-                        <RadioButton fx:id="shareYes" layoutX="36.0" layoutY="230.0" mnemonicParsing="false" text="Yes">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="sharing" />
-                           </toggleGroup>
-                        </RadioButton>
                         <TextField fx:id="nameTextBox" layoutX="37.0" layoutY="113.0" />
-                        <RadioButton fx:id="shareNo" layoutX="114.0" layoutY="230.0" mnemonicParsing="false" text="No" toggleGroup="$sharing" />
-                        <Label layoutX="36.0" layoutY="272.0" prefHeight="32.0" prefWidth="177.0" style="-fx-font-weight: bold; -fx-font-size: 16px;" text="If yes, please list below">
-                           <font>
-                              <Font size="24.0" />
-                           </font>
-                        </Label>
-                        <Button fx:id="addTenantButton" layoutX="217.0" layoutY="377.0" mnemonicParsing="false" onAction="#addTenantButtonListener" prefHeight="43.0" prefWidth="167.0" text="Add new Tenant" />
-                        <Label layoutX="42.0" layoutY="145.0" text="Delete Tenant" />
-                        <ComboBox layoutX="37.0" layoutY="166.0" prefWidth="150.0" promptText="Tenants" />
-                        <Label layoutX="199.0" layoutY="170.0" text="*Tenants cannot be undeleted!" textFill="#f80101" />
+                        <Button fx:id="addTenantButton" layoutX="202.0" layoutY="190.0" mnemonicParsing="false" onAction="#addTenantButtonListener" prefHeight="43.0" prefWidth="167.0" text="Add new Tenant" />
+                        <Label layoutX="41.0" layoutY="307.0" text="Delete Tenant" />
+                        <ComboBox layoutX="37.0" layoutY="332.0" prefWidth="150.0" promptText="Tenants" />
+                        <Label layoutX="204.0" layoutY="336.0" text="*Tenants cannot be undeleted!" textFill="#f80101" />
+                        <ComboBox layoutX="225.0" layoutY="113.0" prefWidth="150.0" promptText="Tenant Type" />
+                        <Button layoutX="405.0" layoutY="332.0" mnemonicParsing="false" text="DELETE" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -89,42 +68,12 @@
                                     </Label>
                                     <TextField fx:id="addressInput" layoutX="121.0" layoutY="55.0" promptText="1234 Main Street Rd." />
                                     <TextField fx:id="numberOfRooms" layoutX="121.0" layoutY="147.0" />
-                                    <ComboBox fx:id="buildingType" layoutX="121.0" layoutY="99.0" prefWidth="150.0" promptText="Building Type" />
-                                    <RadioButton fx:id="seasonalBtn" layoutX="460.0" layoutY="146.0" mnemonicParsing="false" text="Seasonal">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="availability" />
-                                       </toggleGroup>
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </RadioButton>
-                                    <RadioButton fx:id="fullTimeBtn" layoutX="363.0" layoutY="146.0" mnemonicParsing="false" text="Full Time" toggleGroup="$availability">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </RadioButton>
-                                    <Label layoutX="5.0" layoutY="98.0" prefHeight="27.0" prefWidth="100.0" text="Residence Type:">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
                                     <Label layoutX="4.0" layoutY="197.0" prefHeight="27.0" prefWidth="102.0" text="Square Footage:">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
                                     <TextField fx:id="numberOfRooms1" layoutX="121.0" layoutY="198.0" />
-                                    <Label layoutX="391.0" layoutY="45.0" text="Number of Tenants">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="numOfTenants" layoutX="376.0" layoutY="68.0" />
-                                    <Label layoutX="394.0" layoutY="112.0" prefHeight="27.0" prefWidth="133.0" text="Occupational Period">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
                                     <Label alignment="CENTER" layoutX="216.0" layoutY="14.0" prefHeight="28.0" prefWidth="143.0" style="-fx-font-weight: bold;" text="General Information">
                                        <font>
                                           <Font size="14.0" />
