@@ -11,8 +11,9 @@ public class DatabaseUtility {
 
 		final static String DB_URL = "jdbc:derby:db/Tenant";
 
-		public void addTenant(String name, String sharingRoom, String occupants, double area, int ID)
-		{
+		public void addTenant(Tenant tenant){
+			
+			
 			try {
 
 				
@@ -20,11 +21,10 @@ public class DatabaseUtility {
 	    		
 	    		Statement stmt = conn.createStatement();
 	    		
-	    		String insertPerson = "insert into Tenant (name, rooms, occupant, Tenant_ID)"
-	    				+ String.format(" values (%s, %s, %d, %.2f, %s)" , 
-	    								name, sharingRoom, occupants, area, ID);
+	    		String insertTenant = "insert into tenant (name)"
+	    				+ String.format(" values (%s)" , tenant.getName());
 	    		
-	    		stmt.execute(insertPerson);
+	    		stmt.execute(insertTenant);
 	    		
 	    		conn.close();
 	    	} catch (SQLException e){
@@ -35,19 +35,17 @@ public class DatabaseUtility {
 		
 		public void addHouseInfo(House house) {
 			
-			
-			
-			
 			try {
 	    		Connection conn = DriverManager.getConnection("jdbc:derby:db/Tenant;");
 	    		
 	    		Statement stmt = conn.createStatement();
 	    		
-//	    		String insertPerson = "insert into Tenant (address, building, rooms, area, numOfTenants, occPeriod, Tenant_ID)"
-//	    				+ String.format(" values (%d, '%s','%s', %.2f)" , address, building, rooms, ID);
+	    		String insertHouse = "insert into house (address, numRooms, sqFt)"
+	    				+ String.format(" values (%d, '%d','%d')" , house.getAddress(),
+	    						house.getNumRooms(), house.getNumRooms());
 	    		
-//	    		stmt.execute(insertPerson);
-//	    		
+	    		stmt.execute(insertHouse);
+	    		
 	    		conn.close();
 	    	} catch (SQLException e){
 	    		e.printStackTrace();
@@ -78,18 +76,18 @@ public class DatabaseUtility {
 		/**
 		 * Inserts 5 sample rows into the database, one with the name Kyle Neuman
 		 */
-		public void inputSampleEntries() {
+		public void inputSampleTenantEntries() {
 			Connection conn = null;
-			String insertSampleRow1 = "INSERT INTO Employee (name, position, payRtHrly)"
-					+ " VALUES('Telemundo Deltoro', 'stapler operator', 15.00)";
-			String insertSampleRow2 = "INSERT INTO Employee (name, position, payRtHrly)"
-					+ "VALUES('Smithery Smithonson', 'scissor operator', 15.00)";
-			String insertSampleRow3 = "INSERT INTO Employee (name, position, payRtHrly)"
-					+ "VALUES('Roger Rabit', 'staple remover', 15.00)";
-			String insertSampleRow4 = "INSERT INTO Employee (name, position, payRtHrly)"
-					+ "VALUES('Ignious Rockface', 'paper clip getter', 15.00)";
-			String insertSampleRow5 = "INSERT INTO Employee (name, position, payRtHrly)"
-					+ "VALUES('Kyle Neuman', 'Sole Proprieter', 100.00)";
+			String insertSampleRow1 = "INSERT INTO tenant (name, active)"
+					+ " VALUES('Telemundo Deltoro', false)";
+			String insertSampleRow2 = "INSERT INTO tenant (name)"
+					+ " VALUES('Kyle Cricketface', true)";
+			String insertSampleRow3 = "INSERT INTO tenant (name)"
+					+ " VALUES('Thomas Tutu', true)";
+			String insertSampleRow4 = "INSERT INTO tenant (name)"
+					+ " VALUES('Rebecca Raferty', false)";
+			String insertSampleRow5 = "INSERT INTO tenant (name)"
+					+ " VALUES('Gilberto DeMayo', true)";
 			try {
 				conn = DriverManager.getConnection(DB_URL);
 				Statement stmt = conn.createStatement();
@@ -119,35 +117,110 @@ public class DatabaseUtility {
 //			}
 //			return results;
 //		}
-
-//		public ArrayList<Employee> fetchSelection(String SQLStatement) throws InvalidHourlyRateException {
-//			Connection conn = null;
-//			ResultSet result = null;
-//			ArrayList<Employee> emp = new ArrayList<>();
-//			try {
-//				conn = DriverManager.getConnection(DB_URL);
-//				Statement stmt = conn.createStatement();
-//				result = stmt.executeQuery(SQLStatement);
-//				while(result.next()){
-//					emp.add(new Employee(result.getString(1), result.getString(2), result.getDouble(3), result.getInt(4)));
-//				}
-//				
-//				if(emp.isEmpty()) throw new InvalidHourlyRateException("0");
-//			} catch (SQLException e) {
-//				throw new InvalidHourlyRateException("0");
-//			} finally {
-//				try {
-//					conn.close();
-//				} catch (SQLException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			
-//			
-//			return emp;
-//
-//		}
+		/**
+		 * Returns an ArrayList of tenant based on SQL string passed in
+		 * @param SQLStatement
+		 * @return
+		 */
+		public ArrayList<Tenant> fetchTenantSelection(String SQLStatement) {
+			Connection conn = null;
+			ResultSet result = null;
+			ArrayList<Tenant> ten = new ArrayList<>();
+			try {
+				conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement();
+				result = stmt.executeQuery(SQLStatement);
+				while(result.next()){
+					ten.add(new Tenant(result.getString(1), result.getBoolean(2)));
+				}
+				
+			} catch (SQLException e) {
+				
+			} finally {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return ten;
+		}
+		
+		public ArrayList<House> fetchHouseSelection(String SQLStatement){
+			Connection conn = null;
+			ResultSet result = null;
+			ArrayList<House> hou = new ArrayList<>();
+			try {
+				conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement();
+				result = stmt.executeQuery(SQLStatement);
+				while(result.next()){
+					hou.add(new House(result.getString(1), result.getInt(2), result.getInt(3)));
+				}
+				
+			} catch (SQLException e) {
+				
+			} finally {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return hou;
+		}
+		
+		public ArrayList<BillMonth> fetchBillMonth(String SQLStatement){
+			Connection conn = null;
+			ResultSet result = null;
+			ArrayList<BillMonth> bm = new ArrayList<>();
+			try {
+				conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement();
+				result = stmt.executeQuery(SQLStatement);
+				while(result.next()){
+					bm.add(new BillMonth(result.getInt(1), result.getInt(2), result.getInt(3)));
+				}
+				
+			} catch (SQLException e) {
+				
+			} finally {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return bm;
+		}
+		
+		public ArrayList<BillPerTenant> fetchBillPerMonth(String SQLStatement){
+			Connection conn = null;
+			ResultSet result = null;
+			ArrayList<BillPerTenant> bpt = new ArrayList<>();
+			try {
+				conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement();
+				result = stmt.executeQuery(SQLStatement);
+				while(result.next()){
+					bpt.add(new BillPerTenant(result.getString(1), result.getDouble(2), result.getString(3), result.getDouble(4)));
+				}
+				
+			} catch (SQLException e) {
+				
+			} finally {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return bpt;
+		}
 
 		public void updateDatabase(String SQLStatement) {
 			Connection conn = null;

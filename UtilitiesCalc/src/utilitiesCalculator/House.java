@@ -1,22 +1,15 @@
 package utilitiesCalculator;
 
 public class House {
-//	String address, String building, double areaOfBedroom,
-//	int numRooms, int numOfTenants, 
+	private String address;
+	private int sqFt;
+	private int numRooms;
 	
-	String address;
-	String building;
-	int numRooms;
-	int numOfTenants;
-	boolean isFullTime;
-
-	public House(String address, String building, int numRooms, int numOfTenants, boolean isFullTime){
+	public House(String address, int numRooms, int sqFt){
 		this.address = address;
-		this.building = building;
+		this.sqFt = sqFt;
 		this.numRooms = numRooms;
-		this.numOfTenants = numOfTenants;
-		this.isFullTime = isFullTime;
-		
+				
 	}
 
 	/**
@@ -34,20 +27,6 @@ public class House {
 	}
 
 	/**
-	 * @return the building
-	 */
-	public String getBuilding() {
-		return building;
-	}
-
-	/**
-	 * @param building the building to set
-	 */
-	public void setBuilding(String building) {
-		this.building = building;
-	}
-
-	/**
 	 * @return the numRooms
 	 */
 	public int getNumRooms() {
@@ -61,31 +40,4 @@ public class House {
 		this.numRooms = numRooms;
 	}
 
-	/**
-	 * @return the numOfTenants
-	 */
-	public int getNumOfTenants() {
-		return numOfTenants;
-	}
-
-	/**
-	 * @param numOfTenants the numOfTenants to set
-	 */
-	public void setNumOfTenants(int numOfTenants) {
-		this.numOfTenants = numOfTenants;
-	}
-
-	/**
-	 * @return the isFullTime
-	 */
-	public boolean isFullTime() {
-		return isFullTime;
-	}
-
-	/**
-	 * @param isFullTime the isFullTime to set
-	 */
-	public void setFullTime(boolean isFullTime) {
-		this.isFullTime = isFullTime;
-	}
 }

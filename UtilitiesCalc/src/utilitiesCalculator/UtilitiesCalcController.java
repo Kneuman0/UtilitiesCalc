@@ -161,10 +161,10 @@ public class UtilitiesCalcController {
     }
     
     public void addHouseInfoListener(){
-    	House house = new House(addressInput.getText(), buildingType.getValue(), 
-    			Integer.parseInt(numberOfRooms.getText()), Integer.parseInt(numOfTenants.getText()),
-    			fullTimeBtn.isSelected());
-    	dbUtil.addHouseInfo(house);
+//    	House house = new House(addressInput.getText(), buildingType.getValue(), 
+//    			Integer.parseInt(numberOfRooms.getText()), Integer.parseInt(numOfTenants.getText()),
+//    			fullTimeBtn.isSelected());
+//    	dbUtil.addHouseInfo(house);
     	
     	
     }
