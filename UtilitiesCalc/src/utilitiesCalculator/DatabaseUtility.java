@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class DatabaseUtility {
 
-		final static String DB_URL = "jdbc:derby:db/Tenant";
+		final static String DB_URL = "jdbc:derby:db/UtilitiesCalc";
 
 		/**
 		 * Populates tenant table using Tenant object passed in
@@ -39,7 +39,7 @@ public class DatabaseUtility {
 		public void addHouseInfo(House house) {
 			
 			try {
-	    		Connection conn = DriverManager.getConnection("jdbc:derby:db/Tenant;");
+	    		Connection conn = DriverManager.getConnection(DB_URL);
 	    		
 	    		Statement stmt = conn.createStatement();
 	    		
@@ -62,7 +62,7 @@ public class DatabaseUtility {
 		public void addBillingMonthEntry(BillMonth billMonth){
 
 			try {
-	    		Connection conn = DriverManager.getConnection("jdbc:derby:db/Tenant;");
+	    		Connection conn = DriverManager.getConnection(DB_URL);
 	    		
 	    		Statement stmt = conn.createStatement();
 	    		
@@ -88,7 +88,7 @@ public class DatabaseUtility {
 		public void addBillPerTenantEntry(BillPerTenant billPerTenant, BillMonth billMonth){
 
 			try {
-	    		Connection conn = DriverManager.getConnection("jdbc:derby:db/Tenant;");
+	    		Connection conn = DriverManager.getConnection(DB_URL);
 	    		
 	    		Statement stmt = conn.createStatement();
 	    		String getTenantID = String.format("SELECT tenant_ID FROM tenant WHERE name = '%s'",
@@ -123,16 +123,16 @@ public class DatabaseUtility {
 		 */
 		public void inputSampleTenantEntries() {
 			Connection conn = null;
-			String insertSampleRow1 = "INSERT INTO tenant (name, active)"
-					+ " VALUES('Telemundo Deltoro', false)";
-			String insertSampleRow2 = "INSERT INTO tenant (name)"
-					+ " VALUES('Kyle Cricketface', true)";
-			String insertSampleRow3 = "INSERT INTO tenant (name)"
-					+ " VALUES('Thomas Tutu', true)";
-			String insertSampleRow4 = "INSERT INTO tenant (name)"
-					+ " VALUES('Rebecca Raferty', false)";
-			String insertSampleRow5 = "INSERT INTO tenant (name)"
-					+ " VALUES('Gilberto DeMayo', true)";
+			String insertSampleRow1 = "INSERT INTO tenant (name, active, tenantType)"
+					+ " VALUES('Telemundo Deltoro', false, 'Sublet')";
+			String insertSampleRow2 = "INSERT INTO tenant (name, active, tenantType)"
+					+ " VALUES('Kyle Cricketface', true, 'Landlord')";
+			String insertSampleRow3 = "INSERT INTO tenant (name, active, tenantType)"
+					+ " VALUES('Thomas Tutu', true, 'Sublet')";
+			String insertSampleRow4 = "INSERT INTO tenant (name, active, tenantType)"
+					+ " VALUES('Rebecca Raferty', false, 'Full Time Renter')";
+			String insertSampleRow5 = "INSERT INTO tenant (name, active, tenantType)"
+					+ " VALUES('Gilberto DeMayo', true, 'Sublet')";
 			try {
 				conn = DriverManager.getConnection(DB_URL);
 				Statement stmt = conn.createStatement();
@@ -161,9 +161,13 @@ public class DatabaseUtility {
 				conn = DriverManager.getConnection(DB_URL);
 				Statement stmt = conn.createStatement();
 				result = stmt.executeQuery(SQLStatement);
+				
 				while(result.next()){
-					ten.add(new Tenant(result.getString(1), result.getBoolean(2)));
+					
+					ten.add(new Tenant(result.getString(1), result.getBoolean(2), result.getString(3)));
 				}
+				
+				
 				
 			} catch (SQLException e) {
 				

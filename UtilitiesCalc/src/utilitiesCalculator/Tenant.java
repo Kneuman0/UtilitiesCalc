@@ -3,10 +3,15 @@ package utilitiesCalculator;
 public class Tenant {
 	private String name;
 	private boolean active;
+	public String tenantType;
 	
-	public Tenant(String name, boolean active){
+	public Tenant(String name, boolean active, String tenantType){
+		this.name = name;
 		this.active = active;
+		this.tenantType = tenantType;
+		
 	}
+
 	/**
 	 * @return the name
 	 */
@@ -22,53 +27,32 @@ public class Tenant {
 	}
 
 	/**
-	 * @return the sqftOfRoom
+	 * @return the active
 	 */
-	public double getSqftOfRoom() {
-		return sqftOfRoom;
+	public boolean isActive() {
+		return active;
 	}
 
 	/**
-	 * @param sqftOfRoom the sqftOfRoom to set
+	 * @param active the active to set
 	 */
-	public void setSqftOfRoom(double sqftOfRoom) {
-		this.sqftOfRoom = sqftOfRoom;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	/**
-	 * @return the isFullTime
+	 * @return the tenantType
 	 */
-	public boolean isFullTime() {
-		return isFullTime;
+	public String getTenantType() {
+		return tenantType;
 	}
 
 	/**
-	 * @param isFullTime the isFullTime to set
+	 * @param tenantType the tenantType to set
 	 */
-	public void setFullTime(boolean isFullTime) {
-		this.isFullTime = isFullTime;
+	public void setTenantType(String tenantType) {
+		this.tenantType = tenantType;
 	}
-
-	/**
-	 * @return the isLandlord
-	 */
-	public boolean isLandlord() {
-		return isLandlord;
-	}
-
-	/**
-	 * @param isLandlord the isLandlord to set
-	 */
-	public void setLandlord(boolean isLandlord) {
-		this.isLandlord = isLandlord;
-	}
-
-	double sqftOfRoom;
-	boolean isFullTime;
-	boolean isLandlord;
 	
-	public Tenant(String name, double sqftOfRoom){
-		this.name = name;
-		this.sqftOfRoom = sqftOfRoom;
-	}
+	
 }

@@ -2,8 +2,8 @@ package utilitiesCalculator;
 // REQ 5
 public class Landlord extends Tenant {
 
-	public Landlord(String name, double sqftOfRoom) {
-		super(name, sqftOfRoom);
+	public Landlord(String name, boolean active, String tenantType) {
+		super(name, active, tenantType);
 		
 	}
 	

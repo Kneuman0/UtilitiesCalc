@@ -1,174 +1,166 @@
 package utilitiesCalculator;
 
+import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 
 public class UtilitiesCalcController {
 
-// hey
-//    @FXML
-//    private TableColumn<Tenant, String> address;
+//	@FXML
+//	private TableColumn<Tenant, String> tenantName;
+//
+//	@FXML
+//	private TableColumn<Tenant, String> tenantColumn;
+//
+//	@FXML
+//	private TableView<Tenant> table;
 
-    @FXML
-    private ComboBox<String> waterHeater;
+	@FXML
+	private ComboBox<String> subletTenantList;
 
-    @FXML
-    private TextField numberOfRooms;
+	@FXML
+	private Button submitFTEbutton;
 
-    @FXML
-    private ToggleGroup availability;
+	@FXML
+	private ComboBox<String> tenantTypeList;
 
-    @FXML
-    private ToggleGroup sharing;
+	@FXML
+	private Button deleteTenant;
 
-    @FXML
-    private Button submitHouseInfo;
+	@FXML
+	private TextField dateReceiptButton;
 
-//    @FXML
-//    private TableColumn<Tenant, String> tenantColumn;
+	@FXML
+	private TextField numberOfRooms;
 
-    @FXML
-    private ComboBox<String> trashType;
+	@FXML
+	private TextField billDate;
 
-    @FXML
-    private RadioButton seasonalBtn;
+	@FXML
+	private ComboBox<String> tenantsList;
 
-    @FXML
-    private Tab summaryTable;
+	@FXML
+	private Button submitBillAmount;
 
-//    @FXML
-//    private TableColumn<Tenant, String> tenantName;
+	@FXML
+	private Button addTenantButton;
 
-    @FXML
-    private RadioButton fullTimeBtn;
+	@FXML
+	private Button submitHouseInfo;
 
-    @FXML
-    private TextField roomSize;
+	@FXML
+	private TextField billAmount;
 
-    @FXML
-    private ComboBox<String> cooling;
+	@FXML
+	private Tab summaryTable;
 
-    @FXML
-    private ComboBox<String> stoveType;
+	@FXML
+	private TextField fte;
 
-    @FXML
-    private TextField numOfTenants;
+	@FXML
+	private Tab tenantTab;
 
-    @FXML
-    private Tab tenantTab;
+	@FXML
+	private TextField nameTextBox;
 
-    @FXML
-    private Tab housingTab;
+	@FXML
+	private Tab housingTab;
 
-    @FXML
-    private ComboBox<String> watertype;
+	@FXML
+	private TextField addressInput;
 
-    @FXML
-    private ComboBox<String> heating;
+	@FXML
+	private TextField numberOfRooms1;
 
-    @FXML
-    private TextField addressInput;
+	@FXML
+	private TextField otherBills;
 
-    @FXML
-    private TextField numberOfRooms1;
+	@FXML
+	private TextField fossilFuelBill;
 
-    @FXML
-    private TableView<Tenant> table;
+	@FXML
+	private Button printReceiptButton;
 
-    @FXML
-    private ComboBox<String> buildingType;
-    
-    @FXML
-    private Button addTenantButton;
-    
-    @FXML
-    private TextField nameTextBox;
-    
-    ObservableList<Tenant> tenants;
-    
-    DatabaseUtility dbUtil;
-    
-    public void initialize(){
-    	//If these values will never be editied by the user we can keep them the way they are
-    	// if we choose to make them editable, we should cue them up from the DB
-    	// and add the changes to the DB
-    	
-    	//Heating Options
-    	ObservableList<String> heatingOptions = FXCollections.observableArrayList(
-    			"Wood", "Natural Gas", "Propane", "Oil/Boiler", "Heat Pump", "Electric Radiator",
-    			"Geothermal", "None");
-    	heating.setItems(heatingOptions);
-    	
-    	//Cooling System AC types
-    	ObservableList<String> coolingOptions = FXCollections.observableArrayList(
-    			"Central Cooling", "Geothermal", "Local AC Unit", "Evaporative Cooling Unit");
-    	cooling.setItems(coolingOptions);
-    	
-    	//Water Source Types
-    	ObservableList<String> waterSource = FXCollections.observableArrayList(
-    			"Municipal", "Well Pump", "Bottled");
-    	watertype.setItems(waterSource);
-    	
-    	//Building Type
-    	ObservableList<String> structures = FXCollections.observableArrayList(
-    			"Condo", "Appartment", "House", "Bungalo", "Shed", "Dog House");
-    	buildingType.setItems(structures);
-    	
-    	//Stove options
-    	ObservableList<String> stoveOptions = FXCollections.observableArrayList(
-    			"Natural Gas", "Propane", "Wood Buring", "Electric");
-    	stoveType.setItems(stoveOptions);
-    	
-    	//Water heater types
-    	ObservableList<String> waterHeaterOptions = FXCollections.observableArrayList(
-    			"Boiler", "Natural Gas", "Propane", "Electric");
-    	waterHeater.setItems(waterHeaterOptions);
-    	
-    	//Trash collection types
-    	ObservableList<String> trashOptions = FXCollections.observableArrayList(
-    			"municipal", "Commercial", "Personal");
-    	trashType.setItems(trashOptions);
-    	//Once database is created, queue up observable list of tenants here
-    	tenants = FXCollections.observableArrayList();
-//    	for(int i = 0; i < methodThatReturnsArrayListOfTenantFromDB.size(); i++){
-//    		tenants.add(methodThatReturnsArrayListOfTenantFromDB.get(i));
-//    	}
-    	dbUtil = new DatabaseUtility();
-    }
-    
-    public void addTenantButtonListener(){
-//    	String tenant =  nameTextBox.getText();
-//    	double sqftOfRoom = Double.parseDouble(this.roomSize.getText());
-//    	Tenant newTenant = new Tenant(tenant, sqftOfRoom);
-////    	String addTenant = "SQL code to add new tenant";
-////    	methodThatAddsANewTenantToDB();
-//    	tenants.add(newTenant);
-    	
-//    	DatabaseUtility addTenant = new DatabaseUtility();
-//    	addTenant.addTenant(nameTextBox.getText(), position, payRate, ID);
-    	
-    }
-    
-    public void addHouseInfoListener(){
-//    	House house = new House(addressInput.getText(), buildingType.getValue(), 
-//    			Integer.parseInt(numberOfRooms.getText()), Integer.parseInt(numOfTenants.getText()),
-//    			fullTimeBtn.isSelected());
-//    	dbUtil.addHouseInfo(house);
-    	
-    	
-    }
-    
-    
+	ObservableList<String> tenants;
+
+	DatabaseUtility dbUtil;
+
+	public void initialize() {
+		dbUtil = new DatabaseUtility();
+//		// If these values will never be editied by the user we can keep them
+//		// the way they are
+//		// if we choose to make them editable, we should cue them up from the DB
+//		// and add the changes to the DB
+//
+//
+//		// Queue up Tenants ComboBox
+		String allTenantsSQL = "SELECT * FROM tenant";
+		ArrayList<Tenant> allTenants = dbUtil
+				.fetchTenantSelection(allTenantsSQL);
+		tenants = FXCollections.observableArrayList("");
+		for (int i = 0; i < allTenants.size(); i++) {
+			tenants.add(allTenants.get(i).getName());
+		}
+		this.tenantsList.setItems(tenants);
+
+		// Queue up sublets ComboBox
+		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = Sublet";
+		ArrayList<Tenant> sublets = dbUtil
+				.fetchTenantSelection(allSubletTenants);
+		ObservableList<String> subs = FXCollections.observableArrayList("");
+		for (int i = 0; i < sublets.size(); i++) {
+			subs.add(sublets.get(i).getName());
+		}
+		this.subletTenantList.setItems(subs);
+//		
+
+	}
+
+	public void addTenantButtonListener() {
+		// String tenant = nameTextBox.getText();
+		// double sqftOfRoom = Double.parseDouble(this.roomSize.getText());
+		// Tenant newTenant = new Tenant(tenant, sqftOfRoom);
+		// // String addTenant = "SQL code to add new tenant";
+		// // methodThatAddsANewTenantToDB();
+		// tenants.add(newTenant);
+
+		// DatabaseUtility addTenant = new DatabaseUtility();
+		// addTenant.addTenant(nameTextBox.getText(), position, payRate, ID);
+
+	}
+
+	public void addHouseInfoListener() {
+		// House house = new House(addressInput.getText(),
+		// buildingType.getValue(),
+		// Integer.parseInt(numberOfRooms.getText()),
+		// Integer.parseInt(numOfTenants.getText()),
+		// fullTimeBtn.isSelected());
+		// dbUtil.addHouseInfo(house);
+
+	}
+	
+	public void deleteTenantButtonListener(){
+		
+	}
+	
+	public void submitBillButtonListener(){
+		
+	}
+	
+	public void saveOccupancyButtonListener(){
+		
+	}
+	
+	public void printReceiptButtonListener(){
+		
+	}
 
 }
