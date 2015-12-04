@@ -99,23 +99,25 @@ public class UtilitiesCalcController {
 //		// the way they are
 //		// if we choose to make them editable, we should cue them up from the DB
 //		// and add the changes to the DB
-//
-//
+		ObservableList<String> tenTypesList = FXCollections.observableArrayList(
+				"Landlord", "Full Time Renter", "Sublet");
+		this.tenantTypeList.setItems(tenTypesList);
+
 //		// Queue up Tenants ComboBox
 		String allTenantsSQL = "SELECT * FROM tenant";
 		ArrayList<Tenant> allTenants = dbUtil
 				.fetchTenantSelection(allTenantsSQL);
-		tenants = FXCollections.observableArrayList("");
+		tenants = FXCollections.observableArrayList();
 		for (int i = 0; i < allTenants.size(); i++) {
 			tenants.add(allTenants.get(i).getName());
 		}
 		this.tenantsList.setItems(tenants);
 
 		// Queue up sublets ComboBox
-		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = Sublet";
+		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'";
 		ArrayList<Tenant> sublets = dbUtil
 				.fetchTenantSelection(allSubletTenants);
-		ObservableList<String> subs = FXCollections.observableArrayList("");
+		ObservableList<String> subs = FXCollections.observableArrayList();
 		for (int i = 0; i < sublets.size(); i++) {
 			subs.add(sublets.get(i).getName());
 		}

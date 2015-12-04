@@ -11,7 +11,7 @@ public class createDB {
 
 	public static void main(String[] args) {
 		
-		final boolean DROP_TABLE = true;
+		final boolean DROP_TABLE = false;
 		DatabaseUtility util = new DatabaseUtility();
 		
 		final String DB_URL = "jdbc:derby:db/UtilitiesCalc;create=true;";
@@ -19,16 +19,22 @@ public class createDB {
 		try{
 			
 			Connection conn = DriverManager.getConnection(DB_URL);
-			
+			if(DROP_TABLE){
+				util.dropTable("tenant");
+				
+			}
 //			createTenantTable(conn, DROP_TABLE);
 //			createBillMonthTable(conn, DROP_TABLE);
 //			createBillMonthPerTenant(conn, DROP_TABLE);
 //			createTenantTable(conn, DROP_TABLE);
-			util.inputSampleTenantEntries();
-			String allTenantsSQL = "SELECT * FROM tenant";
-			ArrayList<Tenant> allTenants = util.fetchTenantSelection(allTenantsSQL);
+//			util.inputSampleTenantEntries();
+//			
+			String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'";
+			ArrayList<Tenant> allTenants = util.fetchTenantSelection(allSubletTenants);
+			for(int i = 0; i < allTenants.size(); i++){
+				System.out.println(allTenants.get(i).getName());
+			}
 			
-			System.out.println(allTenants.get(0).tenantType);
 			
 			
 			conn.close();

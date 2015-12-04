@@ -161,9 +161,9 @@ public class DatabaseUtility {
 				conn = DriverManager.getConnection(DB_URL);
 				Statement stmt = conn.createStatement();
 				result = stmt.executeQuery(SQLStatement);
-				
+				int i = 0;
 				while(result.next()){
-					
+					System.out.println(i++);
 					ten.add(new Tenant(result.getString(1), result.getBoolean(2), result.getString(3)));
 				}
 				
@@ -270,6 +270,26 @@ public class DatabaseUtility {
 				}
 			}
 			return bpt;
+		}
+		
+		public void dropTable(String tableName){
+			String dropTable = String.format("DROP TABLE %s", tableName);
+			Connection conn = null;
+			try {
+				conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement();
+				stmt.executeUpdate(dropTable);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 
 		
