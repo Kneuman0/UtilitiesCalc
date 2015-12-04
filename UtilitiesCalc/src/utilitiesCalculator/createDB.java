@@ -10,7 +10,7 @@ public class createDB {
 
 	public static void main(String[] args) {
 		
-		final int DROP_TABLE = 1;
+		final boolean DROP_TABLE = false;
 		
 		final String DB_URL = "jdbc:derby:db/UtilitiesCalc;create=true;";
 		
@@ -30,9 +30,9 @@ public class createDB {
 		}
 	}
 
-	private static void createTenantTable(Connection conn, int input) throws SQLException {
+	private static void createTenantTable(Connection conn, boolean input) throws SQLException {
 		Statement stmt = conn.createStatement();
-		if(input == 0){
+		if(input){
 			try 
 			{
 				String dropTable = "drop table Tenant";
@@ -52,10 +52,10 @@ public class createDB {
 		stmt.execute(createTableSQL);
 	}
 	
-	private static void createHouseTable(Connection conn, int input) throws SQLException {
+	private static void createHouseTable(Connection conn, boolean input) throws SQLException {
 		
 		Statement stmt = conn.createStatement();
-		if(input == 0){
+		if(input){
 			try 
 			{
 				String dropTable = "drop table house";
@@ -77,10 +77,10 @@ public class createDB {
 		stmt.execute(createTableSQL);
 	}
 	
-	private static void createBillingMonthTable(Connection conn, int input) throws SQLException {
+	private static void createBillingMonthTable(Connection conn, boolean input) throws SQLException {
 		
 		Statement stmt = conn.createStatement();
-		if(input == 0){
+		if(input){
 			try 
 			{
 				String dropTable = "drop table billingMonth";
@@ -103,10 +103,10 @@ public class createDB {
 		stmt.execute(createTableSQL);
 	}
 	
-	private static void createBillMonthPerTenant(Connection conn, int input) throws SQLException {
+	private static void createBillMonthPerTenant(Connection conn, boolean input) throws SQLException {
 		
 		Statement stmt = conn.createStatement();
-		if(input == 0){
+		if(input){
 			try 
 			{
 				String dropTable = "drop table billPerTenant";
