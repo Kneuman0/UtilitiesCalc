@@ -122,6 +122,7 @@ public class UtilitiesCalcController {
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
 	DatabaseUtility dbUtil;
+	ArrayList<Sublet> subletStoreage;
 
 	public void initialize() {
 		dbUtil = new DatabaseUtility();
@@ -147,6 +148,9 @@ public class UtilitiesCalcController {
 		dbUtil.addHouseInfo(house);
 	}
 
+	/**
+	 * Need to figure out how to delete all bills by this tenant as well
+	 */
 	public void deleteTenantButtonListener() {
 		String deleteTen = tenantsList.getValue();
 		dbUtil.deleteTenant(deleteTen);
@@ -157,15 +161,20 @@ public class UtilitiesCalcController {
 	}
 
 	public void submitBillButtonListener() {
-
+		
+			
 	}
 
 	public void saveOccupancyButtonListener() {
-
+		for(int i = 0; i < subletStoreage.size(); i++){
+			if(subletStoreage.get(i).getName().equals(subletTenantList.getValue())){
+				subletStoreage.get(i).setFte(Double.parseDouble(fte.getText()));
+			}
+		}
 	}
 
 	public void printReceiptButtonListener() {
-
+		
 	}
 
 	public void populateActiveStatus() {
@@ -197,12 +206,14 @@ public class UtilitiesCalcController {
 	 */
 	public void queueUpSubletComboBox() {
 
-		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'";
+		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'"
+				+ " AND active = true";
 		ArrayList<Tenant> sublets = dbUtil
 				.fetchTenantSelection(allSubletTenants);
 		subs = FXCollections.observableArrayList();
 		for (int i = 0; i < sublets.size(); i++) {
 			subs.add(sublets.get(i).getName());
+			subletStoreage.add(new Sublet(sublets.get(i).getName(), true));
 		}
 		this.subletTenantList.setItems(subs);
 	}

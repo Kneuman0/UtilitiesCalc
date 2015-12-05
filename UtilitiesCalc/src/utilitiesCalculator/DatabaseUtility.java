@@ -279,7 +279,7 @@ public class DatabaseUtility {
 				Statement stmt = conn.createStatement();
 				result = stmt.executeQuery(SQLStatement);
 				while(result.next()){
-					bpt.add(new BillPerTenant(result.getString(1), result.getDouble(2), result.getString(3), result.getDouble(4)));
+//					bpt.add(new BillPerTenant(result.getString(1), result.getDouble(2), result.getString(3), result.getDouble(4)));
 				}
 				
 			} catch (SQLException e) {

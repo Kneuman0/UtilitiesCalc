@@ -2,10 +2,28 @@ package utilitiesCalculator;
 
 public class Sublet extends Tenant {
 	
+	double fte;
 	
-	public Sublet(String name, boolean active, String tenantType) {
-		super(name, active, tenantType);
-		// TODO Auto-generated constructor stub
+	
+	public Sublet(String name, boolean active) {
+		super(name, active, "Sublet");
+		this.fte = 1;
+	}
+
+
+	/**
+	 * @return the fte
+	 */
+	public double getFte() {
+		return fte;
+	}
+
+
+	/**
+	 * @param fte the fte to set
+	 */
+	public void setFte(double fte) {
+		this.fte = fte;
 	}
 
 }

@@ -6,11 +6,18 @@ public class BillPerTenant {
 	private String tenantName;
 	private double bill;
 	
-	public BillPerTenant(String tenantType, double fte, String tenantName, double bill){
+	/**
+	 * Need to make utility method that calculates tenants individual bill from the bill portion bill, and
+	 * fte. I presume this object will be stored in an arraylist which will be passed to the database
+	 * utility method to storage
+	 * @param tenantType
+	 * @param fte
+	 * @param tenantName
+	 */
+	public BillPerTenant(String tenantType, double fte, String tenantName){
 		this.tenantType = tenantType;
 		this.tenantName = tenantName;
 		this.fte = fte;
-		this.bill = bill;
 	}
 
 	/**
