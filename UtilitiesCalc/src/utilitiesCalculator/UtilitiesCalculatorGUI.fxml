@@ -28,8 +28,17 @@
                         <Label layoutX="41.0" layoutY="307.0" text="Delete Tenant" />
                         <ComboBox fx:id="tenantsList" layoutX="37.0" layoutY="332.0" prefWidth="150.0" promptText="Tenants" />
                         <Label layoutX="204.0" layoutY="336.0" text="*Tenants cannot be undeleted!" textFill="#f80101" />
-                        <ComboBox fx:id="tenantTypeList" layoutX="225.0" layoutY="113.0" prefWidth="150.0" promptText="Tenant Type" />
+                        <ComboBox fx:id="tenantTypeList" layoutX="225.0" layoutY="113.0" onAction="#populateActiveStatus" prefWidth="150.0" promptText="Tenant Type" />
                         <Button fx:id="deleteTenant" layoutX="405.0" layoutY="332.0" mnemonicParsing="false" onAction="#deleteTenantButtonListener" text="DELETE" />
+                        <Label layoutX="41.0" layoutY="368.0" text="Activate/Deactivate Tenant" />
+                        <ComboBox fx:id="activeTenants" layoutX="37.0" layoutY="385.0" onAction="#populateActiveStatus" prefWidth="150.0" promptText="Tenants" />
+                        <RadioButton fx:id="activeTenantRadioButton" layoutX="202.0" layoutY="389.0" mnemonicParsing="false" text="Activate">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="activeTenant" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="deactivateTenantRadioButton" layoutX="301.0" layoutY="389.0" mnemonicParsing="false" text="Deactivate" toggleGroup="$activeTenant" />
+                        <Button fx:id="activateDeactivateButton" layoutX="407.0" layoutY="385.0" mnemonicParsing="false" text="Activate/Deactivate" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -91,12 +100,12 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="billAmount" layoutX="212.0" layoutY="123.0" prefHeight="25.0" prefWidth="176.0" promptText="Enter Electric Bill" />
-                        <ComboBox fx:id="subletTenantList" layoutX="45.0" layoutY="252.0" prefWidth="150.0" promptText="Sublet Tenants" />
-                        <TextField fx:id="fte" layoutX="203.0" layoutY="252.0" prefHeight="25.0" prefWidth="172.0" promptText="Portion of Month Occupied" />
-                        <Button fx:id="submitFTEbutton" layoutX="388.0" layoutY="252.0" mnemonicParsing="false" onAction="#saveOccupancyButtonListener" text="Save Sublet Occupancy" />
-                        <Label layoutX="45.0" layoutY="229.0" text="Select Any Sublets From the List" />
-                        <Label layoutX="252.0" layoutY="277.0" text="*1 week = .25" textFill="#f50505" />
-                        <Button fx:id="submitBillAmount" layoutX="215.0" layoutY="170.0" mnemonicParsing="false" onAction="#submitBillButtonListener" prefHeight="53.0" prefWidth="170.0" text="Submit Bill Amount" />
+                        <ComboBox fx:id="subletTenantList" layoutX="30.0" layoutY="182.0" prefWidth="150.0" promptText="Sublet Tenants" />
+                        <TextField fx:id="fte" layoutX="214.0" layoutY="182.0" prefHeight="25.0" prefWidth="172.0" promptText="Portion of Month Occupied" />
+                        <Button fx:id="submitFTEbutton" layoutX="426.0" layoutY="182.0" mnemonicParsing="false" onAction="#saveOccupancyButtonListener" text="Save Sublet Occupancy" />
+                        <Label layoutX="30.0" layoutY="159.0" text="Select Any Sublets From the List" />
+                        <Label layoutX="252.0" layoutY="214.0" text="*1 week = .25" textFill="#f50505" />
+                        <Button fx:id="submitBillAmount" layoutX="210.0" layoutY="271.0" mnemonicParsing="false" onAction="#submitBillButtonListener" prefHeight="53.0" prefWidth="170.0" text="Submit Bill Amount" />
                         <Label layoutX="45.0" layoutY="30.0" text="Date" />
                         <TextField fx:id="billDate" layoutX="82.0" layoutY="26.0" promptText="Enter Date" />
                         <Label layoutX="251.0" layoutY="30.0" text="*mm/yyyy" textFill="#ff0202" />

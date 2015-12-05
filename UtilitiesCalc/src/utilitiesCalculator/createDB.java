@@ -13,7 +13,7 @@ public class createDB {
 
 	public static void main(String[] args) {
 		
-		final boolean DROP_TABLE = false;
+		final boolean DROP_TABLE = true;
 		DatabaseUtility util = new DatabaseUtility();
 		
 		final String DB_URL = "jdbc:derby:db/UtilitiesCalc;create=true;";
@@ -21,27 +21,40 @@ public class createDB {
 		try{
 			
 			Connection conn = DriverManager.getConnection(DB_URL);
-			if(DROP_TABLE){
-				util.dropTable("tenant");
-				
-			}
-//			createTenantTable(conn, DROP_TABLE);
+//			if(DROP_TABLE){
+//				util.dropTable("tenant");
+//				
+//			}
+			createTenantTable(conn, DROP_TABLE);
 //			createBillMonthTable(conn, DROP_TABLE);
 //			createBillMonthPerTenant(conn, DROP_TABLE);
 //			createTenantTable(conn, DROP_TABLE);
-//			util.inputSampleTenantEntries();
+			util.inputSampleTenantEntries();
 //			
-			String updateTenant = String.format("UPDATE tenant SET active = %b"
-					+ " WHERE name = '%s'", true, "Telemundo Deltoro");
-			//test you]
-			util.modifyDatabase(updateTenant);
+//			String updateTenant = String.format("DELETE FROM tenant"
+//					+ " WHERE name = '%s'", "Telemundo Deltoro");
+//			//test you]
+//			util.modifyDatabase(updateTenant);
 			
 			
-			String test = String.format("SELECT * FROM tenant WHERE"
-					+ " name = '%s'", "Telemundo Deltoro");
-			Tenant tenant = util.fetchTenantSelection(test).get(0);
-			System.out.println(tenant.isActive());
+//			String getTenant = String.format("SELECT * FROM tenant WHERE name = '%s'",
+//					"Thomas Tutu");
+//			if(util.fetchTenantSelection(getTenant).get(0).isActive()){
+//				System.out.println("true");
+//			}else{
+//				System.out.println("false");
+//			}
+//			
+//			System.out.println(util.fetchTenantSelection(getTenant).size());
 			
+			
+			
+//			String test1 = String.format("SELECT * FROM tenant");
+//			String test = String.format("SELECT * FROM tenant WHERE"
+//					+ " name = '%s'", "Telemundo Deltoro");
+//			Tenant tenant = util.fetchTenantSelection(test1).get(0);
+//			System.out.println(util.fetchTenantSelection(test1).size());
+//			
 			
 			conn.close();
 		}catch(SQLException e){

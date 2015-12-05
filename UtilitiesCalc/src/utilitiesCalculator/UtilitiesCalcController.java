@@ -142,7 +142,7 @@ public class UtilitiesCalcController {
 	}
 
 	public void deleteTenantButtonListener() {
-
+		dbUtil.deleteTenant(tenantsList.getValue());
 	}
 
 	public void submitBillButtonListener() {
@@ -155,6 +155,17 @@ public class UtilitiesCalcController {
 
 	public void printReceiptButtonListener() {
 
+	}
+	
+	public void populateActiveStatus(){
+		String getTenant = String.format("SELECT * FROM tenant WHERE name = '%s'",
+				activeTenants.getValue());
+		
+		if(dbUtil.fetchTenantSelection(getTenant).get(0).isActive()){
+			activeTenantRadioButton.setSelected(true);
+		}else{
+			deactivateTenantRadioButton.setSelected(true);
+		}
 	}
 	
 	public void activateDeactivateButtonListener(){
@@ -196,8 +207,9 @@ public class UtilitiesCalcController {
 		tenants = FXCollections.observableArrayList();
 		for (int i = 0; i < allTenants.size(); i++) {
 			tenants.add(allTenants.get(i).getName());
-		}
-		this.tenantsList.setItems(tenants);
+			}
+		this.tenantsList.getItems().addAll(tenants);
+		this.activeTenants.getItems().addAll(tenants);
 	}
 
 	/**
@@ -206,8 +218,11 @@ public class UtilitiesCalcController {
 	private void queueUpTenantTypesComboBox() {
 		ObservableList<String> tenTypesList = FXCollections
 				.observableArrayList("Landlord", "Full Time Renter", "Sublet");
-		this.tenantTypeList.setItems(tenTypesList);
-		this.activeTenants.setItems(tenTypesList);
+		
+			this.tenantTypeList.getItems().addAll(tenTypesList);
+		
+//		this.tenantTypeList.setItems(tenTypesList);
+		
 	}
 
 }

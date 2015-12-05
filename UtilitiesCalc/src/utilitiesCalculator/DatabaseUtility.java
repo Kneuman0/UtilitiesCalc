@@ -184,12 +184,9 @@ public class DatabaseUtility {
 				result = stmt.executeQuery(SQLStatement);
 				int i = 0;
 				while(result.next()){
-					if(result.getBoolean(2)){
-						System.out.println("yes");
-					}else{
-						System.out.println("No");
-					}
+					
 					ten.add(new Tenant(result.getString(1), result.getBoolean(2), result.getString(3)));
+					ten.get(i++).getName();
 				}
 				
 				
@@ -327,6 +324,27 @@ public class DatabaseUtility {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+		
+		public void deleteTenant(String tenantName){
+			Connection conn = null;
+			String deleteTenant = String.format("DELETE FROM tenant"
+					+ " WHERE name = '%s'", "Telemundo Deltoro", tenantName);
+			try {
+				conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement();
+				stmt.executeUpdate(deleteTenant);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
