@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.apache.derby.iapi.store.raw.FetchDescriptor;
+
 public class createDB {
 
 	public static void main(String[] args) {
@@ -29,12 +31,16 @@ public class createDB {
 //			createTenantTable(conn, DROP_TABLE);
 //			util.inputSampleTenantEntries();
 //			
-			String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'";
-			ArrayList<Tenant> allTenants = util.fetchTenantSelection(allSubletTenants);
-			for(int i = 0; i < allTenants.size(); i++){
-				System.out.println(allTenants.get(i).getName());
-			}
+			String updateTenant = String.format("UPDATE tenant SET active = %b"
+					+ " WHERE name = '%s'", true, "Telemundo Deltoro");
+			//test you]
+			util.modifyDatabase(updateTenant);
 			
+			
+			String test = String.format("SELECT * FROM tenant WHERE"
+					+ " name = '%s'", "Telemundo Deltoro");
+			Tenant tenant = util.fetchTenantSelection(test).get(0);
+			System.out.println(tenant.isActive());
 			
 			
 			conn.close();
@@ -47,11 +53,12 @@ public class createDB {
 	private static void createTenantTable(Connection conn, boolean input) throws SQLException {
 		Statement stmt = conn.createStatement();
 		if(input){
-			try 
-			{
+			try{
+				
 				String dropTable = "drop table Tenant";
 				stmt.execute(dropTable);
 				System.out.println("Tenant table dropped.");
+				
 			} catch (Exception e) {
 				
 				System.out.println("Tenant table does not exist");

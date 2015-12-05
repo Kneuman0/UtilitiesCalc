@@ -7,21 +7,23 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 
 public class UtilitiesCalcController {
 
-//	@FXML
-//	private TableColumn<Tenant, String> tenantName;
-//
-//	@FXML
-//	private TableColumn<Tenant, String> tenantColumn;
-//
-//	@FXML
-//	private TableView<Tenant> table;
+	// @FXML
+	// private TableColumn<Tenant, String> tenantName;
+	//
+	// @FXML
+	// private TableColumn<Tenant, String> tenantColumn;
+	//
+	// @FXML
+	// private TableView<Tenant> table;
 
 	@FXML
 	private ComboBox<String> subletTenantList;
@@ -89,40 +91,30 @@ public class UtilitiesCalcController {
 	@FXML
 	private Button printReceiptButton;
 
-	ObservableList<String> tenants;
+	@FXML
+	private ToggleGroup activeTenant;
 
+	@FXML
+	private RadioButton deactivateTenantRadioButton;
+	
+	@FXML
+    private RadioButton activeTenantRadioButton;
+	
+	@FXML
+    private ComboBox<String> activeTenants;
+	
+	@FXML
+    private Button activateDeactivateButton;
+
+	ObservableList<String> tenants;
+	ObservableList<String> subs;
 	DatabaseUtility dbUtil;
 
 	public void initialize() {
 		dbUtil = new DatabaseUtility();
-//		// If these values will never be editied by the user we can keep them
-//		// the way they are
-//		// if we choose to make them editable, we should cue them up from the DB
-//		// and add the changes to the DB
-		ObservableList<String> tenTypesList = FXCollections.observableArrayList(
-				"Landlord", "Full Time Renter", "Sublet");
-		this.tenantTypeList.setItems(tenTypesList);
-
-//		// Queue up Tenants ComboBox
-		String allTenantsSQL = "SELECT * FROM tenant";
-		ArrayList<Tenant> allTenants = dbUtil
-				.fetchTenantSelection(allTenantsSQL);
-		tenants = FXCollections.observableArrayList();
-		for (int i = 0; i < allTenants.size(); i++) {
-			tenants.add(allTenants.get(i).getName());
-		}
-		this.tenantsList.setItems(tenants);
-
-		// Queue up sublets ComboBox
-		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'";
-		ArrayList<Tenant> sublets = dbUtil
-				.fetchTenantSelection(allSubletTenants);
-		ObservableList<String> subs = FXCollections.observableArrayList();
-		for (int i = 0; i < sublets.size(); i++) {
-			subs.add(sublets.get(i).getName());
-		}
-		this.subletTenantList.setItems(subs);
-//		
+		queueUpTenantTypesComboBox();
+		queueUpTenantComboBox();
+		queueUpSubletComboBox();
 
 	}
 
@@ -148,21 +140,74 @@ public class UtilitiesCalcController {
 		// dbUtil.addHouseInfo(house);
 
 	}
-	
-	public void deleteTenantButtonListener(){
-		
+
+	public void deleteTenantButtonListener() {
+
+	}
+
+	public void submitBillButtonListener() {
+
+	}
+
+	public void saveOccupancyButtonListener() {
+
+	}
+
+	public void printReceiptButtonListener() {
+
 	}
 	
-	public void submitBillButtonListener(){
-		
+	public void activateDeactivateButtonListener(){
+		String updateTenant = String.format("UPDATE tenant SET active = %b"
+				+ " WHERE name = '%s'", this.activeTenantRadioButton.isSelected(),
+				this.activeTenants.getValue());
+		dbUtil.modifyDatabase(updateTenant);
 	}
 	
-	public void saveOccupancyButtonListener(){
-		
-	}
 	
-	public void printReceiptButtonListener(){
-		
+	
+	
+//----------------------------------controller utility methods-----------------------------------------------
+
+	/**
+	 * Loads all tenant names into the combo box that have tenant type of
+	 * 'sublet'
+	 */
+	public void queueUpSubletComboBox() {
+
+		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'";
+		ArrayList<Tenant> sublets = dbUtil
+				.fetchTenantSelection(allSubletTenants);
+		subs = FXCollections.observableArrayList();
+		for (int i = 0; i < sublets.size(); i++) {
+			subs.add(sublets.get(i).getName());
+		}
+		this.subletTenantList.setItems(subs);
+	}
+
+	/**
+	 * Loads all tenant names into the tenant combo box
+	 */
+	public void queueUpTenantComboBox() {
+
+		String allTenantsSQL = "SELECT * FROM tenant";
+		ArrayList<Tenant> allTenants = dbUtil
+				.fetchTenantSelection(allTenantsSQL);
+		tenants = FXCollections.observableArrayList();
+		for (int i = 0; i < allTenants.size(); i++) {
+			tenants.add(allTenants.get(i).getName());
+		}
+		this.tenantsList.setItems(tenants);
+	}
+
+	/**
+	 * Loads the constant values "Landlord", "Full Time Renter", "Sublet"
+	 */
+	private void queueUpTenantTypesComboBox() {
+		ObservableList<String> tenTypesList = FXCollections
+				.observableArrayList("Landlord", "Full Time Renter", "Sublet");
+		this.tenantTypeList.setItems(tenTypesList);
+		this.activeTenants.setItems(tenTypesList);
 	}
 
 }

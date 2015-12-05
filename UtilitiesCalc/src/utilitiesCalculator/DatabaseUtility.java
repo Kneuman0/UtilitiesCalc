@@ -117,6 +117,27 @@ public class DatabaseUtility {
 	    	}
 		}
 		
+		public void modifyDatabase(String SQLStatement){
+			Connection conn = null;
+    		
+			try {
+				conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement();
+				stmt.executeUpdate(SQLStatement);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 				
 		/**
 		 * Inserts 5 sample rows into the database, one with the name Kyle Neuman
@@ -163,7 +184,11 @@ public class DatabaseUtility {
 				result = stmt.executeQuery(SQLStatement);
 				int i = 0;
 				while(result.next()){
-					System.out.println(i++);
+					if(result.getBoolean(2)){
+						System.out.println("yes");
+					}else{
+						System.out.println("No");
+					}
 					ten.add(new Tenant(result.getString(1), result.getBoolean(2), result.getString(3)));
 				}
 				
