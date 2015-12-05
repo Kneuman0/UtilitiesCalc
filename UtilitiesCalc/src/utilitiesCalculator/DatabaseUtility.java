@@ -44,8 +44,8 @@ public class DatabaseUtility {
 	    		
 	    		Statement stmt = conn.createStatement();
 	    		
-	    		String insertHouse = "insert into house (address, numRooms, sqFt)"
-	    				+ String.format(" values (%d, '%d','%d')" , house.getAddress(),
+	    		String insertHouse = "INSERT INTO house (address, numRooms, sqFt)"
+	    				+ String.format(" values ('%s', %d, %d)" , house.getAddress(),
 	    						house.getNumRooms(), house.getNumRooms());
 	    		
 	    		stmt.execute(insertHouse);

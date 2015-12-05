@@ -71,19 +71,19 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="5.0" layoutY="146.0" prefHeight="27.0" prefWidth="100.0" text="Num of rooms:">
+                                    <Label layoutX="5.0" layoutY="203.0" prefHeight="27.0" prefWidth="100.0" text="Num of rooms:">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
                                     <TextField fx:id="addressInput" layoutX="121.0" layoutY="55.0" promptText="1234 Main Street Rd." />
-                                    <TextField fx:id="numberOfRooms" layoutX="121.0" layoutY="147.0" />
-                                    <Label layoutX="4.0" layoutY="197.0" prefHeight="27.0" prefWidth="102.0" text="Square Footage:">
+                                    <TextField fx:id="numberOfRooms" layoutX="121.0" layoutY="204.0" />
+                                    <Label layoutX="4.0" layoutY="135.0" prefHeight="27.0" prefWidth="102.0" text="Square Footage:">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="numberOfRooms1" layoutX="121.0" layoutY="198.0" />
+                                    <TextField fx:id="squareFootage" layoutX="121.0" layoutY="136.0" />
                                     <Label alignment="CENTER" layoutX="216.0" layoutY="14.0" prefHeight="28.0" prefWidth="143.0" style="-fx-font-weight: bold;" text="General Information">
                                        <font>
                                           <Font size="14.0" />

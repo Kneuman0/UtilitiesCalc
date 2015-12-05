@@ -14,6 +14,7 @@ public class createDB {
 	public static void main(String[] args) {
 		
 		final boolean DROP_TABLE = true;
+		final boolean RESET_DATABSE = false;
 		DatabaseUtility util = new DatabaseUtility();
 		
 		final String DB_URL = "jdbc:derby:db/UtilitiesCalc;create=true;";
@@ -25,18 +26,21 @@ public class createDB {
 //				util.dropTable("tenant");
 //				
 //			}
-//			createTenantTable(conn, DROP_TABLE);
-//			createBillMonthTable(conn, DROP_TABLE);
-//			createBillMonthPerTenant(conn, DROP_TABLE);
-//			createTenantTable(conn, DROP_TABLE);
-//			util.inputSampleTenantEntries();
-//			
-//			
-					
-			String addTenant = String.format("SELECT * FROM tenant WHERE name = '%s'",
-					"Thomas Tutu");
-//			
+			if(RESET_DATABSE){
+			createHouseTable(conn, DROP_TABLE);
+			createBillMonthTable(conn, DROP_TABLE);
+			createBillMonthPerTenant(conn, DROP_TABLE);
+			createTenantTable(conn, DROP_TABLE);
+			util.inputSampleTenantEntries();
+			}
 			
+			
+					
+//			String addTenant = String.format("SELECT * FROM tenant WHERE name = '%s'",
+//					"Thomas Tutu");
+//			
+			House house = new House("1200 turdButt ct.", 7600, 5);
+			util.addHouseInfo(house);
 			
 			
 			String test1 = String.format("SELECT * FROM tenant");
