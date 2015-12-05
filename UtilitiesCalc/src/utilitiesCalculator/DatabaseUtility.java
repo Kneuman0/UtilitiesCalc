@@ -20,8 +20,9 @@ public class DatabaseUtility {
 				
 				Connection conn = DriverManager.getConnection(DB_URL);
 	    		Statement stmt = conn.createStatement();
-	    		String insertTenant = "insert into tenant (name)"
-	    				+ String.format(" values (%s)" , tenant.getName());
+	    		String insertTenant = "INSERT INTO tenant (name, active, tenantType)"
+	    				+ String.format(" values ('%s', %b, '%s')" , tenant.getName(),
+	    						tenant.isActive(), tenant.tenantType);
 	    		
 	    		stmt.execute(insertTenant);
 	    		

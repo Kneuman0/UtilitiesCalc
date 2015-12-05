@@ -25,33 +25,26 @@ public class createDB {
 //				util.dropTable("tenant");
 //				
 //			}
-			createTenantTable(conn, DROP_TABLE);
+//			createTenantTable(conn, DROP_TABLE);
 //			createBillMonthTable(conn, DROP_TABLE);
 //			createBillMonthPerTenant(conn, DROP_TABLE);
 //			createTenantTable(conn, DROP_TABLE);
-			util.inputSampleTenantEntries();
+//			util.inputSampleTenantEntries();
 //			
 //			
-			
-			
-//			String getTenant = String.format("SELECT * FROM tenant WHERE name = '%s'",
-//					"Thomas Tutu");
-//			if(util.fetchTenantSelection(getTenant).get(0).isActive()){
-//				System.out.println("true");
-//			}else{
-//				System.out.println("false");
-//			}
+					
+			String addTenant = String.format("SELECT * FROM tenant WHERE name = '%s'",
+					"Thomas Tutu");
 //			
-//			System.out.println(util.fetchTenantSelection(getTenant).size());
 			
 			
 			
-//			String test1 = String.format("SELECT * FROM tenant");
+			String test1 = String.format("SELECT * FROM tenant");
 //			String test = String.format("SELECT * FROM tenant WHERE"
 //					+ " name = '%s'", "Telemundo Deltoro");
 //			Tenant tenant = util.fetchTenantSelection(test1).get(0);
 //			util.deleteTenant("Kyle Cricketface");
-//			System.out.println(util.fetchTenantSelection(test1).size());
+			System.out.println(util.fetchTenantSelection(test1).size());
 //			
 			
 			conn.close();

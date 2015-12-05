@@ -28,7 +28,7 @@
                         <Label layoutX="41.0" layoutY="307.0" text="Delete Tenant" />
                         <ComboBox fx:id="tenantsList" layoutX="37.0" layoutY="332.0" prefWidth="150.0" promptText="Tenants" />
                         <Label layoutX="204.0" layoutY="336.0" text="*Tenants cannot be undeleted!" textFill="#f80101" />
-                        <ComboBox fx:id="tenantTypeList" layoutX="225.0" layoutY="113.0" onAction="#populateActiveStatus" prefWidth="150.0" promptText="Tenant Type" />
+                        <ComboBox fx:id="tenantTypeList" layoutX="225.0" layoutY="113.0" prefWidth="150.0" promptText="Tenant Type" />
                         <Button fx:id="deleteTenant" layoutX="405.0" layoutY="332.0" mnemonicParsing="false" onAction="#deleteTenantButtonListener" text="DELETE" />
                         <Label layoutX="41.0" layoutY="368.0" text="Activate/Deactivate Tenant" />
                         <ComboBox fx:id="activeTenants" layoutX="37.0" layoutY="385.0" onAction="#populateActiveStatus" prefWidth="150.0" promptText="Tenants" />
@@ -40,6 +40,12 @@
                         <RadioButton fx:id="deactivateTenantRadioButton" layoutX="301.0" layoutY="389.0" mnemonicParsing="false" text="Deactivate" toggleGroup="$activeTenant" />
                         <Button fx:id="activateDeactivateButton" layoutX="407.0" layoutY="385.0" mnemonicParsing="false" onAction="#activateDeactivateButtonListener" text="Activate/Deactivate" />
                         <Label fx:id="userMessageLabelTenant" alignment="CENTER" layoutX="95.0" layoutY="240.0" prefHeight="60.0" prefWidth="381.0" textFill="#f80303" wrapText="true" />
+                        <RadioButton fx:id="newTenantActiveRadioButton" layoutX="389.0" layoutY="117.0" mnemonicParsing="false" selected="true" text="Active">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="initalTenantActive" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="newTenantInactiveRadioButton" layoutX="460.0" layoutY="117.0" mnemonicParsing="false" text="Inactive" toggleGroup="$initalTenantActive" />
                      </children></AnchorPane>
             </content>
           </Tab>

@@ -109,6 +109,15 @@ public class UtilitiesCalcController {
 	
 	@FXML
     private Label userMessageLabelTenant;
+	
+	@FXML
+    private RadioButton newTenantInactiveRadioButton;
+	
+	@FXML
+    private RadioButton newTenantActiveRadioButton;
+	
+	@FXML
+    private ToggleGroup initalTenantActive;
 
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
@@ -123,37 +132,22 @@ public class UtilitiesCalcController {
 	}
 
 	public void addTenantButtonListener() {
-		// String tenant = nameTextBox.getText();
-		// double sqftOfRoom = Double.parseDouble(this.roomSize.getText());
-		// Tenant newTenant = new Tenant(tenant, sqftOfRoom);
-		// // String addTenant = "SQL code to add new tenant";
-		// // methodThatAddsANewTenantToDB();
-		// tenants.add(newTenant);
-
-		// DatabaseUtility addTenant = new DatabaseUtility();
-		// addTenant.addTenant(nameTextBox.getText(), position, payRate, ID);
+		Tenant tenant = new Tenant(nameTextBox.getText(), 
+				newTenantActiveRadioButton.isSelected(), tenantTypeList.getValue());
+		dbUtil.addTenant(tenant);
+		resetComboBoxes();
 
 	}
 
 	public void addHouseInfoListener() {
-		// House house = new House(addressInput.getText(),
-		// buildingType.getValue(),
-		// Integer.parseInt(numberOfRooms.getText()),
-		// Integer.parseInt(numOfTenants.getText()),
-		// fullTimeBtn.isSelected());
-		// dbUtil.addHouseInfo(house);
-
+		
 	}
 
 	public void deleteTenantButtonListener() {
 		String deleteTen = tenantsList.getValue();
 		dbUtil.deleteTenant(deleteTen);
 		userMessageLabelTenant.setText(String.format("%s has been deleted from the database!", deleteTen));
-		tenantsList.getItems().setAll(FXCollections.observableArrayList());
-		activeTenants.getItems().setAll(FXCollections.observableArrayList());
-		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
-		queueUpSubletComboBox();
-		queueUpTenantComboBox();
+		resetComboBoxes();
 		
 		}
 
@@ -235,6 +229,14 @@ public class UtilitiesCalcController {
 		
 //		this.tenantTypeList.setItems(tenTypesList);
 		
+	}
+	
+	public void resetComboBoxes(){
+		tenantsList.getItems().setAll(FXCollections.observableArrayList());
+		activeTenants.getItems().setAll(FXCollections.observableArrayList());
+		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
+		queueUpSubletComboBox();
+		queueUpTenantComboBox();
 	}
 
 }
