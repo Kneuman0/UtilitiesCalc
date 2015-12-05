@@ -38,7 +38,8 @@
                            </toggleGroup>
                         </RadioButton>
                         <RadioButton fx:id="deactivateTenantRadioButton" layoutX="301.0" layoutY="389.0" mnemonicParsing="false" text="Deactivate" toggleGroup="$activeTenant" />
-                        <Button fx:id="activateDeactivateButton" layoutX="407.0" layoutY="385.0" mnemonicParsing="false" text="Activate/Deactivate" />
+                        <Button fx:id="activateDeactivateButton" layoutX="407.0" layoutY="385.0" mnemonicParsing="false" onAction="#activateDeactivateButtonListener" text="Activate/Deactivate" />
+                        <Label fx:id="userMessageLabelTenant" alignment="CENTER" layoutX="95.0" layoutY="240.0" prefHeight="60.0" prefWidth="381.0" textFill="#f80303" wrapText="true" />
                      </children></AnchorPane>
             </content>
           </Tab>

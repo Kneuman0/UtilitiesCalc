@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
@@ -105,6 +106,9 @@ public class UtilitiesCalcController {
 	
 	@FXML
     private Button activateDeactivateButton;
+	
+	@FXML
+    private Label userMessageLabelTenant;
 
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
@@ -142,8 +146,16 @@ public class UtilitiesCalcController {
 	}
 
 	public void deleteTenantButtonListener() {
-		dbUtil.deleteTenant(tenantsList.getValue());
-	}
+		String deleteTen = tenantsList.getValue();
+		dbUtil.deleteTenant(deleteTen);
+		userMessageLabelTenant.setText(String.format("%s has been deleted from the database!", deleteTen));
+		tenantsList.getItems().setAll(FXCollections.observableArrayList());
+		activeTenants.getItems().setAll(FXCollections.observableArrayList());
+		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
+		queueUpSubletComboBox();
+		queueUpTenantComboBox();
+		
+		}
 
 	public void submitBillButtonListener() {
 
@@ -185,7 +197,7 @@ public class UtilitiesCalcController {
 	 * 'sublet'
 	 */
 	public void queueUpSubletComboBox() {
-
+		
 		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'";
 		ArrayList<Tenant> sublets = dbUtil
 				.fetchTenantSelection(allSubletTenants);
@@ -200,7 +212,7 @@ public class UtilitiesCalcController {
 	 * Loads all tenant names into the tenant combo box
 	 */
 	public void queueUpTenantComboBox() {
-
+		
 		String allTenantsSQL = "SELECT * FROM tenant";
 		ArrayList<Tenant> allTenants = dbUtil
 				.fetchTenantSelection(allTenantsSQL);

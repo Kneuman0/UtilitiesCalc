@@ -330,7 +330,7 @@ public class DatabaseUtility {
 		public void deleteTenant(String tenantName){
 			Connection conn = null;
 			String deleteTenant = String.format("DELETE FROM tenant"
-					+ " WHERE name = '%s'", "Telemundo Deltoro", tenantName);
+					+ " WHERE name = '%s'", tenantName);
 			try {
 				conn = DriverManager.getConnection(DB_URL);
 				Statement stmt = conn.createStatement();

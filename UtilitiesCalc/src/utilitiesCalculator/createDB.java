@@ -31,10 +31,7 @@ public class createDB {
 //			createTenantTable(conn, DROP_TABLE);
 			util.inputSampleTenantEntries();
 //			
-//			String updateTenant = String.format("DELETE FROM tenant"
-//					+ " WHERE name = '%s'", "Telemundo Deltoro");
-//			//test you]
-//			util.modifyDatabase(updateTenant);
+//			
 			
 			
 //			String getTenant = String.format("SELECT * FROM tenant WHERE name = '%s'",
@@ -53,6 +50,7 @@ public class createDB {
 //			String test = String.format("SELECT * FROM tenant WHERE"
 //					+ " name = '%s'", "Telemundo Deltoro");
 //			Tenant tenant = util.fetchTenantSelection(test1).get(0);
+//			util.deleteTenant("Kyle Cricketface");
 //			System.out.println(util.fetchTenantSelection(test1).size());
 //			
 			
