@@ -125,6 +125,9 @@ public class UtilitiesCalcController {
 	DatabaseUtility dbUtil;
 	ArrayList<Tenant> utilityParticipants;
 
+	/**
+	 * Tested/working
+	 */
 	public void initialize() {
 		dbUtil = new DatabaseUtility();
 		utilityParticipants = new ArrayList<Tenant>();
@@ -136,6 +139,9 @@ public class UtilitiesCalcController {
 
 	}
 
+	/**
+	 * Tested/working
+	 */
 	public void addTenantButtonListener() {
 		Tenant tenant = new Tenant(nameTextBox.getText(),
 				newTenantActiveRadioButton.isSelected(),
@@ -145,6 +151,9 @@ public class UtilitiesCalcController {
 
 	}
 
+	/**
+	 * Tested/working
+	 */
 	public void addHouseInfoListener() {
 		House house = new House(addressInput.getText(),
 				Integer.parseInt(squareFootage.getText()),
@@ -153,6 +162,7 @@ public class UtilitiesCalcController {
 	}
 
 	/**
+	 * Tested/working
 	 * Need to figure out how to delete all bills by this tenant as well
 	 */
 	public void deleteTenantButtonListener() {
@@ -165,7 +175,7 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Uses String.split (StringTokenizer)
+	 * Needs testing
 	 */
 	public void submitBillButtonListener() {
 		utilityParticipants.add(new Sublet("Jake", true)); 
@@ -175,17 +185,23 @@ public class UtilitiesCalcController {
 		
 		double amtPerTen = getAmountPerTenant();
 		ArrayList<BillPerTenant> thisMonthsTenants = new ArrayList<BillPerTenant>();
+		
+		// creates an arraylist of BillPerTenant objects and passes it to addBillPerTenantEntry
+		//which adds it to the database
 		for(int i = 0; i < utilityParticipants.size(); i++){
 			double tenantBill = amtPerTen * utilityParticipants.get(i).getFte();
-			thisMonthsTenants.add(new BillPerTenant(billMonthID(modifyBillDate()), houseID()
-					, utilityParticipants.get(i).getFte(), utilityParticipants.get(i).getName()
-					, tenantID(utilityParticipants.get(i).getName())));
+			thisMonthsTenants.add(new BillPerTenant(billMonthID(modifyBillDate()), houseID(),
+					tenantBill, utilityParticipants.get(i).getName(),
+					tenantID(utilityParticipants.get(i).getName())));
 		}
 		
 		dbUtil.addBillPerTenantEntry(thisMonthsTenants);
 		
 	}
 
+	/**
+	 * Needs Testing
+	 */
 	public void saveOccupancyButtonListener() {
 
 		modifyTenantFTE();
@@ -196,6 +212,9 @@ public class UtilitiesCalcController {
 
 	}
 
+	/**
+	 * Tested and working
+	 */
 	public void populateActiveStatus() {
 		String getTenant = String.format(
 				"SELECT * FROM tenant WHERE name = '%s'",
@@ -208,6 +227,9 @@ public class UtilitiesCalcController {
 		}
 	}
 
+	/**
+	 * Tested/working
+	 */
 	public void activateDeactivateButtonListener() {
 		String updateTenant = String.format("UPDATE tenant SET active = %b"
 				+ " WHERE name = '%s'",
@@ -401,6 +423,8 @@ public class UtilitiesCalcController {
 	
 	/**
 	 * returns the house ID of the first house in the db. assumes only 1 house exists in DB
+	 * 
+	 * will be modified to accept an address that will be stored in a combobox in the GUI
 	 * @return
 	 */
 	public int houseID(){

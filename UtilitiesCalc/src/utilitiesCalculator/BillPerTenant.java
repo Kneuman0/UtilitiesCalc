@@ -13,14 +13,14 @@ public class BillPerTenant {
 	 * fte. I presume this object will be stored in an arraylist which will be passed to the database
 	 * utility method to storage
 	 * @param tenantType
-	 * @param fte
+	 * @param bill
 	 * @param tenantName
 	 */
-	public BillPerTenant(int billMonth_ID, int house_ID, double fte, String tenantName, int tenant_ID){
+	public BillPerTenant(int billMonth_ID, int house_ID, double bill, String tenantName, int tenant_ID){
 		this.billMonth_ID = billMonth_ID;
 		this.house_ID = house_ID;
 		this.tenantName = tenantName;
-		this.fte = fte;
+		this.bill = bill;
 		this.tenant_ID = tenant_ID;
 	}
 
@@ -67,6 +67,8 @@ public class BillPerTenant {
 		this.tenant_ID = tenant_ID;
 	}
 
+	
+
 	/**
 	 * @return the fte
 	 */
@@ -74,12 +76,14 @@ public class BillPerTenant {
 		return fte;
 	}
 
+
 	/**
 	 * @param fte the fte to set
 	 */
 	public void setFte(double fte) {
 		this.fte = fte;
 	}
+
 
 	/**
 	 * @return the tenantName
