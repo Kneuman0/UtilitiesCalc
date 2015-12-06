@@ -86,24 +86,24 @@ public class DatabaseUtility {
 		 * @param billPerTenant
 		 * @param billMonth
 		 */
-		public void addBillPerTenantEntry(BillPerTenant billPerTenant, BillMonth billMonth){
+		public void addBillPerTenantEntry(ArrayList<BillPerTenant> thisMonthsTenants){
 
 			try {
 	    		Connection conn = DriverManager.getConnection(DB_URL);
 	    		
 	    		Statement stmt = conn.createStatement();
-	    		String getTenantID = String.format("SELECT tenant_ID FROM tenant WHERE name = '%s'",
-	    				billPerTenant.getTenantName());
-	    		Tenant tenant =  fetchTenantSelection(getTenantID).get(0);
-	    		String getBillMonthID = String.format("SELECT billMonth_ID FROM billMonth"
-	    				+ "WHERE date = '%s'", billMonth.getDate());
-	    		BillMonth bm = fetchBillMonth(getBillMonthID).get(0);
-	    		
-	    		String getHouse = String.format("SELECT * FROM house");
-	    		ResultSet result = stmt.executeQuery(getHouse);
-	    		
-	    		double bill = (billMonth.getFossilFuelBill() + billMonth.getElectricityBill()
-	    				+ billMonth.getOtherBill()) * billPerTenant.getFte();
+//	    		String getTenantID = String.format("SELECT tenant_ID FROM tenant WHERE name = '%s'",
+//	    				billPerTenant.getTenantName());
+//	    		Tenant tenant =  fetchTenantSelection(getTenantID).get(0);
+//	    		String getBillMonthID = String.format("SELECT billMonth_ID FROM billMonth"
+//	    				+ "WHERE date = '%s'", billMonth.getDate());
+//	    		BillMonth bm = fetchBillMonth(getBillMonthID).get(0);
+//	    		
+//	    		String getHouse = String.format("SELECT * FROM house");
+//	    		ResultSet result = stmt.executeQuery(getHouse);
+//	    		
+//	    		double bill = (billMonth.getFossilFuelBill() + billMonth.getElectricityBill()
+//	    				+ billMonth.getOtherBill()) * billPerTenant.getFte();
 	    		
 //	    		String insertBillPerTenant = "insert into billingMonth(date, numRooms, sqFt)"
 //	    				+ String.format(" values ('%s', %.2f, %.2f,%.2f)" , bm.getDate(), result.getString(4),
@@ -186,7 +186,8 @@ public class DatabaseUtility {
 				int i = 0;
 				while(result.next()){
 					
-					ten.add(new Tenant(result.getString(1), result.getBoolean(2), result.getString(3)));
+					ten.add(new Tenant(result.getString(1), result.getBoolean(2), 
+							result.getString(3), result.getInt(4)));
 					ten.get(i++).getName();
 				}
 				
@@ -219,7 +220,7 @@ public class DatabaseUtility {
 				Statement stmt = conn.createStatement();
 				result = stmt.executeQuery(SQLStatement);
 				while(result.next()){
-					hou.add(new House(result.getString(1), result.getInt(2), result.getInt(3)));
+					hou.add(new House(result.getString(1), result.getInt(2), result.getInt(3), result.getInt(4)));
 				}
 				
 			} catch (SQLException e) {
@@ -249,7 +250,8 @@ public class DatabaseUtility {
 				Statement stmt = conn.createStatement();
 				result = stmt.executeQuery(SQLStatement);
 				while(result.next()){
-					bm.add(new BillMonth(result.getString(1), result.getInt(2), result.getInt(3), result.getInt(4)));
+					bm.add(new BillMonth(result.getString(1), result.getInt(2),
+							result.getInt(3), result.getInt(4), result.getInt(5)));
 				}
 				
 			} catch (SQLException e) {

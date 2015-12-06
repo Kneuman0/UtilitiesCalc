@@ -1,7 +1,9 @@
 package utilitiesCalculator;
 
 public class BillPerTenant {
-	private String tenantType;
+	private int billMonth_ID;
+	private int house_ID;
+	private int tenant_ID;
 	private double fte;
 	private String tenantName;
 	private double bill;
@@ -14,24 +16,55 @@ public class BillPerTenant {
 	 * @param fte
 	 * @param tenantName
 	 */
-	public BillPerTenant(String tenantType, double fte, String tenantName){
-		this.tenantType = tenantType;
+	public BillPerTenant(int billMonth_ID, int house_ID, double fte, String tenantName, int tenant_ID){
+		this.billMonth_ID = billMonth_ID;
+		this.house_ID = house_ID;
 		this.tenantName = tenantName;
 		this.fte = fte;
+		this.tenant_ID = tenant_ID;
+	}
+
+	
+	/**
+	 * @return the billMonth_ID
+	 */
+	public int getBillMonth_ID() {
+		return billMonth_ID;
 	}
 
 	/**
-	 * @return the tenantType
+	 * @param billMonth_ID the billMonth_ID to set
 	 */
-	public String getTenantType() {
-		return tenantType;
+	public void setBillMonth_ID(int billMonth_ID) {
+		this.billMonth_ID = billMonth_ID;
 	}
 
 	/**
-	 * @param tenantType the tenantType to set
+	 * @return the house_ID
 	 */
-	public void setTenantType(String tenantType) {
-		this.tenantType = tenantType;
+	public int getHouse_ID() {
+		return house_ID;
+	}
+
+	/**
+	 * @param house_ID the house_ID to set
+	 */
+	public void setHouse_ID(int house_ID) {
+		this.house_ID = house_ID;
+	}
+
+	/**
+	 * @return the tenant_ID
+	 */
+	public int getTenant_ID() {
+		return tenant_ID;
+	}
+
+	/**
+	 * @param tenant_ID the tenant_ID to set
+	 */
+	public void setTenant_ID(int tenant_ID) {
+		this.tenant_ID = tenant_ID;
 	}
 
 	/**
@@ -75,7 +108,7 @@ public class BillPerTenant {
 	public void setBill(double bill) {
 		this.bill = bill;
 	}
-	
+
 	
 	
 }

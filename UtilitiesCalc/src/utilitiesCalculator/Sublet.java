@@ -2,28 +2,13 @@ package utilitiesCalculator;
 
 public class Sublet extends Tenant {
 	
-	double fte;
-	
-	
 	public Sublet(String name, boolean active) {
-		super(name, active, "Sublet");
-		this.fte = 1;
+		super(name, active, "Sublet", 1);
+		
 	}
-
-
-	/**
-	 * @return the fte
-	 */
-	public double getFte() {
-		return fte;
+	
+	public Sublet(String name, boolean active, int tenant_ID) {
+		super(name, active, "Sublet", 1, tenant_ID);
+		
 	}
-
-
-	/**
-	 * @param fte the fte to set
-	 */
-	public void setFte(double fte) {
-		this.fte = fte;
-	}
-
 }

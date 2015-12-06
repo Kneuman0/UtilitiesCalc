@@ -5,6 +5,7 @@ public class BillMonth {
 	private double fossilFuelBill;
 	private double electricityBill;
 	private double otherBill;
+	private int billMonth_ID;
 	
 	public BillMonth(String date, double fossilFuelBill, double electricityBill, double otherBill){
 		this.date = date;
@@ -13,8 +14,30 @@ public class BillMonth {
 		this.otherBill = otherBill;
 	}
 	
+	public BillMonth(String date, double fossilFuelBill, double electricityBill, double otherBill, int billMonth_ID){
+		this.date = date;
+		this.fossilFuelBill = fossilFuelBill;
+		this.electricityBill = electricityBill;
+		this.otherBill = otherBill;
+		this.billMonth_ID = billMonth_ID;
+	}
 	
 	
+	
+	/**
+	 * @return the billMonth_ID
+	 */
+	public int getBillMonth_ID() {
+		return billMonth_ID;
+	}
+
+	/**
+	 * @param billMonth_ID the billMonth_ID to set
+	 */
+	public void setBillMonth_ID(int billMonth_ID) {
+		this.billMonth_ID = billMonth_ID;
+	}
+
 	/**
 	 * @return the date
 	 */
