@@ -40,9 +40,14 @@ public class createDB {
 			}
 			//-----------------StartTest-----------------------------------
 			
-			String testID = "SELECT * FROM tenant";
+			ArrayList<BillPerTenant> bpt = new ArrayList<BillPerTenant>();
+			bpt.add(new BillPerTenant(1, 1, .25, 83.45, 5));
+			util.addBillPerTenantEntry(bpt);
+			
+			
+			String testID = "SELECT * FROM billPerTenant";
 			for(int i = 0; i < util.fetchTenantSelection(testID).size(); i++){
-				System.out.println(util.fetchTenantSelection(testID).get(i).getTenant_ID());
+				System.out.println(util.fetchBillPerMonth(testID).get(i).getBill());
 			}
 			
 			

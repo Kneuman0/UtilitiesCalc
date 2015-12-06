@@ -103,37 +103,21 @@ public class DatabaseUtility {
 			Connection conn = DriverManager.getConnection(DB_URL);
 
 			Statement stmt = conn.createStatement();
-			// String getTenantID =
-			// String.format("SELECT tenant_ID FROM tenant WHERE name = '%s'",
-			// billPerTenant.getTenantName());
-			// Tenant tenant = fetchTenantSelection(getTenantID).get(0);
-			// String getBillMonthID =
-			// String.format("SELECT billMonth_ID FROM billMonth"
-			// + "WHERE date = '%s'", billMonth.getDate());
-			// BillMonth bm = fetchBillMonth(getBillMonthID).get(0);
-			//
-			// String getHouse = String.format("SELECT * FROM house");
-			// ResultSet result = stmt.executeQuery(getHouse);
-			//
-			// double bill = (billMonth.getFossilFuelBill() +
-			// billMonth.getElectricityBill()
-			// + billMonth.getOtherBill()) * billPerTenant.getFte();
-
-			// String insertBillPerTenant =
-			// "insert into billingMonth(date, numRooms, sqFt)"
-			// + String.format(" values ('%s', %.2f, %.2f,%.2f)" , bm.getDate(),
-			// result.getString(4),
-			// billPerTenant.getTenantType(), billPerTenant.getFte(),
-			// );
-			//
-			// stmt.execute(insertBillPerTenant);
-
-			for (int i = 0; i < thisMonthsTenants.size(); i++) {
-				System.out.println(String.format(
-						"Tenant_ID: %d\nBill: %.2f\nFTE: %.2f\n---------------\n",
-						thisMonthsTenants.get(i).getTenant_ID(),
-						thisMonthsTenants.get(i).getBill(),	thisMonthsTenants.get(i).getFte()));
+			for(int i = 0; i < thisMonthsTenants.size(); i++){
+				String inserBillPerTenant = String.format("INSERT INTO billPerTenant("
+						+ " billingMonth_ID, house_ID, fte, bill, tenant_ID)"
+						+ " VALUES(%d, %d, %f, %.2f, %d)",
+						thisMonthsTenants.get(i).getBillMonth_ID(),
+						thisMonthsTenants.get(i).getHouse_ID(),
+						thisMonthsTenants.get(i).getFte(),
+						thisMonthsTenants.get(i).getBill(),
+						thisMonthsTenants.get(i).getTenant_ID());
+				stmt.execute(inserBillPerTenant);
 			}
+			//
+			// 
+
+			
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -346,9 +330,9 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				// bpt.add(new BillPerTenant(result.getString(1),
-				// result.getDouble(2), result.getString(3),
-				// result.getDouble(4)));
+				 bpt.add(new BillPerTenant(result.getInt(1),
+				 result.getInt(2), result.getDouble(3),
+				 result.getDouble(4), result.getInt(5)));
 			}
 
 		} catch (SQLException e) {
