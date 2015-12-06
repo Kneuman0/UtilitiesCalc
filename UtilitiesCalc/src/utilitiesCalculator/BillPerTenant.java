@@ -16,11 +16,11 @@ public class BillPerTenant {
 	 * @param bill
 	 * @param tenantName
 	 */
-	public BillPerTenant(int billMonth_ID, int house_ID, double bill, String tenantName, int tenant_ID){
+	public BillPerTenant(int billMonth_ID, int house_ID, double fte, double bill, int tenant_ID){
 		this.billMonth_ID = billMonth_ID;
 		this.house_ID = house_ID;
-		this.tenantName = tenantName;
 		this.bill = bill;
+		this.fte = fte;
 		this.tenant_ID = tenant_ID;
 	}
 

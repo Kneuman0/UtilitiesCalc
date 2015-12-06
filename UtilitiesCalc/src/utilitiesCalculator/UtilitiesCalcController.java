@@ -136,6 +136,7 @@ public class UtilitiesCalcController {
 		queueUpTenantComboBox();
 		queueUpSubletComboBox();
 		queueNONLandlordArrayList();
+		System.out.println(utilityParticipants.size());
 
 	}
 
@@ -178,20 +179,20 @@ public class UtilitiesCalcController {
 	 * Needs testing
 	 */
 	public void submitBillButtonListener() {
-		utilityParticipants.add(new Sublet("Jake", true)); 
 		queueAllTenantArrayList();
 		
 		saveBillMonth();
 		
 		double amtPerTen = getAmountPerTenant();
+		System.out.println("Amt per tenant: " + amtPerTen);
 		ArrayList<BillPerTenant> thisMonthsTenants = new ArrayList<BillPerTenant>();
 		
 		// creates an arraylist of BillPerTenant objects and passes it to addBillPerTenantEntry
 		//which adds it to the database
 		for(int i = 0; i < utilityParticipants.size(); i++){
 			double tenantBill = amtPerTen * utilityParticipants.get(i).getFte();
-			thisMonthsTenants.add(new BillPerTenant(billMonthID(modifyBillDate()), houseID(),
-					tenantBill, utilityParticipants.get(i).getName(),
+			thisMonthsTenants.add(new BillPerTenant(billMonthID(modifyBillDate()), 
+					houseID(),	utilityParticipants.get(i).getFte(), tenantBill,
 					tenantID(utilityParticipants.get(i).getName())));
 		}
 		
@@ -253,7 +254,6 @@ public class UtilitiesCalcController {
 		subs = FXCollections.observableArrayList();
 		for (int i = 0; i < sublets.size(); i++) {
 			subs.add(sublets.get(i).getName());
-			utilityParticipants.add(new Sublet("Jake", true));
 		}
 		this.subletTenantList.setItems(subs);
 	}
@@ -312,11 +312,14 @@ public class UtilitiesCalcController {
 	public void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
+		System.out.println(utilityParticipants.size());
 		for (int i = 0; i < dbUtil.fetchTenantSelection(landlordQuery).size(); i++) {
 			utilityParticipants
 					.add(new Sublet(dbUtil.fetchTenantSelection(landlordQuery)
 							.get(i).getName(), true));
+			
 		}
+		
 	}
 
 	/**
@@ -342,11 +345,12 @@ public class UtilitiesCalcController {
 	}
 
 	/**
+	 * Tested/working
 	 * Still need to delete the tenant after user has selected it
 	 * 
 	 * changes the fte of the tenant specified by the user in the combobox
 	 * Must be used in saveOccupancyButtonListener()
-	 * untested
+	 * 
 	 */
 	public void modifyTenantFTE() {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
@@ -354,8 +358,10 @@ public class UtilitiesCalcController {
 					.equals(subletTenantList.getValue())) {
 				utilityParticipants.get(i).setFte(
 						Double.parseDouble(fte.getText()));
-			}
+				}
 		}
+		
+		
 
 	}
 
@@ -375,6 +381,7 @@ public class UtilitiesCalcController {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			totalParticipateCoeff += utilityParticipants.get(i).getFte();
 		}
+		System.out.println(totalParticipateCoeff);
 
 		return totalBill / totalParticipateCoeff;
 	}
@@ -423,7 +430,8 @@ public class UtilitiesCalcController {
 	 * @return
 	 */
 	public int tenantID(String name){
-		String tenantIDSQL = String.format("SELECT * FROM tenant WHERE date = '%s'", name);
+		String tenantIDSQL = String.format("SELECT * FROM tenant WHERE name = '%s'", name);
+		System.out.println(dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID());
 		return dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID();
 	}
 	
