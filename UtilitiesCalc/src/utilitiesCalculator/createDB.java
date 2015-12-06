@@ -36,18 +36,30 @@ public class createDB {
 				util.inputSampleTenantEntries();
 			}
 
-//			String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'"
-//			 + " AND active = true";
+			// String allSubletTenants =
+			// "SELECT * FROM tenant WHERE tenantType = 'Sublet'"
+			// + " AND active = true";
+			// String landlordQuery =
+			// "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
+			// + " AND active = true";
+			// ArrayList<Tenant> sublets = util
+			// .fetchTenantSelection(landlordQuery);
+			// System.out.println(sublets.size());
+
+			ArrayList<Tenant> utilityParticipants = new ArrayList<Tenant>();
 			String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 					+ " AND active = true";
-			ArrayList<Tenant> sublets = util
-					.fetchTenantSelection(landlordQuery);
-			System.out.println(sublets.size());
-			
+			for (int i = 0; i < util.fetchTenantSelection(landlordQuery)
+					.size(); i++) {
+				utilityParticipants.add(new Sublet(util
+						.fetchTenantSelection(landlordQuery).get(i).getName(),
+						true));
+			}
+			System.out.println(utilityParticipants.size());
+
 //			String test1 = String.format("SELECT * FROM tenant");
-			
+//
 //			System.out.println(util.fetchTenantSelection(test1).size());
-			
 
 			conn.close();
 		} catch (SQLException e) {
@@ -149,12 +161,8 @@ public class createDB {
 		}
 
 		String createTableSQL = "CREATE TABLE billPerTenant ("
-				+ " billingMonth_ID integer,"
-				+ " house_ID integer,"
-				+ " fte double,"
-				+ " bill double,"
-				+ " tenant_ID integer"
-				+ ")";
+				+ " billingMonth_ID integer," + " house_ID integer,"
+				+ " fte double," + " bill double," + " tenant_ID integer" + ")";
 
 		stmt.execute(createTableSQL);
 	}

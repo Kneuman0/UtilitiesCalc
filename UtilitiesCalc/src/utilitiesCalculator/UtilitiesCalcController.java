@@ -294,7 +294,7 @@ public class UtilitiesCalcController {
 		tenantsList.getItems().setAll(FXCollections.observableArrayList());
 		activeTenants.getItems().setAll(FXCollections.observableArrayList());
 		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
-		utilityParticipants = null;
+		utilityParticipants = new ArrayList<Tenant>();
 		queueNONLandlordArrayList();
 		queueUpSubletComboBox();
 		queueUpTenantComboBox();
@@ -307,6 +307,7 @@ public class UtilitiesCalcController {
 	 * fte of 1 (see sublet class constructor)
 	 * 
 	 * Will be used in submitBillButtonListener() to populate and calculate bill for the month
+	 * Untested
 	 */
 	public void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
@@ -363,6 +364,7 @@ public class UtilitiesCalcController {
 	 * Must be used after all sublet FTE have been entered by the user
 	 * Must use in submitBillButtonListener()
 	 * Must use after queueAllTenantArrayList()
+	 * Untested
 	 * @return
 	 */
 	public double getAmountPerTenant() {
@@ -379,6 +381,7 @@ public class UtilitiesCalcController {
 	
 	/**
 	 * saves billMonth in database from GUI items. Must use in submitBillButtonListener()
+	 * Untested
 	 */
 	public void saveBillMonth(){
 		
@@ -390,7 +393,8 @@ public class UtilitiesCalcController {
 	
 	/**
 	 * Uses String.split to change the bill from month first year last
-	 * to year first month last for sorting purposes. Untested
+	 * to year first month last for sorting purposes. 
+	 * Untested
 	 * @return
 	 */
 	public String modifyBillDate(){
@@ -401,8 +405,9 @@ public class UtilitiesCalcController {
 	}
 	
 	/**
-	 * Returns the billMont ID based on the date. Date must be modified
+	 * Returns the billMonth ID based on the date. Date must be modified
 	 * from the date the user enters. use modifyBillDate() method
+	 * untested
 	 * @param date
 	 * @return
 	 */
@@ -413,6 +418,7 @@ public class UtilitiesCalcController {
 	
 	/**
 	 * returns the tenant ID based on the name passed in. Ignores the possibility of duplicate names
+	 * Untested
 	 * @param name
 	 * @return
 	 */
@@ -425,6 +431,7 @@ public class UtilitiesCalcController {
 	 * returns the house ID of the first house in the db. assumes only 1 house exists in DB
 	 * 
 	 * will be modified to accept an address that will be stored in a combobox in the GUI
+	 * Untested
 	 * @return
 	 */
 	public int houseID(){
