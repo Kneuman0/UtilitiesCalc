@@ -237,7 +237,7 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Loads all tenant names into the tenant combo box
+	 * Loads all tenant names into the combo boxes labeled tenant
 	 */
 	public void queueUpTenantComboBox() {
 
@@ -262,6 +262,12 @@ public class UtilitiesCalcController {
 		this.tenantTypeList.getItems().addAll(tenTypesList);
 	}
 
+	/**
+	 * sets all comboBoxes containing tenants to null then re-populates
+	 * comboBoxes with tenants that accurately reflect db
+	 * 
+	 * used in relation to deleting tenants and submitting occupancy 
+	 */
 	public void resetComboBoxes() {
 		tenantsList.getItems().setAll(FXCollections.observableArrayList());
 		activeTenants.getItems().setAll(FXCollections.observableArrayList());
@@ -273,7 +279,12 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Uses polymorphism
+	 * Uses polymorphism (Tenant = Sublet)
+	 * 
+	 * adds active NON landlord tenants to an arraylist. All tenants have an editable 
+	 * fte of 1 (see sublet class constructor)
+	 * 
+	 * Will be used in submitBillButtonListener() to populate and calculate bill for the month
 	 */
 	public void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
@@ -286,7 +297,14 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Uses polymorphism
+	 * Uses polymorphism (Tenant = Landlord)
+	 * 
+	 * adds active landlord tenants to the paying tenants arrayList. 
+	 * Landlord tenants have FTEs of 0 (see landlord class constructor)
+	 *  
+	 * Must be called after queueNONLandlordArrayList() and after all FTEs have been modified
+	 * Must be called in submitBillButtonlistener()
+	 * untested
 	 */
 	public void queueAllTenantArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
@@ -300,6 +318,13 @@ public class UtilitiesCalcController {
 
 	}
 
+	/**
+	 * Still need to delete the tenant after user has selected it
+	 * 
+	 * changes the fte of the tenant specified by the user in the combobox
+	 * Must be used in saveOccupancyButtonListener()
+	 * untested
+	 */
 	public void modifyTenantFTE() {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			if (utilityParticipants.get(i).getName()
@@ -311,6 +336,13 @@ public class UtilitiesCalcController {
 
 	}
 
+	/**
+	 * totals the bill and divided that by the total FTE of all tenants
+	 * Must be used after all sublet FTE have been entered by the user
+	 * Must use in submitBillButtonListener()
+	 * Must use after queueAllTenantArrayList()
+	 * @return
+	 */
 	public double getAmountPerTenant() {
 		double totalParticipateCoeff = 0;
 		double totalBill = Double.parseDouble(fossilFuelBill.getText())
@@ -323,15 +355,22 @@ public class UtilitiesCalcController {
 		return totalBill / totalParticipateCoeff;
 	}
 	
+	/**
+	 * saves billMonth in database from GUI items. Must use in submitBillButtonListener()
+	 */
 	public void saveBillMonth(){
 		
-		//Saves bill month
 		BillMonth billMonth = new BillMonth(modifyBillDate(), Double.parseDouble(
 				fossilFuelBill.getText()), Double.parseDouble(billAmount.getText()),
 						Double.parseDouble(otherBills.getText()));
 		dbUtil.addBillingMonthEntry(billMonth);
 	}
 	
+	/**
+	 * Uses String.split to change the bill from month first year last
+	 * to year first month last for sorting purposes. Untested
+	 * @return
+	 */
 	public String modifyBillDate(){
 		String[] date = billDate.getText().split("/");
 		String dbDate = date[1] + "/" + date[0];
@@ -339,16 +378,31 @@ public class UtilitiesCalcController {
 		
 	}
 	
+	/**
+	 * Returns the billMont ID based on the date. Date must be modified
+	 * from the date the user enters. use modifyBillDate() method
+	 * @param date
+	 * @return
+	 */
 	public int billMonthID(String date){
 		String billMonthIDSQL = String.format("SELECT * FROM billMonth WHERE date = '%s'", date);
 		return dbUtil.fetchBillMonth(billMonthIDSQL).get(0).getBillMonth_ID();
 	}
 	
+	/**
+	 * returns the tenant ID based on the name passed in. Ignores the possibility of duplicate names
+	 * @param name
+	 * @return
+	 */
 	public int tenantID(String name){
 		String tenantIDSQL = String.format("SELECT * FROM tenant WHERE date = '%s'", name);
 		return dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID();
 	}
 	
+	/**
+	 * returns the house ID of the first house in the db. assumes only 1 house exists in DB
+	 * @return
+	 */
 	public int houseID(){
 		String houseIDSQL = "SELECT * FROM house";
 		return dbUtil.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
