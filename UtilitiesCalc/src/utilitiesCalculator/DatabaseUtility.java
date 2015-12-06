@@ -250,7 +250,7 @@ public class DatabaseUtility {
 
 				ten.add(new Tenant(result.getString(1), result.getBoolean(2),
 						result.getString(3), result.getInt(4)));
-				ten.get(i++).getName();
+				
 			}
 
 		} catch (SQLException e) {

@@ -4,30 +4,33 @@ public class Tenant {
 	private String name;
 	private boolean active;
 	public String tenantType;
-	double fte;
 	private int tenant_ID;
+	private double fte;
 	
 	public Tenant(String name, boolean active, String tenantType){
 		this.name = name;
 		this.active = active;
 		this.tenantType = tenantType;
+		this.tenant_ID = 1;
 		
 	}
 	
-	public Tenant(String name, boolean active, String tenantType, double fte){
+	public Tenant(String name, boolean active, String tenantType, int tenant_ID){
 		this.name = name;
 		this.active = active;
 		this.tenantType = tenantType;
-		this.fte = fte;
+		this.tenant_ID = tenant_ID;
 	}
 	
 	public Tenant(String name, boolean active, String tenantType, double fte, int tenant_ID){
 		this.name = name;
 		this.active = active;
 		this.tenantType = tenantType;
-		this.fte = fte;
 		this.tenant_ID = tenant_ID;
+		this.fte = fte;
 	}
+	
+	
 
 	
 	/**

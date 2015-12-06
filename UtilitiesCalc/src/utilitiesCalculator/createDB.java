@@ -40,32 +40,10 @@ public class createDB {
 			}
 			//-----------------StartTest-----------------------------------
 			
-			ArrayList<Tenant> utilityParticipants = new ArrayList<Tenant>();
-			String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
-					+ " AND active = true";
-			System.out.println(util.fetchTenantSelection(landlordQuery).size());
-			
-			for (int i = 0; i < util.fetchTenantSelection(landlordQuery).size(); i++) {
-				utilityParticipants
-						.add(new Sublet(util.fetchTenantSelection(landlordQuery)
-								.get(i).getName(), true));
-				System.out.println(utilityParticipants.get(i).getName());
+			String testID = "SELECT * FROM tenant";
+			for(int i = 0; i < util.fetchTenantSelection(testID).size(); i++){
+				System.out.println(util.fetchTenantSelection(testID).get(i).getTenant_ID());
 			}
-			
-//			String landlordQueryIN = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
-//					+ " AND active = true";
-//			for (int i = 0; i < util.fetchTenantSelection(landlordQueryIN).size(); i++) {
-//				utilityParticipants
-//						.add(new Landlord(util
-//								.fetchTenantSelection(landlordQueryIN).get(i)
-//								.getName(), true));
-//				System.out.println(utilityParticipants.get(i).getName());
-//			}
-			
-			System.out.println(utilityParticipants.size());
-			
-			
-			
 			
 			
 			
