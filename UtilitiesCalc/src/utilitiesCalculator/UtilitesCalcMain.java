@@ -21,7 +21,7 @@ public class UtilitesCalcMain extends Application{
 		Scene scene = new Scene(parent);
 
 		// window title
-		stage.setTitle("Bullet Projectile Calculator");
+		stage.setTitle("Utilities Calculator");
 		stage.setScene(scene);
 		stage.show();
 	}

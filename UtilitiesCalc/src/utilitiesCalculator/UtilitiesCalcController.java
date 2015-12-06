@@ -28,6 +28,12 @@ public class UtilitiesCalcController {
 	// private TableView<Tenant> table;
 
 	@FXML
+	private Label houseUserLabel;
+
+	@FXML
+	private ComboBox<String> addressComboBox;
+
+	@FXML
 	private ComboBox<String> subletTenantList;
 
 	@FXML
@@ -119,9 +125,13 @@ public class UtilitiesCalcController {
 
 	@FXML
 	private ToggleGroup initalTenantActive;
+	
+	@FXML
+    private Button deleteHouseButton;
 
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
+	ObservableList<String> addresses;
 	DatabaseUtility dbUtil;
 	ArrayList<Tenant> utilityParticipants;
 
@@ -135,6 +145,7 @@ public class UtilitiesCalcController {
 		queueUpTenantTypesComboBox();
 		queueUpTenantComboBox();
 		queueUpSubletComboBox();
+		queueUpAddressComboBox();
 		queueNONLandlordArrayList();
 		System.out.println(utilityParticipants.size());
 
@@ -148,8 +159,8 @@ public class UtilitiesCalcController {
 				newTenantActiveRadioButton.isSelected(),
 				tenantTypeList.getValue());
 		dbUtil.addTenant(tenant);
+		userMessageLabelTenant.setText(String.format("%s has been added!", tenant));
 		resetComboBoxes();
-
 	}
 
 	/**
@@ -160,11 +171,11 @@ public class UtilitiesCalcController {
 				Integer.parseInt(squareFootage.getText()),
 				Integer.parseInt(numberOfRooms.getText()));
 		dbUtil.addHouseInfo(house);
-	}
+		}
 
 	/**
-	 * Tested/working
-	 * Need to figure out how to delete all bills by this tenant as well
+	 * Tested/working Need to figure out how to delete all bills by this tenant
+	 * as well
 	 */
 	public void deleteTenantButtonListener() {
 		String deleteTen = tenantsList.getValue();
@@ -175,29 +186,40 @@ public class UtilitiesCalcController {
 		resetComboBoxes();
 	}
 
+	public void deleteHouseButtonListener() {
+		String deleteHouse = addressComboBox.getValue();
+		dbUtil.deleteHouse(deleteHouse);
+		houseUserLabel.setText(String.format("House a %s has been deleted!",
+				deleteHouse));
+		houseUserLabel.setText(String.format("House at %s has been added!", deleteHouse));
+		resetComboBoxes();
+	}
+
 	/**
 	 * Needs testing
 	 */
 	public void submitBillButtonListener() {
 		queueAllTenantArrayList();
-		
+
 		saveBillMonth();
-		
+
 		double amtPerTen = getAmountPerTenant();
 		System.out.println("Amt per tenant: " + amtPerTen);
 		ArrayList<BillPerTenant> thisMonthsTenants = new ArrayList<BillPerTenant>();
-		
-		// creates an arraylist of BillPerTenant objects and passes it to addBillPerTenantEntry
-		//which adds it to the database
-		for(int i = 0; i < utilityParticipants.size(); i++){
+
+		// creates an arraylist of BillPerTenant objects and passes it to
+		// addBillPerTenantEntry
+		// which adds it to the database
+		for (int i = 0; i < utilityParticipants.size(); i++) {
 			double tenantBill = amtPerTen * utilityParticipants.get(i).getFte();
-			thisMonthsTenants.add(new BillPerTenant(billMonthID(modifyBillDate()), 
-					houseID(),	utilityParticipants.get(i).getFte(), tenantBill,
+			thisMonthsTenants.add(new BillPerTenant(
+					billMonthID(modifyBillDate()), houseID(),
+					utilityParticipants.get(i).getFte(), tenantBill,
 					tenantID(utilityParticipants.get(i).getName())));
 		}
-		
+
 		dbUtil.addBillPerTenantEntry(thisMonthsTenants);
-		
+
 	}
 
 	/**
@@ -284,30 +306,43 @@ public class UtilitiesCalcController {
 		this.tenantTypeList.getItems().addAll(tenTypesList);
 	}
 
+	private void queueUpAddressComboBox() {
+		String allAddressesSQL = "SELECT * FROM house";
+		ArrayList<House> allHouses = dbUtil
+				.fetchHouseSelection(allAddressesSQL);
+		addresses = FXCollections.observableArrayList();
+		for (int i = 0; i < allHouses.size(); i++) {
+			addresses.add(allHouses.get(i).getAddress());
+		}
+		addressComboBox.getItems().addAll(addresses);
+	}
+
 	/**
 	 * sets all comboBoxes containing tenants to null then re-populates
 	 * comboBoxes with tenants that accurately reflect db
 	 * 
-	 * used in relation to deleting tenants and submitting occupancy 
+	 * used in relation to deleting tenants and submitting occupancy
 	 */
 	public void resetComboBoxes() {
 		tenantsList.getItems().setAll(FXCollections.observableArrayList());
 		activeTenants.getItems().setAll(FXCollections.observableArrayList());
 		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
+		addressComboBox.getItems().setAll(FXCollections.observableArrayList());
 		utilityParticipants = new ArrayList<Tenant>();
 		queueNONLandlordArrayList();
 		queueUpSubletComboBox();
 		queueUpTenantComboBox();
+		queueUpAddressComboBox();
 	}
 
 	/**
 	 * Uses polymorphism (Tenant = Sublet)
 	 * 
-	 * adds active NON landlord tenants to an arraylist. All tenants have an editable 
-	 * fte of 1 (see sublet class constructor)
+	 * adds active NON landlord tenants to an arraylist. All tenants have an
+	 * editable fte of 1 (see sublet class constructor)
 	 * 
-	 * Will be used in submitBillButtonListener() to populate and calculate bill for the month
-	 * Untested
+	 * Will be used in submitBillButtonListener() to populate and calculate bill
+	 * for the month Untested
 	 */
 	public void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
@@ -317,20 +352,19 @@ public class UtilitiesCalcController {
 			utilityParticipants
 					.add(new Sublet(dbUtil.fetchTenantSelection(landlordQuery)
 							.get(i).getName(), true));
-			
+
 		}
-		
+
 	}
 
 	/**
 	 * Uses polymorphism (Tenant = Landlord)
 	 * 
-	 * adds active landlord tenants to the paying tenants arrayList. 
-	 * Landlord tenants have FTEs of 0 (see landlord class constructor)
-	 *  
-	 * Must be called after queueNONLandlordArrayList() and after all FTEs have been modified
-	 * Must be called in submitBillButtonlistener()
-	 * untested
+	 * adds active landlord tenants to the paying tenants arrayList. Landlord
+	 * tenants have FTEs of 0 (see landlord class constructor)
+	 * 
+	 * Must be called after queueNONLandlordArrayList() and after all FTEs have
+	 * been modified Must be called in submitBillButtonlistener() untested
 	 */
 	public void queueAllTenantArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
@@ -345,11 +379,10 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Tested/working
-	 * Still need to delete the tenant after user has selected it
+	 * Tested/working Still need to delete the tenant after user has selected it
 	 * 
-	 * changes the fte of the tenant specified by the user in the combobox
-	 * Must be used in saveOccupancyButtonListener()
+	 * changes the fte of the tenant specified by the user in the combobox Must
+	 * be used in saveOccupancyButtonListener()
 	 * 
 	 */
 	public void modifyTenantFTE() {
@@ -358,19 +391,17 @@ public class UtilitiesCalcController {
 					.equals(subletTenantList.getValue())) {
 				utilityParticipants.get(i).setFte(
 						Double.parseDouble(fte.getText()));
-				}
+			}
 		}
-		
-		
 
 	}
 
 	/**
-	 * totals the bill and divided that by the total FTE of all tenants
-	 * Must be used after all sublet FTE have been entered by the user
-	 * Must use in submitBillButtonListener()
-	 * Must use after queueAllTenantArrayList()
+	 * totals the bill and divided that by the total FTE of all tenants Must be
+	 * used after all sublet FTE have been entered by the user Must use in
+	 * submitBillButtonListener() Must use after queueAllTenantArrayList()
 	 * Untested
+	 * 
 	 * @return
 	 */
 	public double getAmountPerTenant() {
@@ -385,64 +416,71 @@ public class UtilitiesCalcController {
 
 		return totalBill / totalParticipateCoeff;
 	}
-	
+
 	/**
-	 * saves billMonth in database from GUI items. Must use in submitBillButtonListener()
-	 * Untested
+	 * saves billMonth in database from GUI items. Must use in
+	 * submitBillButtonListener() Untested
 	 */
-	public void saveBillMonth(){
-		
-		BillMonth billMonth = new BillMonth(modifyBillDate(), Double.parseDouble(
-				fossilFuelBill.getText()), Double.parseDouble(billAmount.getText()),
-						Double.parseDouble(otherBills.getText()));
+	public void saveBillMonth() {
+
+		BillMonth billMonth = new BillMonth(modifyBillDate(),
+				Double.parseDouble(fossilFuelBill.getText()),
+				Double.parseDouble(billAmount.getText()),
+				Double.parseDouble(otherBills.getText()));
 		dbUtil.addBillingMonthEntry(billMonth);
 	}
-	
+
 	/**
-	 * Uses String.split to change the bill from month first year last
-	 * to year first month last for sorting purposes. 
-	 * Untested
+	 * Uses String.split to change the bill from month first year last to year
+	 * first month last for sorting purposes. Untested
+	 * 
 	 * @return
 	 */
-	public String modifyBillDate(){
+	public String modifyBillDate() {
 		String[] date = billDate.getText().split("/");
 		String dbDate = date[1] + "/" + date[0];
 		return dbDate;
-		
+
 	}
-	
+
 	/**
-	 * Returns the billMonth ID based on the date. Date must be modified
-	 * from the date the user enters. use modifyBillDate() method
-	 * untested
+	 * Returns the billMonth ID based on the date. Date must be modified from
+	 * the date the user enters. use modifyBillDate() method untested
+	 * 
 	 * @param date
 	 * @return
 	 */
-	public int billMonthID(String date){
-		String billMonthIDSQL = String.format("SELECT * FROM billMonth WHERE date = '%s'", date);
+	public int billMonthID(String date) {
+		String billMonthIDSQL = String.format(
+				"SELECT * FROM billMonth WHERE date = '%s'", date);
 		return dbUtil.fetchBillMonth(billMonthIDSQL).get(0).getBillMonth_ID();
 	}
-	
+
 	/**
-	 * returns the tenant ID based on the name passed in. Ignores the possibility of duplicate names
-	 * Untested
+	 * returns the tenant ID based on the name passed in. Ignores the
+	 * possibility of duplicate names Untested
+	 * 
 	 * @param name
 	 * @return
 	 */
-	public int tenantID(String name){
-		String tenantIDSQL = String.format("SELECT * FROM tenant WHERE name = '%s'", name);
-		System.out.println(dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID());
+	public int tenantID(String name) {
+		String tenantIDSQL = String.format(
+				"SELECT * FROM tenant WHERE name = '%s'", name);
+		System.out.println(dbUtil.fetchTenantSelection(tenantIDSQL).get(0)
+				.getTenant_ID());
 		return dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID();
 	}
-	
+
 	/**
-	 * returns the house ID of the first house in the db. assumes only 1 house exists in DB
+	 * returns the house ID of the first house in the db. assumes only 1 house
+	 * exists in DB
 	 * 
-	 * will be modified to accept an address that will be stored in a combobox in the GUI
-	 * Untested
+	 * will be modified to accept an address that will be stored in a combobox
+	 * in the GUI Untested
+	 * 
 	 * @return
 	 */
-	public int houseID(){
+	public int houseID() {
 		String houseIDSQL = "SELECT * FROM house";
 		return dbUtil.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
 	}

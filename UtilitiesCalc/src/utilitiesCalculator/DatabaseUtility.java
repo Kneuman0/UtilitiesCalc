@@ -400,4 +400,25 @@ public class DatabaseUtility {
 			}
 		}
 	}
+	
+	public void deleteHouse(String address){
+		Connection conn = null;
+		String deleteHouse = String.format("DELETE FROM house"
+				+ " WHERE address = '%s'", address);
+		try {
+			conn = DriverManager.getConnection(DB_URL);
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate(deleteHouse);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }
