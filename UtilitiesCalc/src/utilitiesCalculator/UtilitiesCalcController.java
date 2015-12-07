@@ -156,7 +156,7 @@ public class UtilitiesCalcController {
 		queueUpSubletComboBox();
 		queueUpAddressComboBox();
 		queueNONLandlordArrayList();
-		System.out.println(utilityParticipants.size());
+		
 
 	}
 
@@ -394,7 +394,7 @@ public class UtilitiesCalcController {
 	private void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
-		System.out.println(utilityParticipants.size());
+		
 		for (int i = 0; i < dbUtil.fetchTenantSelection(landlordQuery).size(); i++) {
 			utilityParticipants
 					.add(new Sublet(dbUtil.fetchTenantSelection(landlordQuery)
@@ -465,7 +465,7 @@ public class UtilitiesCalcController {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			totalParticipateCoeff += utilityParticipants.get(i).getFte();
 		}
-		System.out.println(totalParticipateCoeff);
+		
 
 		return totalBill / totalParticipateCoeff;
 	}
