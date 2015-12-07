@@ -1,6 +1,7 @@
 package utilitiesCalculator;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.StringTokenizer;
 
 import javafx.collections.FXCollections;
@@ -229,9 +230,15 @@ public class UtilitiesCalcController {
 	 * Needs Testing
 	 */
 	public void saveOccupancyButtonListener() {
-
 		modifyTenantFTE();
-
+		String subTenantFTERecorded = subletTenantList.getValue();
+		for(int i = 0; i < subs.size(); i ++){
+			if(subs.get(i).equals(subTenantFTERecorded)){
+				subs.remove(i);
+			}
+		}
+		subletTenantList.setItems(subs);
+		
 	}
 
 	public void printReceiptButtonListener() {
@@ -279,7 +286,7 @@ public class UtilitiesCalcController {
 	 * Loads all tenant names into the combo box that have tenant type of
 	 * 'sublet'
 	 */
-	public void queueUpSubletComboBox() {
+	private void queueUpSubletComboBox() {
 
 		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'"
 				+ " AND active = true";
@@ -295,7 +302,7 @@ public class UtilitiesCalcController {
 	/**
 	 * Loads all tenant names into the combo boxes labeled tenant
 	 */
-	public void queueUpTenantComboBox() {
+	private void queueUpTenantComboBox() {
 
 		String allTenantsSQL = "SELECT * FROM tenant";
 		ArrayList<Tenant> allTenants = dbUtil
@@ -336,7 +343,7 @@ public class UtilitiesCalcController {
 	 * 
 	 * used in relation to deleting tenants and submitting occupancy
 	 */
-	public void resetComboBoxes() {
+	private void resetComboBoxes() {
 		tenantsList.getItems().setAll(FXCollections.observableArrayList());
 		activeTenants.getItems().setAll(FXCollections.observableArrayList());
 		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
@@ -358,7 +365,7 @@ public class UtilitiesCalcController {
 	 * Will be used in submitBillButtonListener() to populate and calculate bill
 	 * for the month Untested
 	 */
-	public void queueNONLandlordArrayList() {
+	private void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
 		System.out.println(utilityParticipants.size());
@@ -380,7 +387,7 @@ public class UtilitiesCalcController {
 	 * Must be called after queueNONLandlordArrayList() and after all FTEs have
 	 * been modified Must be called in submitBillButtonlistener() untested
 	 */
-	public void queueAllTenantArrayList() {
+	private void queueAllTenantArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
 				+ " AND active = true";
 		for (int i = 0; i < dbUtil.fetchTenantSelection(landlordQuery).size(); i++) {
@@ -399,7 +406,7 @@ public class UtilitiesCalcController {
 	 * be used in saveOccupancyButtonListener()
 	 * 
 	 */
-	public void modifyTenantFTE() {
+	private void modifyTenantFTE() {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			if (utilityParticipants.get(i).getName()
 					.equals(subletTenantList.getValue())) {
@@ -418,7 +425,7 @@ public class UtilitiesCalcController {
 	 * 
 	 * @return
 	 */
-	public double getAmountPerTenant() {
+	private double getAmountPerTenant() {
 		double totalParticipateCoeff = 0;
 		double totalBill = Double.parseDouble(fossilFuelBill.getText())
 				+ Double.parseDouble(billAmount.getText())
@@ -435,7 +442,7 @@ public class UtilitiesCalcController {
 	 * saves billMonth in database from GUI items. Must use in
 	 * submitBillButtonListener() Untested
 	 */
-	public void saveBillMonth() {
+	private void saveBillMonth() {
 
 		BillMonth billMonth = new BillMonth(modifyBillDate(),
 				Double.parseDouble(fossilFuelBill.getText()),
@@ -450,7 +457,7 @@ public class UtilitiesCalcController {
 	 * 
 	 * @return
 	 */
-	public String modifyBillDate() {
+	private String modifyBillDate() {
 		String[] date = billDate.getText().split("/");
 		String dbDate = date[1] + "/" + date[0];
 		return dbDate;
@@ -464,7 +471,7 @@ public class UtilitiesCalcController {
 	 * @param date
 	 * @return
 	 */
-	public int billMonthID(String date) {
+	private int billMonthID(String date) {
 		String billMonthIDSQL = String.format(
 				"SELECT * FROM billMonth WHERE date = '%s'", date);
 		return dbUtil.fetchBillMonth(billMonthIDSQL).get(0).getBillMonth_ID();
@@ -477,7 +484,7 @@ public class UtilitiesCalcController {
 	 * @param name
 	 * @return
 	 */
-	public int tenantID(String name) {
+	private int tenantID(String name) {
 		String tenantIDSQL = String.format(
 				"SELECT * FROM tenant WHERE name = '%s'", name);
 		return dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID();
@@ -492,9 +499,10 @@ public class UtilitiesCalcController {
 	 * 
 	 * @return
 	 */
-	public int houseID(String address) {
+	private int houseID(String address) {
 		String houseIDSQL =String.format("SELECT * FROM house WHERE address = '%s'", address);
 		return dbUtil.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
 	}
+	
 
 }
