@@ -412,6 +412,10 @@ public class UtilitiesCalcController {
 							.get(i).getName(), true));
 
 		}
+		
+		for(int i = 0; i < utilityParticipants.size(); i++){
+			utilityParticipants.get(i).setFte(1);
+		}
 
 	}
 
@@ -477,6 +481,7 @@ public class UtilitiesCalcController {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			totalParticipateCoeff += utilityParticipants.get(i).getFte();
 		}
+		System.out.println(totalParticipateCoeff);
 
 		return totalBill / totalParticipateCoeff;
 	}

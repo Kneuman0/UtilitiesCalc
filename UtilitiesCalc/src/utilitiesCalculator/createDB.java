@@ -16,7 +16,7 @@ public class createDB {
 	public static void main(String[] args) {
 
 		final boolean DROP_TABLE = true;
-		final boolean RESET_DATABSE = false;
+		final boolean RESET_DATABSE = true;
 		final boolean SHOW_ROW_COUNT = false;
 		DatabaseUtility util = new DatabaseUtility();
 
@@ -39,19 +39,21 @@ public class createDB {
 				util.inputSampleBillMonthEntries();
 			}
 			//-----------------StartTest-----------------------------------
-			String address = "1204 raymond Dr.";
+//			String testBPTContents = String.format("SELECT * FROM billPerTenant");
+//			ArrayList<BillPerTenant> bpt = util.fetchBillPerMonth(testBPTContents);
+//			for(int i = 0; i < bpt.size(); i++){
+//				System.out.printf("tenant_ID: %d\nBill: %.2f\nFTE: %.2f\n--------------------\n", 
+//						bpt.get(i).getTenant_ID(), bpt.get(i).getBill(), bpt.get(i).getFte());
+//			}
 			
-			String testHContents = String.format("SELECT * FROM house WHERE address = '%s'", address);
-			for(int i = 0; i < util.fetchTenantSelection(testHContents).size(); i++){
-				System.out.println(util.fetchHouseSelection(testHContents).get(i).getAddress());
-				System.out.println(util.fetchHouseSelection(testHContents).get(i).getHouse_ID());
+			String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
+					+ " AND active = true";
+			ArrayList<Tenant> nonLandLords = util.fetchTenantSelection(landlordQuery);
+//			ArrayList<Sublet>
+			for(int i = 0; i < nonLandLords.size(); i++){
+				System.out.printf("Name: %s\nTenantType: %s\n-------------\n", nonLandLords.get(i).getName(),
+						nonLandLords.get(i).tenantType);
 			}
-			
-//			String houseIDSQL =String.format("SELECT * FROM house WHERE address = '%s", address);
-//			System.out.println(util.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID());
-			
-			
-			
 			
 			
 			//-----------------EndTest-------------------------------------

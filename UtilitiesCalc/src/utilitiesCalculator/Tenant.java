@@ -11,7 +11,7 @@ public class Tenant {
 		this.name = name;
 		this.active = active;
 		this.tenantType = tenantType;
-		this.tenant_ID = 1;
+		this.tenant_ID = -1;
 		
 	}
 	
