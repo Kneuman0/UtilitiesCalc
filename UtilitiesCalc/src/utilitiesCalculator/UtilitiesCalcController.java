@@ -265,6 +265,8 @@ public class UtilitiesCalcController {
 					.format("%s is not a valid portion of occupancy"));
 			return;
 		}
+		userLabelUtilCalc.setText(String.format("Occupancy for %s saved as %.2f", 
+				subletTenantList.getValue(), Double.parseDouble(fte.getText())));
 		// Deletes each sublet from combo box after FTE has been recorded
 		String subTenantFTERecorded = subletTenantList.getValue();
 		for (int i = 0; i < subs.size(); i++) {
@@ -405,12 +407,10 @@ public class UtilitiesCalcController {
 	private void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
-
-		for (int i = 0; i < dbUtil.fetchTenantSelection(landlordQuery).size(); i++) {
-			utilityParticipants
-					.add(new Sublet(dbUtil.fetchTenantSelection(landlordQuery)
-							.get(i).getName(), true, dbUtil.fetchTenantSelection(landlordQuery)
-							.get(i).getTenant_ID()));
+		ArrayList<Tenant> temp = dbUtil.fetchTenantSelection(landlordQuery);
+		for (int i = 0; i < temp.size(); i++) {
+			utilityParticipants.add(new Sublet(temp.get(i).getName(), true, 
+					temp.get(i).getTenant_ID()));
 		}
 	}
 
@@ -426,12 +426,10 @@ public class UtilitiesCalcController {
 	private void queueAllTenantArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
 				+ " AND active = true";
-		for (int i = 0; i < dbUtil.fetchTenantSelection(landlordQuery).size(); i++) {
-			utilityParticipants
-					.add(new Landlord(dbUtil
-							.fetchTenantSelection(landlordQuery).get(i)
-							.getName(), true, dbUtil
-							.fetchTenantSelection(landlordQuery).get(i).getTenant_ID()));
+		ArrayList<Tenant> temp = dbUtil.fetchTenantSelection(landlordQuery);
+		for (int i = 0; i < temp.size(); i++) {
+			utilityParticipants.add(new Landlord(temp.get(i).getName(), true, 
+							temp.get(i).getTenant_ID()));
 		}
 
 	}
