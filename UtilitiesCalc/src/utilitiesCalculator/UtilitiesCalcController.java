@@ -128,15 +128,15 @@ public class UtilitiesCalcController {
 
 	@FXML
 	private ToggleGroup initalTenantActive;
-	
+
 	@FXML
-    private Button deleteHouseButton;
-	
+	private Button deleteHouseButton;
+
 	@FXML
-    private ComboBox<String> houseAddresses;
-	
+	private ComboBox<String> houseAddresses;
+
 	@FXML
-    private Label userLabelUtilCalc;
+	private Label userLabelUtilCalc;
 
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
@@ -156,7 +156,6 @@ public class UtilitiesCalcController {
 		queueUpSubletComboBox();
 		queueUpAddressComboBox();
 		queueNONLandlordArrayList();
-		
 
 	}
 
@@ -164,14 +163,15 @@ public class UtilitiesCalcController {
 	 * Tested/working
 	 */
 	public void addTenantButtonListener() {
-		if(ensureAllEntriesLoggedTenant()){
+		if (ensureAllEntriesLoggedTenant()) {
 			return;
 		}
 		Tenant tenant = new Tenant(nameTextBox.getText(),
 				newTenantActiveRadioButton.isSelected(),
 				tenantTypeList.getValue());
 		dbUtil.addTenant(tenant);
-		userMessageLabelTenant.setText(String.format("%s has been added!", tenant));
+		userMessageLabelTenant.setText(String.format("%s has been added!",
+				tenant));
 		resetComboBoxes();
 	}
 
@@ -179,7 +179,7 @@ public class UtilitiesCalcController {
 	 * Tested/working
 	 */
 	public void addHouseInfoListener() {
-		if(ensureAllEntriesLoggedHouseInfo()){
+		if (ensureAllEntriesLoggedHouseInfo()) {
 			return;
 		}
 		House house = null;
@@ -188,12 +188,16 @@ public class UtilitiesCalcController {
 					Integer.parseInt(squareFootage.getText()),
 					Integer.parseInt(numberOfRooms.getText()));
 		} catch (NumberFormatException e) {
-			houseUserLabel.setText("Non-number detected in 'Number of Rooms' field"
-					+ " or 'Square Footage' field");
+			houseUserLabel
+					.setText("Non-number detected in 'Number of Rooms' field"
+							+ " or 'Square Footage' field");
 			return;
 		}
+
+		houseUserLabel.setText(String.format("House at %s has been added!",
+				addressInput.getText()));
 		dbUtil.addHouseInfo(house);
-		}
+	}
 
 	/**
 	 * Tested/working Need to figure out how to delete all bills by this tenant
@@ -213,7 +217,8 @@ public class UtilitiesCalcController {
 		dbUtil.deleteHouse(deleteHouse);
 		houseUserLabel.setText(String.format("House a %s has been deleted!",
 				deleteHouse));
-		houseUserLabel.setText(String.format("House at %s has been added!", deleteHouse));
+		houseUserLabel.setText(String.format("House at %s has been added!",
+				deleteHouse));
 		resetComboBoxes();
 	}
 
@@ -221,10 +226,10 @@ public class UtilitiesCalcController {
 	 * Needs testing
 	 */
 	public void submitBillButtonListener() {
-		if(ensureAllEntriesLoggedUtilCalc()){
+		if (ensureAllEntriesLoggedUtilCalc()) {
 			return;
 		}
-		
+
 		queueAllTenantArrayList();
 		saveBillMonth();
 		double amtPerTen = getAmountPerTenant();
@@ -236,12 +241,15 @@ public class UtilitiesCalcController {
 		// which adds it to the database
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			double tenantBill = amtPerTen * utilityParticipants.get(i).getFte();
-			thisMonthsTenants.add(new BillPerTenant(
-					billMonthID(modifyBillDate()), houseID(houseAddresses.getValue()),
-					utilityParticipants.get(i).getFte(), tenantBill,
-					tenantID(utilityParticipants.get(i).getName())));
+			thisMonthsTenants
+					.add(new BillPerTenant(billMonthID(modifyBillDate(billDate.getText())),
+							houseID(houseAddresses.getValue()),
+							utilityParticipants.get(i).getFte(), tenantBill,
+							tenantID(utilityParticipants.get(i).getName())));
 		}
 
+		userLabelUtilCalc.setText(String.format("Bill for %s has been processed and saved to database!",
+				modifyBillDate(billDate.getText())));
 		dbUtil.addBillPerTenantEntry(thisMonthsTenants);
 
 	}
@@ -253,18 +261,19 @@ public class UtilitiesCalcController {
 		try {
 			modifyTenantFTE();
 		} catch (InvalidUserEntryException e) {
-			userLabelUtilCalc.setText(String.format("%s is not a valid portion of occupancy"));
+			userLabelUtilCalc.setText(String
+					.format("%s is not a valid portion of occupancy"));
 			return;
 		}
 		// Deletes each sublet from combo box after FTE has been recorded
 		String subTenantFTERecorded = subletTenantList.getValue();
-		for(int i = 0; i < subs.size(); i ++){
-			if(subs.get(i).equals(subTenantFTERecorded)){
+		for (int i = 0; i < subs.size(); i++) {
+			if (subs.get(i).equals(subTenantFTERecorded)) {
 				subs.remove(i);
 			}
 		}
 		subletTenantList.setItems(subs);
-		
+
 	}
 
 	public void printReceiptButtonListener() {
@@ -298,10 +307,12 @@ public class UtilitiesCalcController {
 				+ " WHERE name = '%s'",
 				this.activeTenantRadioButton.isSelected(),
 				this.activeTenants.getValue());
-		if(this.activeTenantRadioButton.isSelected()){
-			userMessageLabelTenant.setText(String.format("%s has been activated!", activeTenants.getValue()));
-		}else{
-			userMessageLabelTenant.setText(String.format("%s has been deactivated!", activeTenants.getValue()));
+		if (this.activeTenantRadioButton.isSelected()) {
+			userMessageLabelTenant.setText(String.format(
+					"%s has been activated!", activeTenants.getValue()));
+		} else {
+			userMessageLabelTenant.setText(String.format(
+					"%s has been deactivated!", activeTenants.getValue()));
 		}
 		dbUtil.modifyDatabase(updateTenant);
 	}
@@ -394,7 +405,7 @@ public class UtilitiesCalcController {
 	private void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
-		
+
 		for (int i = 0; i < dbUtil.fetchTenantSelection(landlordQuery).size(); i++) {
 			utilityParticipants
 					.add(new Sublet(dbUtil.fetchTenantSelection(landlordQuery)
@@ -430,14 +441,15 @@ public class UtilitiesCalcController {
 	 * 
 	 * changes the fte of the tenant specified by the user in the combobox Must
 	 * be used in saveOccupancyButtonListener()
-	 * @throws InvalidUserEntryException 
+	 * 
+	 * @throws InvalidUserEntryException
 	 * 
 	 */
 	private void modifyTenantFTE() throws InvalidUserEntryException {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			if (utilityParticipants.get(i).getName()
 					.equals(subletTenantList.getValue())) {
-				
+
 				try {
 					utilityParticipants.get(i).setFte(
 							Double.parseDouble(fte.getText()));
@@ -465,7 +477,6 @@ public class UtilitiesCalcController {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			totalParticipateCoeff += utilityParticipants.get(i).getFte();
 		}
-		
 
 		return totalBill / totalParticipateCoeff;
 	}
@@ -478,7 +489,7 @@ public class UtilitiesCalcController {
 
 		BillMonth billMonth = null;
 		try {
-			billMonth = new BillMonth(modifyBillDate(),
+			billMonth = new BillMonth(modifyBillDate(billDate.getText()),
 					Double.parseDouble(fossilFuelBill.getText()),
 					Double.parseDouble(billAmount.getText()),
 					Double.parseDouble(otherBills.getText()));
@@ -495,8 +506,8 @@ public class UtilitiesCalcController {
 	 * 
 	 * @return
 	 */
-	private String modifyBillDate() {
-		String[] date = billDate.getText().split("/");
+	private String modifyBillDate(String dbDateIn) {
+		String[] date = dbDateIn.split("/");
 		String dbDate = date[1] + "/" + date[0];
 		return dbDate;
 
@@ -538,82 +549,92 @@ public class UtilitiesCalcController {
 	 * @return
 	 */
 	private int houseID(String address) {
-		String houseIDSQL =String.format("SELECT * FROM house WHERE address = '%s'", address);
+		String houseIDSQL = String.format(
+				"SELECT * FROM house WHERE address = '%s'", address);
 		return dbUtil.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
 	}
-	
+
 	/**
-	 * Checks all fields necessary to add a full BillMonth and BillPerTenant object to database.
-	 * If any field is empty, user will be notified and no code executed
+	 * Checks all fields necessary to add a full BillMonth and BillPerTenant
+	 * object to database. If any field is empty, user will be notified and no
+	 * code executed
 	 * 
 	 * Method must be used at the every beginning of the listener
+	 * 
 	 * @return
 	 */
-	private boolean ensureAllEntriesLoggedUtilCalc(){
+	private boolean ensureAllEntriesLoggedUtilCalc() {
 		boolean notifiyUser = false;
-		if(billDate.getText().equals("")){
-			userLabelUtilCalc.setText("Bill Date field empty! Please enter 0 if there is no bill");
+		if (billDate.getText().equals("")) {
+			userLabelUtilCalc
+					.setText("Bill Date field empty! Please enter 0 if there is no bill");
 			notifiyUser = true;
 		}
-		if(houseAddresses.getSelectionModel().isEmpty()){
+		if (houseAddresses.getSelectionModel().isEmpty()) {
 			userLabelUtilCalc.setText("No house selected!");
 			notifiyUser = true;
 		}
-		if(fossilFuelBill.getText().equals("")){
-			userLabelUtilCalc.setText("Fossil Fuel bill field empty! Please enter 0 if there is no bill");
+		if (fossilFuelBill.getText().equals("")) {
+			userLabelUtilCalc
+					.setText("Fossil Fuel bill field empty! Please enter 0 if there is no bill");
 			notifiyUser = true;
 		}
-		if(billAmount.getText().equals("")){
-			userLabelUtilCalc.setText("Electric bill field empty! Please enter 0 if there is no bill");
+		if (billAmount.getText().equals("")) {
+			userLabelUtilCalc
+					.setText("Electric bill field empty! Please enter 0 if there is no bill");
 			notifiyUser = true;
 		}
-		if(otherBills.getText().equals("")){
-			userLabelUtilCalc.setText("Other bill field empty! Please enter 0 if there is no Bill");
+		if (otherBills.getText().equals("")) {
+			userLabelUtilCalc
+					.setText("Other bill field empty! Please enter 0 if there is no Bill");
 			notifiyUser = true;
 		}
-		
+
 		return notifiyUser;
 	}
-	
+
 	/**
-	 * Checks all fields necessary to add a full house object to database.
-	 * If any field is empty, user will be notified and no code executed
+	 * Checks all fields necessary to add a full house object to database. If
+	 * any field is empty, user will be notified and no code executed
 	 * 
 	 * Method must be used at the every beginning of the listener
+	 * 
 	 * @return
 	 */
-	private boolean ensureAllEntriesLoggedHouseInfo(){
+	private boolean ensureAllEntriesLoggedHouseInfo() {
 		boolean notifyUser = false;
-		if(addressInput.getText().equals("")){
+		if (addressInput.getText().equals("")) {
 			houseUserLabel.setText("Address field empty!");
 			notifyUser = true;
 		}
-		if(numberOfRooms.getText().equals("")){
+		if (numberOfRooms.getText().equals("")) {
 			houseUserLabel.setText("Number of rooms field empty!");
 			notifyUser = true;
 		}
-		if(squareFootage.getText().equals("")){
+		if (squareFootage.getText().equals("")) {
 			houseUserLabel.setText("Square Footage field empty!");
 			notifyUser = true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
-	 * Checks all fields necessary to add a full BillMonth and BillPerTenant object to database.
-	 * If any field is empty, user will be notified and no code executed
+	 * Checks all fields necessary to add a full BillMonth and BillPerTenant
+	 * object to database. If any field is empty, user will be notified and no
+	 * code executed
 	 * 
 	 * Method must be used at the every beginning of the listener
+	 * 
 	 * @return
 	 */
-	private boolean ensureAllEntriesLoggedTenant(){
+	private boolean ensureAllEntriesLoggedTenant() {
 		boolean notifyUser = false;
-		if(nameTextBox.getText().equals("")){
+		if (nameTextBox.getText().equals("")) {
 			notifyUser = true;
 			userMessageLabelTenant.setText("Name field is empty!");
 		}
-		if(tenantTypeList.getSelectionModel().isEmpty()){
+		if (tenantTypeList.getSelectionModel().isEmpty()) {
 			notifyUser = true;
 			userMessageLabelTenant.setText("No tenant type selected!");
 		}
