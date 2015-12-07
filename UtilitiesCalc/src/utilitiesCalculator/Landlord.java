@@ -7,7 +7,6 @@ public class Landlord extends Tenant {
 	public Landlord(String name, boolean active) {
 		super(name, active, "Landlord");
 		super.setFte(0);
-		
 	}
 	
 	public Landlord(String name, boolean active, int tenant_ID) {

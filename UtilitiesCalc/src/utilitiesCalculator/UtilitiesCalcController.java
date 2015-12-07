@@ -8,6 +8,9 @@ import javax.print.attribute.standard.MediaSize.Other;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -150,13 +153,11 @@ public class UtilitiesCalcController {
 	public void initialize() {
 		dbUtil = new DatabaseUtility();
 		utilityParticipants = new ArrayList<Tenant>();
-
 		queueUpTenantTypesComboBox();
 		queueUpTenantComboBox();
 		queueUpSubletComboBox();
 		queueUpAddressComboBox();
 		queueNONLandlordArrayList();
-
 	}
 
 	/**
@@ -318,6 +319,18 @@ public class UtilitiesCalcController {
 		}
 		dbUtil.modifyDatabase(updateTenant);
 	}
+	
+//	public void tabPaneTest(){
+//		new EventHandler<ActionEvent>(){
+//			@Override
+//			public void handle(ActionEvent events){
+//				System.out.println("Action Event Thrown");
+//				housingTab.setOnClosed(events);
+//			}
+//		}
+//		
+//		
+//	}
 
 	// ----------------controller utility methods--------------------
 

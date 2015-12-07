@@ -21,11 +21,6 @@ public class Tenant {
 		this.tenant_ID = tenant_ID;
 	}
 	
-
-	
-	
-
-	
 	/**
 	 * @return the tenant_ID
 	 */
