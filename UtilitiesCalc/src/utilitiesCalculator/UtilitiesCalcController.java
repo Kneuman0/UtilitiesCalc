@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.StringTokenizer;
 
+import javax.print.attribute.standard.MediaSize.Other;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -132,6 +134,9 @@ public class UtilitiesCalcController {
 	
 	@FXML
     private ComboBox<String> houseAddresses;
+	
+	@FXML
+    private Label userLabelUtilCalc;
 
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
@@ -159,6 +164,9 @@ public class UtilitiesCalcController {
 	 * Tested/working
 	 */
 	public void addTenantButtonListener() {
+		if(ensureAllEntriesLoggedTenant()){
+			return;
+		}
 		Tenant tenant = new Tenant(nameTextBox.getText(),
 				newTenantActiveRadioButton.isSelected(),
 				tenantTypeList.getValue());
@@ -171,6 +179,9 @@ public class UtilitiesCalcController {
 	 * Tested/working
 	 */
 	public void addHouseInfoListener() {
+		if(ensureAllEntriesLoggedHouseInfo()){
+			return;
+		}
 		House house = new House(addressInput.getText(),
 				Integer.parseInt(squareFootage.getText()),
 				Integer.parseInt(numberOfRooms.getText()));
@@ -203,10 +214,12 @@ public class UtilitiesCalcController {
 	 * Needs testing
 	 */
 	public void submitBillButtonListener() {
+		if(ensureAllEntriesLoggedUtilCalc()){
+			return;
+		}
+		
 		queueAllTenantArrayList();
-
 		saveBillMonth();
-
 		double amtPerTen = getAmountPerTenant();
 		System.out.println("Amt per tenant: " + amtPerTen);
 		ArrayList<BillPerTenant> thisMonthsTenants = new ArrayList<BillPerTenant>();
@@ -504,5 +517,82 @@ public class UtilitiesCalcController {
 		return dbUtil.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
 	}
 	
+	/**
+	 * Checks all fields necessary to add a full BillMonth and BillPerTenant object to database.
+	 * If any field is empty, user will be notified and no code executed
+	 * 
+	 * Method must be used at the every beginning of the listener
+	 * @return
+	 */
+	private boolean ensureAllEntriesLoggedUtilCalc(){
+		boolean notifiyUser = false;
+		if(billDate.getText().equals("")){
+			userLabelUtilCalc.setText("Bill Date field empty! Please enter 0 if there is no bill");
+			notifiyUser = true;
+		}
+		if(houseAddresses.getSelectionModel().isEmpty()){
+			userLabelUtilCalc.setText("No house selected!");
+			notifiyUser = true;
+		}
+		if(fossilFuelBill.getText().equals("")){
+			userLabelUtilCalc.setText("Fossil Fuel bill field empty! Please enter 0 if there is no bill");
+			notifiyUser = true;
+		}
+		if(billAmount.getText().equals("")){
+			userLabelUtilCalc.setText("Electric bill field empty! Please enter 0 if there is no bill");
+			notifiyUser = true;
+		}
+		if(otherBills.getText().equals("")){
+			userLabelUtilCalc.setText("Other bill field empty! Please enter 0 if there is no Bill");
+			notifiyUser = true;
+		}
+		
+		return notifiyUser;
+	}
+	
+	/**
+	 * Checks all fields necessary to add a full house object to database.
+	 * If any field is empty, user will be notified and no code executed
+	 * 
+	 * Method must be used at the every beginning of the listener
+	 * @return
+	 */
+	private boolean ensureAllEntriesLoggedHouseInfo(){
+		boolean notifyUser = false;
+		if(addressInput.getText().equals("")){
+			houseUserLabel.setText("Address field empty!");
+			notifyUser = true;
+		}
+		if(numberOfRooms.getText().equals("")){
+			houseUserLabel.setText("Number of rooms field empty!");
+			notifyUser = true;
+		}
+		if(squareFootage.getText().equals("")){
+			houseUserLabel.setText("Square Footage field empty!");
+			notifyUser = true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Checks all fields necessary to add a full BillMonth and BillPerTenant object to database.
+	 * If any field is empty, user will be notified and no code executed
+	 * 
+	 * Method must be used at the every beginning of the listener
+	 * @return
+	 */
+	private boolean ensureAllEntriesLoggedTenant(){
+		boolean notifyUser = false;
+		if(nameTextBox.getText().equals("")){
+			notifyUser = true;
+			userMessageLabelTenant.setText("Name field is empty!");
+		}
+		if(tenantTypeList.getSelectionModel().isEmpty()){
+			notifyUser = true;
+			userMessageLabelTenant.setText("No tenant type selected!");
+		}
+		return notifyUser;
+	}
 
 }
