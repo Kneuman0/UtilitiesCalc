@@ -16,7 +16,7 @@ public class createDB {
 	public static void main(String[] args) {
 
 		final boolean DROP_TABLE = true;
-		final boolean RESET_DATABSE = true;
+		final boolean RESET_DATABSE = false;
 		final boolean SHOW_ROW_COUNT = false;
 		DatabaseUtility util = new DatabaseUtility();
 
@@ -39,21 +39,14 @@ public class createDB {
 				util.inputSampleBillMonthEntries();
 			}
 			//-----------------StartTest-----------------------------------
-//			String testBPTContents = String.format("SELECT * FROM billPerTenant");
-//			ArrayList<BillPerTenant> bpt = util.fetchBillPerMonth(testBPTContents);
-//			for(int i = 0; i < bpt.size(); i++){
-//				System.out.printf("tenant_ID: %d\nBill: %.2f\nFTE: %.2f\n--------------------\n", 
-//						bpt.get(i).getTenant_ID(), bpt.get(i).getBill(), bpt.get(i).getFte());
-//			}
-			
-			String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
-					+ " AND active = true";
-			ArrayList<Tenant> nonLandLords = util.fetchTenantSelection(landlordQuery);
-//			ArrayList<Sublet>
-			for(int i = 0; i < nonLandLords.size(); i++){
-				System.out.printf("Name: %s\nTenantType: %s\n-------------\n", nonLandLords.get(i).getName(),
-						nonLandLords.get(i).tenantType);
+			String testBPTContents = String.format("SELECT * FROM billPerTenant");
+			ArrayList<BillPerTenant> bpt = util.fetchBillPerMonth(testBPTContents);
+			for(int i = 0; i < bpt.size(); i++){
+				System.out.printf("tenant_ID: %d\nBill: %.2f\nFTE: %.2f\n--------------------\n", 
+						bpt.get(i).getTenant_ID(), bpt.get(i).getBill(), bpt.get(i).getFte());
 			}
+			
+			
 			
 			
 			//-----------------EndTest-------------------------------------

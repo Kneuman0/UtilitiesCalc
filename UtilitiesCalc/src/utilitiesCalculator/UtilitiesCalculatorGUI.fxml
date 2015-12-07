@@ -125,7 +125,7 @@
                         <TextField fx:id="fossilFuelBill" layoutX="29.0" layoutY="123.0" promptText="Enter Fossil Fuel Amount" AnchorPane.leftAnchor="30.0" />
                         <TextField fx:id="otherBills" layoutX="415.0" layoutY="123.0" promptText="Enter Enter Other Bills" AnchorPane.rightAnchor="30.0" />
                         <ComboBox fx:id="houseAddresses" layoutX="421.0" layoutY="26.0" prefWidth="150.0" promptText="House" />
-                        <Label fx:id="userLabelUtilCalc" contentDisplay="CENTER" layoutX="74.0" layoutY="231.0" prefHeight="54.0" prefWidth="452.0" AnchorPane.leftAnchor="74.0" AnchorPane.rightAnchor="74.0" />
+                        <Label fx:id="userLabelUtilCalc" alignment="CENTER" contentDisplay="CENTER" layoutX="74.0" layoutY="231.0" prefHeight="54.0" prefWidth="452.0" textFill="#3f08ff" AnchorPane.leftAnchor="74.0" AnchorPane.rightAnchor="74.0" />
                      </children></AnchorPane>
               </content>
             </Tab>

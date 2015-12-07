@@ -245,7 +245,7 @@ public class UtilitiesCalcController {
 					.add(new BillPerTenant(billMonthID(modifyBillDate(billDate.getText())),
 							houseID(houseAddresses.getValue()),
 							utilityParticipants.get(i).getFte(), tenantBill,
-							tenantID(utilityParticipants.get(i).getName())));
+							utilityParticipants.get(i).getTenant_ID()));
 		}
 
 		userLabelUtilCalc.setText(String.format("Bill for %s has been processed and saved to database!",
@@ -409,7 +409,8 @@ public class UtilitiesCalcController {
 		for (int i = 0; i < dbUtil.fetchTenantSelection(landlordQuery).size(); i++) {
 			utilityParticipants
 					.add(new Sublet(dbUtil.fetchTenantSelection(landlordQuery)
-							.get(i).getName(), true));
+							.get(i).getName(), true, dbUtil.fetchTenantSelection(landlordQuery)
+							.get(i).getTenant_ID()));
 		}
 	}
 
@@ -429,7 +430,8 @@ public class UtilitiesCalcController {
 			utilityParticipants
 					.add(new Landlord(dbUtil
 							.fetchTenantSelection(landlordQuery).get(i)
-							.getName(), true));
+							.getName(), true, dbUtil
+							.fetchTenantSelection(landlordQuery).get(i).getTenant_ID()));
 		}
 
 	}
