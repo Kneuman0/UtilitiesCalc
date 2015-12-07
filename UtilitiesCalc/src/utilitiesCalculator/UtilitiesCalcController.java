@@ -128,6 +128,9 @@ public class UtilitiesCalcController {
 	
 	@FXML
     private Button deleteHouseButton;
+	
+	@FXML
+    private ComboBox<String> houseAddresses;
 
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
@@ -213,7 +216,7 @@ public class UtilitiesCalcController {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			double tenantBill = amtPerTen * utilityParticipants.get(i).getFte();
 			thisMonthsTenants.add(new BillPerTenant(
-					billMonthID(modifyBillDate()), houseID(),
+					billMonthID(modifyBillDate()), houseID(houseAddresses.getValue()),
 					utilityParticipants.get(i).getFte(), tenantBill,
 					tenantID(utilityParticipants.get(i).getName())));
 		}
@@ -243,10 +246,14 @@ public class UtilitiesCalcController {
 				"SELECT * FROM tenant WHERE name = '%s'",
 				activeTenants.getValue());
 
-		if (dbUtil.fetchTenantSelection(getTenant).get(0).isActive()) {
-			activeTenantRadioButton.setSelected(true);
-		} else {
-			deactivateTenantRadioButton.setSelected(true);
+		try {
+			if (dbUtil.fetchTenantSelection(getTenant).get(0).isActive()) {
+				activeTenantRadioButton.setSelected(true);
+			} else {
+				deactivateTenantRadioButton.setSelected(true);
+			}
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println("Exception due to something with radio buttons");
 		}
 	}
 
@@ -258,6 +265,11 @@ public class UtilitiesCalcController {
 				+ " WHERE name = '%s'",
 				this.activeTenantRadioButton.isSelected(),
 				this.activeTenants.getValue());
+		if(this.activeTenantRadioButton.isSelected()){
+			userMessageLabelTenant.setText(String.format("%s has been activated!", activeTenants.getValue()));
+		}else{
+			userMessageLabelTenant.setText(String.format("%s has been deactivated!", activeTenants.getValue()));
+		}
 		dbUtil.modifyDatabase(updateTenant);
 	}
 
@@ -315,6 +327,7 @@ public class UtilitiesCalcController {
 			addresses.add(allHouses.get(i).getAddress());
 		}
 		addressComboBox.getItems().addAll(addresses);
+		houseAddresses.getItems().addAll(addresses);
 	}
 
 	/**
@@ -328,6 +341,7 @@ public class UtilitiesCalcController {
 		activeTenants.getItems().setAll(FXCollections.observableArrayList());
 		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
 		addressComboBox.getItems().setAll(FXCollections.observableArrayList());
+		houseAddresses.getItems().addAll(FXCollections.observableArrayList());
 		utilityParticipants = new ArrayList<Tenant>();
 		queueNONLandlordArrayList();
 		queueUpSubletComboBox();
@@ -466,8 +480,6 @@ public class UtilitiesCalcController {
 	public int tenantID(String name) {
 		String tenantIDSQL = String.format(
 				"SELECT * FROM tenant WHERE name = '%s'", name);
-		System.out.println(dbUtil.fetchTenantSelection(tenantIDSQL).get(0)
-				.getTenant_ID());
 		return dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID();
 	}
 
@@ -480,8 +492,8 @@ public class UtilitiesCalcController {
 	 * 
 	 * @return
 	 */
-	public int houseID() {
-		String houseIDSQL = "SELECT * FROM house";
+	public int houseID(String address) {
+		String houseIDSQL =String.format("SELECT * FROM house WHERE address = '%s'", address);
 		return dbUtil.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
 	}
 
