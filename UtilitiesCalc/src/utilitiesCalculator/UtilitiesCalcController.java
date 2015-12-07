@@ -410,13 +410,7 @@ public class UtilitiesCalcController {
 			utilityParticipants
 					.add(new Sublet(dbUtil.fetchTenantSelection(landlordQuery)
 							.get(i).getName(), true));
-
 		}
-		
-		for(int i = 0; i < utilityParticipants.size(); i++){
-			utilityParticipants.get(i).setFte(1);
-		}
-
 	}
 
 	/**
