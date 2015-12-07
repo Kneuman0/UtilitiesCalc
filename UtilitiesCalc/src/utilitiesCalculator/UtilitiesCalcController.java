@@ -182,9 +182,16 @@ public class UtilitiesCalcController {
 		if(ensureAllEntriesLoggedHouseInfo()){
 			return;
 		}
-		House house = new House(addressInput.getText(),
-				Integer.parseInt(squareFootage.getText()),
-				Integer.parseInt(numberOfRooms.getText()));
+		House house = null;
+		try {
+			house = new House(addressInput.getText(),
+					Integer.parseInt(squareFootage.getText()),
+					Integer.parseInt(numberOfRooms.getText()));
+		} catch (NumberFormatException e) {
+			houseUserLabel.setText("Non-number detected in 'Number of Rooms' field"
+					+ " or 'Square Footage' field");
+			return;
+		}
 		dbUtil.addHouseInfo(house);
 		}
 
@@ -243,7 +250,13 @@ public class UtilitiesCalcController {
 	 * Needs Testing
 	 */
 	public void saveOccupancyButtonListener() {
-		modifyTenantFTE();
+		try {
+			modifyTenantFTE();
+		} catch (InvalidUserEntryException e) {
+			userLabelUtilCalc.setText(String.format("%s is not a valid portion of occupancy"));
+			return;
+		}
+		// Deletes each sublet from combo box after FTE has been recorded
 		String subTenantFTERecorded = subletTenantList.getValue();
 		for(int i = 0; i < subs.size(); i ++){
 			if(subs.get(i).equals(subTenantFTERecorded)){
@@ -417,14 +430,20 @@ public class UtilitiesCalcController {
 	 * 
 	 * changes the fte of the tenant specified by the user in the combobox Must
 	 * be used in saveOccupancyButtonListener()
+	 * @throws InvalidUserEntryException 
 	 * 
 	 */
-	private void modifyTenantFTE() {
+	private void modifyTenantFTE() throws InvalidUserEntryException {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			if (utilityParticipants.get(i).getName()
 					.equals(subletTenantList.getValue())) {
-				utilityParticipants.get(i).setFte(
-						Double.parseDouble(fte.getText()));
+				
+				try {
+					utilityParticipants.get(i).setFte(
+							Double.parseDouble(fte.getText()));
+				} catch (NumberFormatException e) {
+					throw new InvalidUserEntryException(fte.getText());
+				}
 			}
 		}
 
@@ -457,10 +476,16 @@ public class UtilitiesCalcController {
 	 */
 	private void saveBillMonth() {
 
-		BillMonth billMonth = new BillMonth(modifyBillDate(),
-				Double.parseDouble(fossilFuelBill.getText()),
-				Double.parseDouble(billAmount.getText()),
-				Double.parseDouble(otherBills.getText()));
+		BillMonth billMonth = null;
+		try {
+			billMonth = new BillMonth(modifyBillDate(),
+					Double.parseDouble(fossilFuelBill.getText()),
+					Double.parseDouble(billAmount.getText()),
+					Double.parseDouble(otherBills.getText()));
+		} catch (NumberFormatException e) {
+			userLabelUtilCalc.setText("Non-number detected in bill field");
+			return;
+		}
 		dbUtil.addBillingMonthEntry(billMonth);
 	}
 
