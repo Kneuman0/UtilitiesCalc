@@ -523,10 +523,14 @@ public class UtilitiesCalcController {
 
 		BillMonth billMonth = null;
 		try {
+			double totalBill = Double.parseDouble(fossilFuelBill.getText()) +
+					Double.parseDouble(billAmount.getText()) +
+					Double.parseDouble(otherBills.getText());
 			billMonth = new BillMonth(modifyBillDate(billDate.getText()),
 					Double.parseDouble(fossilFuelBill.getText()),
 					Double.parseDouble(billAmount.getText()),
-					Double.parseDouble(otherBills.getText()));
+					Double.parseDouble(otherBills.getText()), totalBill, 
+					houseID(houseAddresses.getValue()));
 		} catch (NumberFormatException e) {
 			userLabelUtilCalc.setText("Non-number detected in bill field");
 			return;

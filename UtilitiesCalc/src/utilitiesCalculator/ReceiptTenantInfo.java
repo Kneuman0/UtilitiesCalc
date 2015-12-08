@@ -2,12 +2,12 @@ package utilitiesCalculator;
 
 public class ReceiptTenantInfo {
 	
-	String name;
-	String date;
-	String tenantType;
-	double fte;
-	double amountOwed;
-	int house_ID;
+	private String name;
+	private String date;
+	private String tenantType;
+	private double fte;
+	private double amountOwed;
+	private int house_ID;
 	
 	public ReceiptTenantInfo(String name, String date, 
 			String tenantType, double fte, double amountOwed, int house_ID){

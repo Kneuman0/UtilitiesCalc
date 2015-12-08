@@ -5,25 +5,48 @@ public class BillMonth {
 	private double fossilFuelBill;
 	private double electricityBill;
 	private double otherBill;
+	private double totalBill;
 	private int billMonth_ID;
+	private int house_ID;
 	
-	public BillMonth(String date, double fossilFuelBill, double electricityBill, double otherBill){
+	public BillMonth(String date, double fossilFuelBill, 
+			double electricityBill, double otherBill, double totalBill, int house_ID){
 		this.date = date;
 		this.fossilFuelBill = fossilFuelBill;
 		this.electricityBill = electricityBill;
 		this.otherBill = otherBill;
+		this.totalBill = totalBill;
+		this.house_ID = house_ID;
 	}
 	
-	public BillMonth(String date, double fossilFuelBill, double electricityBill, double otherBill, int billMonth_ID){
+	public BillMonth(String date, double fossilFuelBill, double electricityBill, 
+			double otherBill, double totalBill, int house_ID, int billMonth_ID){
 		this.date = date;
 		this.fossilFuelBill = fossilFuelBill;
 		this.electricityBill = electricityBill;
 		this.otherBill = otherBill;
 		this.billMonth_ID = billMonth_ID;
+		this.totalBill = totalBill;
+		this.house_ID = house_ID;
 	}
 	
 	
 	
+	
+	/**
+	 * @return the totalBill
+	 */
+	public double getTotalBill() {
+		return totalBill;
+	}
+
+	/**
+	 * @param totalBill the totalBill to set
+	 */
+	public void setTotalBill(double totalBill) {
+		this.totalBill = totalBill;
+	}
+
 	/**
 	 * @return the billMonth_ID
 	 */

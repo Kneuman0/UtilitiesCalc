@@ -73,11 +73,11 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			
 
-			String insertBillMonthEntry = "INSERT INTO billMonth(date, fossilFuel, electric, other)"
-					+ String.format(" values ('%s', %.2f, %.2f, %.2f)",
+			String insertBillMonthEntry = "INSERT INTO billMonth(date, fossilFuel, electric, other, totalBill)"
+					+ String.format(" values ('%s', %.2f, %.2f, %.2f, %.2f)",
 							billMonth.getDate(), billMonth.getFossilFuelBill(),
 							billMonth.getElectricityBill(),
-							billMonth.getOtherBill());
+							billMonth.getOtherBill(), billMonth.getTotalBill());
 
 			stmt.execute(insertBillMonthEntry);
 
@@ -201,12 +201,12 @@ public class DatabaseUtility {
 	 */
 	public void inputSampleBillMonthEntries() {
 		Connection conn = null;
-		String insertSampleRow1 = "INSERT INTO billMonth (date, fossilFuel, electric, other)"
-				+ " VALUES('09/2015', 75.50, 90.45, 25.00)";
-		String insertSampleRow2 = "INSERT INTO billMonth (date, fossilFuel, electric, other)"
-				+ " VALUES('10/2015', 80.00, 91.00, 25.00)";
-		String insertSampleRow3 = "INSERT INTO billMonth (date, fossilFuel, electric, other)"
-				+ " VALUES('11/2015', 78.50, 85.40, 25.00)";
+		String insertSampleRow1 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
+				+ " VALUES('2015/09', 75.50, 90.45, 25.00, 190.95, 1)";
+		String insertSampleRow2 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
+				+ " VALUES('2015/10', 80.00, 91.00, 25.00, 196.0, 1)";
+		String insertSampleRow3 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
+				+ " VALUES('2015/11', 78.50, 85.40, 25.00, 188.9, 2)";
 
 		try {
 			conn = DriverManager.getConnection(DB_URL);
@@ -214,6 +214,35 @@ public class DatabaseUtility {
 			stmt.executeUpdate(insertSampleRow1);
 			stmt.executeUpdate(insertSampleRow2);
 			stmt.executeUpdate(insertSampleRow3);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void inputSampleBillPerTenantEntries(){
+		Connection conn = null;
+		String insertSampleRow1a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
+				+ " VALUES(1, 1, .25, 220.0, 1)";
+		String insertSampleRow2a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
+				+ " VALUES(1, 1, 0, 220.0, 2)";
+		String insertSampleRow3a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
+				+ " VALUES(1, 1, 1, 220.0, 4)";
+		
+		String insertSampleRow1b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
+				+ " VALUES(2, 1, .25, 200.0, 1)";
+		String insertSampleRow2b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
+				+ " VALUES(2, 1, 0, 200.0, 2)";
+		String insertSampleRow3b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
+				+ " VALUES(2, 1, 1, 200.0, 4)";
+
+		try {
+			conn = DriverManager.getConnection(DB_URL);
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate(insertSampleRow1a);
+			stmt.executeUpdate(insertSampleRow2a);
+			stmt.executeUpdate(insertSampleRow3a);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -303,8 +332,9 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				bm.add(new BillMonth(result.getString(1), result.getInt(2),
-						result.getInt(3), result.getInt(4), result.getInt(5)));
+				bm.add(new BillMonth(result.getString(1), result.getDouble(2),
+						result.getDouble(3), result.getDouble(4), result.getDouble(5),
+						result.getInt(5), result.getInt(6)));
 			}
 
 		} catch (SQLException e) {
@@ -441,16 +471,26 @@ public class DatabaseUtility {
 	 */
 	public ArrayList<ReceiptTenantInfo> fetchReceiptInfoForTenant(String date){
 		ArrayList<ReceiptTenantInfo> tenantInfo = new ArrayList<ReceiptTenantInfo>();
-		String SQLStatement = "SELECT .......";
+		String SQLStatement = String.format(
+				"SELECT tenant.name, "
+				+ " billMonth.date, "
+				+ " tenant.tenantType, billPerTenant.fte,"
+				+ "  billPerTenant.bill, house.house_ID"
+				+ " FROM tenant, billPerTenant, "
+				+ " billMonth, house"
+				+ " WHERE billPerTenant.tenant_ID = tenant.tenant_ID"
+				+ " AND billMonth.billMonth_ID = billPerTenant.billMonth_ID"
+				+ " AND house.house_ID = billPerTenant.house_ID"
+				+ " AND billMonth.date = '%s'", date);
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(DB_URL);
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-//				 tenantInfo.add(new BillPerTenant(result.getInt(1),
-//				 result.getInt(2), result.getDouble(3),
-//				 result.getDouble(4), result.getInt(5)));
+				 tenantInfo.add(new ReceiptTenantInfo(result.getString(1),
+				 result.getString(2), result.getString(3),
+				 result.getDouble(4), result.getDouble(5), result.getInt(6)));
 			}
 
 		} catch (SQLException e) {
@@ -475,16 +515,28 @@ public class DatabaseUtility {
 	 */
 	public ArrayList<ReceiptHouseInfo> fetchReceiptInfoForHouse(String date){
 		ArrayList<ReceiptHouseInfo> houseInfo = new ArrayList<ReceiptHouseInfo>();
-		String SQLStatement = "SELECT .......";
+		String SQLStatement = String.format(
+				"SELECT house.address, "
+				+ " house.numRooms,"
+				+ " house.sqFt, billMonth.totalBill,"
+				+ " billMonth.fossilFuel, billMonth.electric,"
+				+ " billMonth.other, house.address, house.house_ID"
+				+ " FROM billMonth, house, billPerTenant"
+				+ " WHERE billMonth.house_ID = house.house_ID"
+				+ " AND billPerTenant.billMonth_ID = billMonth.billMonth_ID"
+				+ " AND house.house_ID = billMonth.house_ID"
+				+ " AND billMonth.date = '%s'", date);
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(DB_URL);
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-//				 houseInfo.add(new BillPerTenant(result.getInt(1),
-//				 result.getInt(2), result.getDouble(3),
-//				 result.getDouble(4), result.getInt(5)));
+				System.out.println(result.getString(0));
+				 houseInfo.add(new ReceiptHouseInfo(result.getString(1),
+				 result.getInt(2), result.getInt(3),
+				 result.getDouble(4), result.getDouble(5), result.getDouble(6),
+						 result.getDouble(7), result.getInt(8)));
 			}
 
 		} catch (SQLException e) {
