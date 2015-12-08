@@ -88,14 +88,10 @@ public class DatabaseUtility {
 	}
 
 	/**
-	 * Need to think about how to get accurate FTE. Possibly process in
-	 * controller and from observable arraylists then pass the value to this
-	 * method. Other option is to put blank values in for bill and process the
-	 * bill when its time to print the receipt by nest nesting a method in the
-	 * receipt method that calculates the bill and then stores it
+	 * Inserts all active tenants living the specified house at the specified month into the db.
+	 * Must pass in a fully populated ArrayList of BillPerTenant objects
 	 * 
-	 * @param billPerTenant
-	 * @param billMonth
+	 * @param thisMonthsTenants
 	 */
 	public void addBillPerTenantEntry(ArrayList<BillPerTenant> thisMonthsTenants) {
 
@@ -124,6 +120,10 @@ public class DatabaseUtility {
 		}
 	}
 
+	/**
+	 * Used to modify rows in the db. Must pass in a complete and executable SQL statement
+	 * @param SQLStatement
+	 */
 	public void modifyDatabase(String SQLStatement) {
 		Connection conn = null;
 
@@ -146,7 +146,7 @@ public class DatabaseUtility {
 	}
 
 	/**
-	 * Inserts 5 sample rows into the database, one with the name Kyle Neuman
+	 * Inserts 5 dummy tenant rows into the tenant table of the db for testing purposes
 	 */
 	public void inputSampleTenantEntries() {
 		Connection conn = null;
@@ -174,6 +174,9 @@ public class DatabaseUtility {
 		}
 	}
 
+	/**
+	 * Inserts dummy house entries into the house table in the db for testing purposes
+	 */
 	public void inputSampleHouseEntries() {
 		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO house (address, numRooms, sqFt)"
@@ -193,6 +196,9 @@ public class DatabaseUtility {
 		}
 	}
 
+	/**
+	 * Inserts dummy bill month entries into the billMonth table of the db for testing purposes
+	 */
 	public void inputSampleBillMonthEntries() {
 		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO billMonth (date, fossilFuel, electric, other)"
@@ -348,6 +354,11 @@ public class DatabaseUtility {
 		return bpt;
 	}
 
+	/**
+	 * Drops any table in the db with the a name matching the string passed in
+	 * 
+	 * @param tableName
+	 */
 	public void dropTable(String tableName) {
 		String dropTable = String.format("DROP TABLE %s", tableName);
 		Connection conn = null;
@@ -368,18 +379,12 @@ public class DatabaseUtility {
 		}
 	}
 
-	public void updateDatabase(String SQLStatement) {
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL);
-			Statement stmt = conn.createStatement();
-			stmt.executeUpdate(SQLStatement);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
+	/**
+	 * Deletes all rows in the tenant table
+	 * in the db with the a name matching the string passed in
+	 * 
+	 * @param tenantName
+	 */
 	public void deleteTenant(String tenantName) {
 		Connection conn = null;
 		String deleteTenant = String.format("DELETE FROM tenant"
@@ -401,6 +406,12 @@ public class DatabaseUtility {
 		}
 	}
 	
+	/**
+	 * Deletes all rows in the house table
+	 * in the db with the an address matching the string passed in
+	 * 
+	 * @param address
+	 */
 	public void deleteHouse(String address){
 		Connection conn = null;
 		String deleteHouse = String.format("DELETE FROM house"
@@ -422,5 +433,70 @@ public class DatabaseUtility {
 		}
 	}
 	
-//	public ArrayList<>
+	/**
+	 * returns an arrayList of ReceiptTenantInfo objects
+	 * that relate to the date passed in
+	 * 
+	 * @return
+	 */
+	public ArrayList<ReceiptTenantInfo> fetchReceiptInfoForTenant(String date){
+		ArrayList<ReceiptTenantInfo> tenantInfo = new ArrayList<ReceiptTenantInfo>();
+		String SQLStatement = "SELECT .......";
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(DB_URL);
+			Statement stmt = conn.createStatement();
+			ResultSet result = stmt.executeQuery(SQLStatement);
+			while (result.next()) {
+//				 tenantInfo.add(new BillPerTenant(result.getInt(1),
+//				 result.getInt(2), result.getDouble(3),
+//				 result.getDouble(4), result.getInt(5)));
+			}
+
+		} catch (SQLException e) {
+
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return tenantInfo;
+		
+	}
+	
+	/**
+	 * returns an arrayList of ReceiptHouseInfo objects
+	 * that relate to the date passed in
+	 * 
+	 * @return
+	 */
+	public ArrayList<ReceiptHouseInfo> fetchReceiptInfoForHouse(String date){
+		ArrayList<ReceiptHouseInfo> houseInfo = new ArrayList<ReceiptHouseInfo>();
+		String SQLStatement = "SELECT .......";
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(DB_URL);
+			Statement stmt = conn.createStatement();
+			ResultSet result = stmt.executeQuery(SQLStatement);
+			while (result.next()) {
+//				 houseInfo.add(new BillPerTenant(result.getInt(1),
+//				 result.getInt(2), result.getDouble(3),
+//				 result.getDouble(4), result.getInt(5)));
+			}
+
+		} catch (SQLException e) {
+
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return houseInfo;
+	}
 }
