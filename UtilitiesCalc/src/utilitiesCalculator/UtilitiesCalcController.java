@@ -213,6 +213,9 @@ public class UtilitiesCalcController {
 		resetComboBoxes();
 	}
 
+	/*
+	 * Tested/Working
+	 */
 	public void deleteHouseButtonListener() {
 		String deleteHouse = addressComboBox.getValue();
 		dbUtil.deleteHouse(deleteHouse);
@@ -224,7 +227,7 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Needs testing
+	 * Tested/Working
 	 */
 	public void submitBillButtonListener() {
 		if (ensureAllEntriesLoggedUtilCalc()) {
@@ -256,14 +259,14 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Needs Testing
+	 * Tested/Working
 	 */
 	public void saveOccupancyButtonListener() {
 		try {
 			modifyTenantFTE();
 		} catch (InvalidUserEntryException e) {
 			userLabelUtilCalc.setText(String
-					.format("%s is not a valid portion of occupancy"));
+					.format("%s is not a valid portion of occupancy", e.getMessage()));
 			return;
 		}
 		userLabelUtilCalc.setText(String.format("Occupancy for %s saved as %.2f", 
@@ -284,7 +287,7 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Tested and working
+	 * Tested/working
 	 */
 	public void populateActiveStatus() {
 		String getTenant = String.format(
@@ -320,7 +323,7 @@ public class UtilitiesCalcController {
 		dbUtil.modifyDatabase(updateTenant);
 	}
 	
-//	public void tabPaneTest(){
+	public void tabPaneTest(){
 //		new EventHandler<ActionEvent>(){
 //			@Override
 //			public void handle(ActionEvent events){
@@ -330,13 +333,15 @@ public class UtilitiesCalcController {
 //		}
 //		
 //		
-//	}
+	}
 
 	// ----------------controller utility methods--------------------
 
 	/**
 	 * Loads all tenant names into the combo box that have tenant type of
 	 * 'sublet'
+	 * 
+	 * Tested/Working
 	 */
 	private void queueUpSubletComboBox() {
 
@@ -353,6 +358,7 @@ public class UtilitiesCalcController {
 
 	/**
 	 * Loads all tenant names into the combo boxes labeled tenant
+	 * Tested/Working
 	 */
 	private void queueUpTenantComboBox() {
 
@@ -369,6 +375,7 @@ public class UtilitiesCalcController {
 
 	/**
 	 * Loads the constant values "Landlord", "Full Time Renter", "Sublet"
+	 * Tested/Working
 	 */
 	private void queueUpTenantTypesComboBox() {
 		ObservableList<String> tenTypesList = FXCollections
@@ -377,6 +384,9 @@ public class UtilitiesCalcController {
 		this.tenantTypeList.getItems().addAll(tenTypesList);
 	}
 
+	/**
+	 * Tested/Working
+	 */
 	private void queueUpAddressComboBox() {
 		String allAddressesSQL = "SELECT * FROM house";
 		ArrayList<House> allHouses = dbUtil
@@ -394,6 +404,8 @@ public class UtilitiesCalcController {
 	 * comboBoxes with tenants that accurately reflect db
 	 * 
 	 * used in relation to deleting tenants and submitting occupancy
+	 * 
+	 * Tested/Working
 	 */
 	private void resetComboBoxes() {
 		tenantsList.getItems().setAll(FXCollections.observableArrayList());
@@ -415,7 +427,9 @@ public class UtilitiesCalcController {
 	 * editable fte of 1 (see sublet class constructor)
 	 * 
 	 * Will be used in submitBillButtonListener() to populate and calculate bill
-	 * for the month Untested
+	 * for the month
+	 * 
+	 * Tested/Working
 	 */
 	private void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
@@ -434,7 +448,9 @@ public class UtilitiesCalcController {
 	 * tenants have FTEs of 0 (see landlord class constructor)
 	 * 
 	 * Must be called after queueNONLandlordArrayList() and after all FTEs have
-	 * been modified Must be called in submitBillButtonlistener() untested
+	 * been modified Must be called in submitBillButtonlistener() 
+	 * 
+	 * Tested/Working
 	 */
 	private void queueAllTenantArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
@@ -452,6 +468,8 @@ public class UtilitiesCalcController {
 	 * 
 	 * changes the fte of the tenant specified by the user in the combobox Must
 	 * be used in saveOccupancyButtonListener()
+	 * 
+	 * Tested/Working
 	 * 
 	 * @throws InvalidUserEntryException
 	 * 
@@ -473,10 +491,12 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * totals the bill and divided that by the total FTE of all tenants Must be
-	 * used after all sublet FTE have been entered by the user Must use in
-	 * submitBillButtonListener() Must use after queueAllTenantArrayList()
-	 * Untested
+	 * totals the bill and divides that by the total FTE of all tenants.
+	 * Must be used after all sublet FTEs have been entered by the user. 
+	 * Must use in submitBillButtonListener(). 
+	 * Must use after queueAllTenantArrayList().
+	 * 
+	 * Tested/Working
 	 * 
 	 * @return
 	 */
@@ -495,7 +515,9 @@ public class UtilitiesCalcController {
 
 	/**
 	 * saves billMonth in database from GUI items. Must use in
-	 * submitBillButtonListener() Untested
+	 * submitBillButtonListener() 
+	 * 
+	 * Tested/Working
 	 */
 	private void saveBillMonth() {
 
@@ -516,6 +538,8 @@ public class UtilitiesCalcController {
 	 * Uses String.split to change the bill from month first year last to year
 	 * first month last for sorting purposes. Untested
 	 * 
+	 * Tested/Working
+	 * 
 	 * @return
 	 */
 	private String modifyBillDate(String dbDateIn) {
@@ -527,7 +551,9 @@ public class UtilitiesCalcController {
 
 	/**
 	 * Returns the billMonth ID based on the date. Date must be modified from
-	 * the date the user enters. use modifyBillDate() method untested
+	 * the date the user enters. use modifyBillDate() method 
+	 * 
+	 * Tested/Working
 	 * 
 	 * @param date
 	 * @return
@@ -540,23 +566,25 @@ public class UtilitiesCalcController {
 
 	/**
 	 * returns the tenant ID based on the name passed in. Ignores the
-	 * possibility of duplicate names Untested
+	 * possibility of duplicate names 
 	 * 
 	 * @param name
 	 * @return
 	 */
-	private int tenantID(String name) {
-		String tenantIDSQL = String.format(
-				"SELECT * FROM tenant WHERE name = '%s'", name);
-		return dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID();
-	}
+//	private int tenantID(String name) {
+//		String tenantIDSQL = String.format(
+//				"SELECT * FROM tenant WHERE name = '%s'", name);
+//		return dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID();
+//	}
 
 	/**
 	 * returns the house ID of the first house in the db. assumes only 1 house
 	 * exists in DB
 	 * 
 	 * will be modified to accept an address that will be stored in a combobox
-	 * in the GUI Untested
+	 * in the GUI 
+	 * 
+	 * Tested/Working
 	 * 
 	 * @return
 	 */
@@ -572,6 +600,8 @@ public class UtilitiesCalcController {
 	 * code executed
 	 * 
 	 * Method must be used at the every beginning of the listener
+	 * 
+	 * Tested/Working
 	 * 
 	 * @return
 	 */
@@ -606,10 +636,12 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Checks all fields necessary to add a full house object to database. If
+	 * Checks all fields necessary to add a full House object to database. If
 	 * any field is empty, user will be notified and no code executed
 	 * 
 	 * Method must be used at the every beginning of the listener
+	 * 
+	 * Tested/Working
 	 * 
 	 * @return
 	 */
@@ -632,11 +664,12 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Checks all fields necessary to add a full BillMonth and BillPerTenant
-	 * object to database. If any field is empty, user will be notified and no
-	 * code executed
+	 * Checks all fields necessary to add a full Tenant object to database. 
+	 * If any field is empty, user will be notified and no code executed
 	 * 
 	 * Method must be used at the every beginning of the listener
+	 * 
+	 * Tested/Working
 	 * 
 	 * @return
 	 */

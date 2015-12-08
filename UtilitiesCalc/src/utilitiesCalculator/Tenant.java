@@ -1,6 +1,6 @@
 package utilitiesCalculator;
 
-public class Tenant {
+public class Tenant implements TenantInterface{
 	private String name;
 	private boolean active;
 	public String tenantType;
