@@ -121,7 +121,7 @@
                         <Label layoutX="251.0" layoutY="30.0" text="*mm/yyyy" textFill="#ff0202" />
                         <Button fx:id="printReceiptButton" layoutX="245.0" layoutY="393.0" mnemonicParsing="false" onAction="#printReceiptButtonListener" text="Print Reciept " />
                         <Label layoutX="30.0" layoutY="98.0" text="*You must fill out all information" textFill="#f80202" />
-                        <TextField fx:id="dateReceiptButton" layoutX="70.0" layoutY="393.0" promptText="Enter Bill Date To Print" />
+                        <TextField fx:id="dateReceiptTextField" layoutX="70.0" layoutY="393.0" promptText="Enter Bill Date To Print" />
                         <TextField fx:id="fossilFuelBill" layoutX="29.0" layoutY="123.0" promptText="Enter Fossil Fuel Amount" AnchorPane.leftAnchor="30.0" />
                         <TextField fx:id="otherBills" layoutX="415.0" layoutY="123.0" promptText="Enter Enter Other Bills" AnchorPane.rightAnchor="30.0" />
                         <ComboBox fx:id="houseAddresses" layoutX="354.0" layoutY="26.0" prefHeight="25.0" prefWidth="217.0" promptText="House" />

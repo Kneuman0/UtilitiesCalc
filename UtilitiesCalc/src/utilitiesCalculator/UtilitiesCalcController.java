@@ -52,7 +52,7 @@ public class UtilitiesCalcController {
 	private Button deleteTenant;
 
 	@FXML
-	private TextField dateReceiptButton;
+	private TextField dateReceiptTextField;
 
 	@FXML
 	private TextField numberOfRooms;
@@ -283,6 +283,24 @@ public class UtilitiesCalcController {
 	}
 
 	public void printReceiptButtonListener() {
+		StringBuilder tenantInfo = new StringBuilder();
+		String header = String.format("|%-25s|%-8s|%-8s|%-5s|%-20s|%-15s|\n", 
+				"Tenant Name", "Date", "House ID", "FTE", "Tenant Type", "Portion of Bill");
+		tenantInfo.append(header);
+		String lineBreak = "";
+		for(int i = 0; i < header.length(); i++){
+			lineBreak += "-";
+		}
+		tenantInfo.append(String.format("%s\n", lineBreak));
+		ArrayList<ReceiptTenantInfo> tens = 
+				dbUtil.fetchReceiptInfoForTenant(modifyBillDate(dateReceiptTextField.getText()));
+		for(int i = 0; i < tens.size(); i++){
+			String stuff = String.format("|%-25s|%-8s|%-8d|%-5.2f|%-20s|%-15.2f|\n",
+					tens.get(i).getName(), tens.get(i).getDate(), tens.get(i).getHouse_ID(),
+					tens.get(i).getFte(), tens.get(i).getTenantType(), tens.get(i).getAmountOwed());
+			tenantInfo.append(stuff);
+		}
+		System.out.println(tenantInfo);
 
 	}
 
@@ -688,6 +706,15 @@ public class UtilitiesCalcController {
 			userMessageLabelTenant.setText("No tenant type selected!");
 		}
 		return notifyUser;
+	}
+	
+	private String getWhiteSpace(String s, int columnWidth){
+		int length = columnWidth - s.length();
+		String spaces = "";
+		for(int i = 0; i < length;i++){
+			spaces += " ";
+		}
+		return spaces;
 	}
 
 }

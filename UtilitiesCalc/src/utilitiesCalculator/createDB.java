@@ -16,8 +16,8 @@ public class createDB {
 	public static void main(String[] args) {
 
 		final boolean DROP_TABLE = true;
-		final boolean RESET_DATABSE = true;
-		final boolean SHOW_ROW_COUNT = true;
+		final boolean RESET_DATABSE = false;
+		final boolean SHOW_ROW_COUNT = false;
 		DatabaseUtility util = new DatabaseUtility();
 
 		final String DB_URL = "jdbc:derby:db/UtilitiesCalc;create=true;";
@@ -39,24 +39,37 @@ public class createDB {
 				util.inputSampleBillMonthEntries();
 				util.inputSampleBillPerTenantEntries();
 			}
-			//-----------------StartTest-----------------------------------
-//			String date = "2015/09";
-//			ArrayList<ReceiptTenantInfo> rti = util.fetchReceiptInfoForTenant(date);
-//			System.out.println(rti.size());
-//			for(int i = 0; i < rti.size(); i++){
-//				System.out.printf("Name: %s\nBill: %s\nHouse_ID: %d\n--------------------\n", 
-//						rti.get(i).getName(), rti.get(i).getAmountOwed(), rti.get(i).getHouse_ID());
+			
+			
+//			String dates = "2015/09";
+//			int house_ID = 1;
+//			ArrayList<ReceiptHouseInfo> rhi = util.fetchReceiptInfoForHouse(dates, house_ID);
+//			System.out.println(rhi.size());
+//			for(int i = 0; i < rhi.size(); i++){
+//				System.out.printf("Electric: %.2f\n--------------------\n", 
+//						rhi.get(i).getElectric());
 //				
 //			}
 			
-			String dates = "2015/09";
-			ArrayList<ReceiptHouseInfo> rhi = util.fetchReceiptInfoForHouse(dates);
-			System.out.println(rhi.size());
-			for(int i = 0; i < rhi.size(); i++){
-				System.out.printf("Address: %s\nDate: %s\nTotal Bill: %.2f\n--------------------\n", 
-						rhi.get(i).getAddress());
-				
+			
+			
+			
+			String name = "Jajob jefferies";
+			String name1 = "fred butt";
+			String stuff = String.format("|%-25s|%-8s|%-8d|%-5.2f|%-20s|%-15.2f|\n", name, "09/2015", 1, .25, "Landlord", 90.45);
+			StringBuilder trial = new StringBuilder();
+			
+			String header = String.format("|%-25s|%-8s|%-8s|%-5s|%-20s|%-15s|\n", "Tenant Name", "Date", "House ID", "FTE", "Tenant Type", "Portion of Bill");
+//			System.out.printf("|%-25s|\n", name1);
+			trial.append(header);
+			String lineBreak = "";
+			for(int i = 0; i < header.length(); i++){
+				lineBreak += "-";
 			}
+			trial.append(String.format("%s\n", lineBreak));
+			trial.append(stuff);
+			System.out.println(trial.toString());
+			
 			
 			
 			

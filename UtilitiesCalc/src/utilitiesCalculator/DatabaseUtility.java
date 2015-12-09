@@ -513,26 +513,26 @@ public class DatabaseUtility {
 	 * 
 	 * @return
 	 */
-	public ArrayList<ReceiptHouseInfo> fetchReceiptInfoForHouse(String date){
+	public ArrayList<ReceiptHouseInfo> fetchReceiptInfoForHouse(String date, int house_ID){
 		ArrayList<ReceiptHouseInfo> houseInfo = new ArrayList<ReceiptHouseInfo>();
 		String SQLStatement = String.format(
 				"SELECT house.address, "
 				+ " house.numRooms,"
 				+ " house.sqFt, billMonth.totalBill,"
 				+ " billMonth.fossilFuel, billMonth.electric,"
-				+ " billMonth.other, house.address, house.house_ID"
-				+ " FROM billMonth, house, billPerTenant"
-				+ " WHERE billMonth.house_ID = house.house_ID"
-				+ " AND billPerTenant.billMonth_ID = billMonth.billMonth_ID"
-				+ " AND house.house_ID = billMonth.house_ID"
-				+ " AND billMonth.date = '%s'", date);
+				+ " billMonth.other, house.house_ID"
+				+ " FROM billMonth, house"
+				+ " WHERE "
+				+ " house.house_ID = %d"
+				+ " AND billMonth.date = '%s'", house_ID,  date);
+		
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(DB_URL);
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				System.out.println(result.getString(0));
+//				System.out.println(result.getString(0));
 				 houseInfo.add(new ReceiptHouseInfo(result.getString(1),
 				 result.getInt(2), result.getInt(3),
 				 result.getDouble(4), result.getDouble(5), result.getDouble(6),
@@ -540,6 +540,7 @@ public class DatabaseUtility {
 			}
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 
 		} finally {
 			try {
@@ -551,4 +552,15 @@ public class DatabaseUtility {
 		}
 		return houseInfo;
 	}
+	
+	public String getWhiteSpace(String s, int columnWidth){
+		int length = columnWidth - s.length();
+		String spaces = "";
+		for(int i = 0; i < length;i++){
+			spaces += " ";
+		}
+		return spaces;
+	}
+	
+	
 }
