@@ -24,20 +24,18 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 
 public class UtilitiesCalcController {
 
-	// @FXML
-	// private TableColumn<Tenant, String> tenantName;
-	//
-	// @FXML
-	// private TableColumn<Tenant, String> tenantColumn;
-	//
-	// @FXML
-	// private TableView<Tenant> table;
-
+	@FXML
+    private Tab summaryTable;
+	
+	@FXML
+	private ToggleGroup summary;
+	 
 	@FXML
 	private Label houseUserLabel;
 
@@ -81,19 +79,10 @@ public class UtilitiesCalcController {
 	private TextField billAmount;
 
 	@FXML
-	private Tab summaryTable;
-
-	@FXML
 	private TextField fte;
 
 	@FXML
-	private Tab tenantTab;
-
-	@FXML
 	private TextField nameTextBox;
-
-	@FXML
-	private Tab housingTab;
 
 	@FXML
 	private TextField addressInput;
@@ -145,12 +134,37 @@ public class UtilitiesCalcController {
 
 	@FXML
 	private Label userLabelUtilCalc;
+	
+	@FXML
+    private RadioButton billTotRadioButton;
+	
+	@FXML
+    private RadioButton houseSumRadioButton;
+	
+	@FXML
+    private RadioButton tenSumRadioButton;
+	
+	@FXML
+    private TextArea summaryTextArea;
+	
+	@FXML
+    private TextField ReceiptViewDateTextField;
+
+    @FXML
+    private ComboBox<?> receiptViewAddressComboBox;
+    
+    @FXML
+    private RadioButton receiptViewRadioButton;
+    
+    @FXML
+    private Button viewReceiptButton;
 
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
 	ObservableList<String> addresses;
 	DatabaseUtility dbUtil;
 	ArrayList<Tenant> utilityParticipants;
+	
 
 	/**
 	 * Tested/working
@@ -163,6 +177,7 @@ public class UtilitiesCalcController {
 		queueUpSubletComboBox();
 		queueUpAddressComboBox();
 		queueNONLandlordArrayList();
+//		summaryTextArea.setText();
 	}
 
 	/**
@@ -358,17 +373,27 @@ public class UtilitiesCalcController {
 		dbUtil.modifyDatabase(updateTenant);
 	}
 	
-	public void tabPaneTest(){
-//		new EventHandler<ActionEvent>(){
-//			@Override
-//			public void handle(ActionEvent events){
-//				System.out.println("Action Event Thrown");
-//				housingTab.setOnClosed(events);
-//			}
-//		}
-//		
-//		
+	public void tenantSummaryRadioButtonListener(){
+		summaryTextArea.setText("Heres your stinking tenant summary");
 	}
+	
+	public void housingSummaryRadioButtonListener(){
+		summaryTextArea.setText("Heres your stinking house summary");
+	}
+	
+	public void billTotStatRadioButtonListener(){
+		summaryTextArea.setText("Heres your stinking statistics summary");
+	}
+	
+	public void receiptViewRadioButtonListener(){
+		summaryTextArea.setText("Please enter your that address and the date on the "
+				+ "receipt you'd like to view");
+	}
+	
+	public void viewReceiptButton(){
+		summaryTextArea.setText("Heres your stinking receipt summary");
+	}
+	
 
 	// ----------------controller utility methods--------------------
 
