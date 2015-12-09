@@ -1,5 +1,10 @@
 package utilitiesCalculator;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.StringTokenizer;
@@ -283,24 +288,36 @@ public class UtilitiesCalcController {
 	}
 
 	public void printReceiptButtonListener() {
-		StringBuilder tenantInfo = new StringBuilder();
-		String header = String.format("|%-25s|%-8s|%-8s|%-5s|%-20s|%-15s|\n", 
-				"Tenant Name", "Date", "House ID", "FTE", "Tenant Type", "Portion of Bill");
-		tenantInfo.append(header);
-		String lineBreak = "";
-		for(int i = 0; i < header.length(); i++){
-			lineBreak += "-";
+		if(ensureAllEntriesLoggedReceipt()){
+			return;
 		}
-		tenantInfo.append(String.format("%s\n", lineBreak));
-		ArrayList<ReceiptTenantInfo> tens = 
-				dbUtil.fetchReceiptInfoForTenant(modifyBillDate(dateReceiptTextField.getText()));
-		for(int i = 0; i < tens.size(); i++){
-			String stuff = String.format("|%-25s|%-8s|%-8d|%-5.2f|%-20s|%-15.2f|\n",
-					tens.get(i).getName(), tens.get(i).getDate(), tens.get(i).getHouse_ID(),
-					tens.get(i).getFte(), tens.get(i).getTenantType(), tens.get(i).getAmountOwed());
-			tenantInfo.append(stuff);
+		FileWriter tenantReceipt;
+		PrintWriter fileOut= null;
+		String date = dateReceiptTextField.getText().replace("/", "-");
+		String filePath = String.format("C:\\%s%s.txt", 
+				"BillsFor", date);
+		try {
+			
+			tenantReceipt = new FileWriter(filePath);
+			fileOut = new PrintWriter(tenantReceipt);
+		} catch (IOException e1) {
+			System.out.println("File Not Found");
+			e1.printStackTrace();
 		}
-		System.out.println(tenantInfo);
+		
+		try {
+			printTenantInfo(fileOut);
+		} catch (InvalidUserEntryException e) {
+			userLabelUtilCalc.setText(String.format("%s was not found in the databse."
+					+ " No receipt printed.",
+					e.getMessage()));
+			return;
+		}
+		printHouseInfo(fileOut);
+		userLabelUtilCalc.setText(String.format("Receipt Processed! File saved at %s\n"
+				+ "(For best results, open with MS Word)", filePath));
+		fileOut.close();
+		
 
 	}
 
@@ -397,7 +414,7 @@ public class UtilitiesCalcController {
 	 */
 	private void queueUpTenantTypesComboBox() {
 		ObservableList<String> tenTypesList = FXCollections
-				.observableArrayList("Landlord", "Full Time Renter", "Sublet");
+				.observableArrayList("Landlord", "Standard", "Sublet");
 
 		this.tenantTypeList.getItems().addAll(tenTypesList);
 	}
@@ -715,6 +732,70 @@ public class UtilitiesCalcController {
 			spaces += " ";
 		}
 		return spaces;
+	}
+	
+	private void printTenantInfo(PrintWriter fileOut) throws InvalidUserEntryException{
+		StringBuilder tenantInfo = new StringBuilder();
+		String date = String.format("Date: %s\n\n", dateReceiptTextField.getText());
+		tenantInfo.append(date);
+		String header = String.format("|%-20s|%-5s|%-15s|%-8s|\n", 
+				"Tenant Name", "FTE", "Tenant Type", "Owed");
+		tenantInfo.append(header);
+		String lineBreak = "";
+		for(int i = 0; i < header.length(); i++){
+			lineBreak += "-";
+		}
+		tenantInfo.append(String.format("%s\n", lineBreak));
+		ArrayList<ReceiptTenantInfo> tens = 
+				dbUtil.fetchReceiptInfoForTenant(modifyBillDate(dateReceiptTextField.getText()));
+		if(tens.size() == 0){
+			throw new InvalidUserEntryException(dateReceiptTextField.getText());
+		}
+		for(int i = 0; i < tens.size(); i++){
+			String stuff = String.format("|%-20s|%-5.2f|%-15s|$%-7.2f|\n",
+					tens.get(i).getName(), tens.get(i).getFte(), 
+					tens.get(i).getTenantType(), tens.get(i).getAmountOwed());
+			tenantInfo.append(stuff);
+		}
+		tenantInfo.append("\n\n\n\n");
+		fileOut.println(tenantInfo);
+	}
+	
+	private void printHouseInfo(PrintWriter fileOut){
+		ArrayList<ReceiptHouseInfo> houseInformation = 
+				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(dateReceiptTextField.getText()), 
+						houseID(houseAddresses.getValue()));
+		StringBuilder houseInfo = new StringBuilder();
+		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\n", "Address", "Total Bill", "Cost / sqft", "Cost / Room");
+		String dash = "";
+		for(int i = 2; i <= idHouse.length(); i++){
+			dash += "-";
+		}
+		houseInfo.append(idHouse);
+		houseInfo.append(String.format("%s\n", dash));
+		
+		for(int i = 0; i < houseInformation.size(); i++){
+		String tenantInfo = String.format("|%-22s|%-12.2f|%-12.2f|%-12.2f|\n",
+				 houseInformation.get(i).getAddress(), houseInformation.get(i).getTotalBill(), 
+				 houseInformation.get(i).getCostPerSqFt(),
+				 houseInformation.get(i).getCostPerRoom());
+		houseInfo.append(tenantInfo);
+		}
+		fileOut.println(houseInfo);
+		
+	}
+	
+	private boolean ensureAllEntriesLoggedReceipt(){
+		boolean notifyUser = false;
+		if(houseAddresses.getSelectionModel().isEmpty()){
+			userLabelUtilCalc.setText("No house address selected");
+			notifyUser = true;
+		}
+		if(dateReceiptTextField.getText().equals("")){
+			userLabelUtilCalc.setText("No date entered");
+			notifyUser = true;
+		}
+		return notifyUser;
 	}
 
 }

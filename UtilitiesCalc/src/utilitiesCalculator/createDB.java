@@ -1,5 +1,8 @@
 package utilitiesCalculator;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -41,35 +44,48 @@ public class createDB {
 			}
 			
 			
-//			String dates = "2015/09";
-//			int house_ID = 1;
-//			ArrayList<ReceiptHouseInfo> rhi = util.fetchReceiptInfoForHouse(dates, house_ID);
-//			System.out.println(rhi.size());
-//			for(int i = 0; i < rhi.size(); i++){
-//				System.out.printf("Electric: %.2f\n--------------------\n", 
-//						rhi.get(i).getElectric());
-//				
-//			}
-			
-			
-			
-			
-			String name = "Jajob jefferies";
-			String name1 = "fred butt";
-			String stuff = String.format("|%-25s|%-8s|%-8d|%-5.2f|%-20s|%-15.2f|\n", name, "09/2015", 1, .25, "Landlord", 90.45);
-			StringBuilder trial = new StringBuilder();
-			
-			String header = String.format("|%-25s|%-8s|%-8s|%-5s|%-20s|%-15s|\n", "Tenant Name", "Date", "House ID", "FTE", "Tenant Type", "Portion of Bill");
-//			System.out.printf("|%-25s|\n", name1);
-			trial.append(header);
-			String lineBreak = "";
-			for(int i = 0; i < header.length(); i++){
-				lineBreak += "-";
+			String dates = "2015/09";
+			int house_ID = 1;
+			ArrayList<ReceiptHouseInfo> rhi = util.fetchReceiptInfoForHouse(dates, house_ID);
+			System.out.println(rhi.size());
+			for(int i = 0; i < rhi.size(); i++){
+				System.out.printf("Electric: %.2f\n--------------------\n", 
+						rhi.get(i).getElectric());
+				
 			}
-			trial.append(String.format("%s\n", lineBreak));
-			trial.append(stuff);
-			System.out.println(trial.toString());
 			
+//			ArrayList<ReceiptTenantInfo> tens = 
+//					util.fetchReceiptInfoForTenant(util.modifyBillDate("09/2015"));
+//			System.out.println(tens.size());
+//			
+			
+			
+//			String name = "Jajob jefferies";
+//			String name1 = "fred butt";
+//			String stuff = String.format("|%-20s|%-8s|%-5.2f|%-17s|%-5.2f|\n", name, "09/2015", .25, "Landlord", 90.45);
+//			StringBuilder trial = new StringBuilder();
+//			
+//			String header = String.format("|%-20s|%-8s|%-5s|%-17s|%-5s|\n", "Tenant Name", "Date", "FTE", "Tenant Type", "Owed");
+////			System.out.printf("|%-25s|\n", name1);
+//			trial.append(header);
+//			String lineBreak = "";
+//			for(int i = 0; i < header.length(); i++){
+//				lineBreak += "-";
+//			}
+//			trial.append(String.format("%s\n", lineBreak));
+//			trial.append(stuff);
+//			FileWriter fout = null;
+//			System.out.println(trial.toString());
+//			try {
+//				 fout = new FileWriter(String.format("C:\\%s%s", 
+//						"BillsFor", "092015.txt"));
+//				 PrintWriter printMe = new PrintWriter(fout, true);
+//				 printMe.println(trial);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
 			
 			
 			

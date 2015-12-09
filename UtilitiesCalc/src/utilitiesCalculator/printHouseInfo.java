@@ -15,15 +15,14 @@ public class printHouseInfo {
 		String dash = "";
 		
 		StringBuilder houseInfo = new StringBuilder();
-		String idHouse = String.format("|%-8s|%-12s|%-12s|%-10s|%-6s|%-12s|%-10s|%-10s|\n", "Date", "Address", "Fossil Fuel", 
-									   "Electric", "Other", "Total Bill", "Cost / sqft", "Cost / Room");
+		String idHouse = String.format("|%-8s|%-25s|%-12s|%-12s|%-12s|\n", "Date", "Address", "Total Bill", "Cost / sqft", "Cost / Room");
 		
 		for(int i = 0; i <= idHouse.length(); i++){
 			dash += "-";
 		}
 		
-		String tenantInfo = String.format("|%-8s|%-12s|%-12.2f|%-10.2f|%-6.2f|%-12.2f|%-11s|%-11.2f|", houseDate, houseAddress, 
-											fossil, electric, other, total, sqft, room);
+		String tenantInfo = String.format("|%-8s|%-25s|%-12.2f|%-12s|%-12.2f|", houseDate, houseAddress, 
+											 total, sqft, room);
 		
 		houseInfo.append(idHouse);
 		houseInfo.append(String.format("%s\n", dash));

@@ -157,7 +157,7 @@ public class DatabaseUtility {
 		String insertSampleRow3 = "INSERT INTO tenant (name, active, tenantType)"
 				+ " VALUES('Thomas Tutu', true, 'Sublet')";
 		String insertSampleRow4 = "INSERT INTO tenant (name, active, tenantType)"
-				+ " VALUES('Rebecca Raferty', true, 'Full Time Renter')";
+				+ " VALUES('Rebecca Raferty', true, 'Standard')";
 		String insertSampleRow5 = "INSERT INTO tenant (name, active, tenantType)"
 				+ " VALUES('Gilberto DeMayo', true, 'Sublet')";
 		try {
@@ -224,18 +224,18 @@ public class DatabaseUtility {
 	public void inputSampleBillPerTenantEntries(){
 		Connection conn = null;
 		String insertSampleRow1a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
-				+ " VALUES(1, 1, .25, 220.0, 1)";
+				+ " VALUES(1, 1, .25, 44.0, 1)";
 		String insertSampleRow2a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
-				+ " VALUES(1, 1, 0, 220.0, 2)";
+				+ " VALUES(1, 1, 0, 0, 2)";
 		String insertSampleRow3a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
-				+ " VALUES(1, 1, 1, 220.0, 4)";
+				+ " VALUES(1, 1, 1, 176.0, 4)";
 		
 		String insertSampleRow1b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
-				+ " VALUES(2, 1, .25, 200.0, 1)";
+				+ " VALUES(2, 1, .25, 40.0, 1)";
 		String insertSampleRow2b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
-				+ " VALUES(2, 1, 0, 200.0, 2)";
+				+ " VALUES(2, 1, 0, 0.0, 2)";
 		String insertSampleRow3b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
-				+ " VALUES(2, 1, 1, 200.0, 4)";
+				+ " VALUES(2, 1, 1, 160.0, 4)";
 
 		try {
 			conn = DriverManager.getConnection(DB_URL);
@@ -494,6 +494,7 @@ public class DatabaseUtility {
 			}
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 
 		} finally {
 			try {
@@ -560,6 +561,21 @@ public class DatabaseUtility {
 			spaces += " ";
 		}
 		return spaces;
+	}
+	
+	/**
+	 * Uses String.split to change the bill from month first year last to year
+	 * first month last for sorting purposes. Untested
+	 * 
+	 * Tested/Working
+	 * 
+	 * @return
+	 */
+	public String modifyBillDate(String dbDateIn) {
+		String[] date = dbDateIn.split("/");
+		String dbDate = date[1] + "/" + date[0];
+		return dbDate;
+
 	}
 	
 	
