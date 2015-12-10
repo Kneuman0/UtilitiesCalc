@@ -2,6 +2,8 @@ package utilitiesCalculator;
 
 public interface TenantInterface {
 
+	//REQ#3
+	
 	/**
 	 * returns the name of the tenant
 	 * @return

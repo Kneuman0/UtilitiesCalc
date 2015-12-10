@@ -1,5 +1,7 @@
 package utilitiesCalculator;
 
+	//#REQ3 REQ#4 #REQ5
+
 public class Tenant implements TenantInterface{
 	private String name;
 	private boolean active;

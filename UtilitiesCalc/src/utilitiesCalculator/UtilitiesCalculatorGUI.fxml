@@ -46,6 +46,11 @@
                            </toggleGroup>
                         </RadioButton>
                         <RadioButton fx:id="newTenantInactiveRadioButton" layoutX="460.0" layoutY="117.0" mnemonicParsing="false" text="Inactive" toggleGroup="$initalTenantActive" />
+                        <Label layoutX="396.0" layoutY="423.0" prefHeight="17.0" prefWidth="204.0" text="Made by: Kyle Neuman &amp; Nick Saveleski">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
                      </children></AnchorPane>
             </content>
           </Tab>

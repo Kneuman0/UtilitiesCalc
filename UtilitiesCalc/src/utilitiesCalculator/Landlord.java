@@ -1,6 +1,7 @@
 package utilitiesCalculator;
 
-// REQ 5
+// REQ #5
+// REQ #6
 public class Landlord extends Tenant {
 
 	

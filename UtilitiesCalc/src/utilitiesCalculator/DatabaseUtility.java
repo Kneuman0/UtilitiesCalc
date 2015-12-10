@@ -65,7 +65,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param billMonth
 	 */
-	public void addBillingMonthEntry(BillMonth billMonth) {
+	public void addBillingMonthEntry(BillMonth billMonth) {				//REQ#7
 
 		try {
 			Connection conn = DriverManager.getConnection(DB_URL);
@@ -93,7 +93,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param thisMonthsTenants
 	 */
-	public void addBillPerTenantEntry(ArrayList<BillPerTenant> thisMonthsTenants) {
+	public void addBillPerTenantEntry(ArrayList<BillPerTenant> thisMonthsTenants) {			//REQ#7
 
 		try {
 			Connection conn = DriverManager.getConnection(DB_URL);
@@ -498,7 +498,7 @@ public class DatabaseUtility {
 	 * 
 	 * @return
 	 */
-	public ArrayList<ReceiptTenantInfo> fetchReceiptInfoForTenant(String date){
+	public ArrayList<ReceiptTenantInfo> fetchReceiptInfoForTenant(String date){			//REQ#8
 		ArrayList<ReceiptTenantInfo> tenantInfo = new ArrayList<ReceiptTenantInfo>();
 		String SQLStatement = String.format(
 				"SELECT tenant.name, "

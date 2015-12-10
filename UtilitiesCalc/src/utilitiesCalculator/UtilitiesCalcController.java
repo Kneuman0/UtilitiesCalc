@@ -330,7 +330,7 @@ public class UtilitiesCalcController {
 		
 		try {
 			printTenantInfo(fileOut);
-		} catch (InvalidUserEntryException e) {
+		} catch (InvalidUserEntryException e) {		//REQ#12
 			userLabelUtilCalc.setText(String.format("%s was not found in the databse."
 					+ " No receipt printed.",
 					e.getMessage()));
@@ -512,7 +512,7 @@ public class UtilitiesCalcController {
 	private void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
-		ArrayList<Tenant> temp = dbUtil.fetchTenantSelection(landlordQuery);
+		ArrayList<Tenant> temp = dbUtil.fetchTenantSelection(landlordQuery);		//REQ#10
 		for (int i = 0; i < temp.size(); i++) {
 			utilityParticipants.add(new Sublet(temp.get(i).getName(), true, 
 					temp.get(i).getTenant_ID()));
@@ -533,7 +533,7 @@ public class UtilitiesCalcController {
 	private void queueAllTenantArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
 				+ " AND active = true";
-		ArrayList<Tenant> temp = dbUtil.fetchTenantSelection(landlordQuery);
+		ArrayList<Tenant> temp = dbUtil.fetchTenantSelection(landlordQuery);		//REQ#10
 		for (int i = 0; i < temp.size(); i++) {
 			utilityParticipants.add(new Landlord(temp.get(i).getName(), true, 
 							temp.get(i).getTenant_ID()));
@@ -562,7 +562,9 @@ public class UtilitiesCalcController {
 	 * @throws InvalidUserEntryException
 	 * 
 	 */
-	private void modifyTenantFTE() throws InvalidUserEntryException {
+	
+	
+	private void modifyTenantFTE() throws InvalidUserEntryException {	// REQ #11
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			if (utilityParticipants.get(i).getName()
 					.equals(subletTenantList.getValue())) {
@@ -571,6 +573,7 @@ public class UtilitiesCalcController {
 					utilityParticipants.get(i).setFte(
 							Double.parseDouble(fte.getText()));
 				} catch (NumberFormatException e) {
+					// REQ#12
 					throw new InvalidUserEntryException(fte.getText());
 				}
 			}
@@ -785,7 +788,9 @@ public class UtilitiesCalcController {
 	}
 	
 	private void printTenantInfo(PrintWriter fileOut) throws InvalidUserEntryException{
-		StringBuilder tenantInfo = new StringBuilder();
+		
+		//StringBuilder REQ#2
+		StringBuilder tenantInfo = new StringBuilder();	
 		String date = String.format("Date: %s\n\n", dateReceiptTextField.getText());
 		tenantInfo.append(date);
 		String header = String.format("|%-20s|%-5s|%-15s|%-8s|\n", 
@@ -816,7 +821,7 @@ public class UtilitiesCalcController {
 				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(dateReceiptTextField.getText()),
 					houseID(houseAddresses.getValue())
 								);
-		StringBuilder houseInfo = new StringBuilder();
+		StringBuilder houseInfo = new StringBuilder();			//REQ#2
 		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\n", "Address", "Total Bill", "Cost / sqft", "Cost / Room");
 		String dash = "";
 		for(int i = 2; i <= idHouse.length(); i++){
