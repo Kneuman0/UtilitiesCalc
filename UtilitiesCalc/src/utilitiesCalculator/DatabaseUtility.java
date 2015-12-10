@@ -73,11 +73,11 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			
 
-			String insertBillMonthEntry = "INSERT INTO billMonth(date, fossilFuel, electric, other, totalBill)"
-					+ String.format(" values ('%s', %.2f, %.2f, %.2f, %.2f)",
+			String insertBillMonthEntry = "INSERT INTO billMonth(date, fossilFuel, electric, other, totalBill, house_ID)"
+					+ String.format(" values ('%s', %.2f, %.2f, %.2f, %.2f, %d)",
 							billMonth.getDate(), billMonth.getFossilFuelBill(),
 							billMonth.getElectricityBill(),
-							billMonth.getOtherBill(), billMonth.getTotalBill());
+							billMonth.getOtherBill(), billMonth.getTotalBill(), billMonth.getHouse_ID());
 
 			stmt.execute(insertBillMonthEntry);
 
@@ -101,7 +101,7 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			for(int i = 0; i < thisMonthsTenants.size(); i++){
 				String inserBillPerTenant = String.format("INSERT INTO billPerTenant("
-						+ " billingMonth_ID, house_ID, fte, bill, tenant_ID)"
+						+ " billMonth_ID, house_ID, fte, bill, tenant_ID)"
 						+ " VALUES(%d, %d, %f, %.2f, %d)",
 						thisMonthsTenants.get(i).getBillMonth_ID(),
 						thisMonthsTenants.get(i).getHouse_ID(),
@@ -352,6 +352,32 @@ public class DatabaseUtility {
 		}
 		return bm;
 	}
+	
+	public int fetchBillMonthID(String date){
+		Connection conn = null;
+		ResultSet result = null;
+		String getBMID = String.format("SELECT billMonth_ID FROM billMonth WHERE date = '%s'", date);
+		int id = 0;
+				try {
+			conn = DriverManager.getConnection(DB_URL);
+			Statement stmt = conn.createStatement();
+			result = stmt.executeQuery(getBMID);
+			while (result.next()) {
+				id = result.getInt("billMonth_ID");
+			}
+
+		} catch (SQLException e) {
+
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return id;
+	}
 
 	/**
 	 * Returns ArrayList of BillPerTenant objects based on SQL statement passed
@@ -526,9 +552,8 @@ public class DatabaseUtility {
 				+ " billMonth.fossilFuel, billMonth.electric,"
 				+ " billMonth.other, house.house_ID"
 				+ " FROM billMonth, house"
-				+ " WHERE "
-				+ " house.house_ID = %d"
-				+ " AND billMonth.date = '%s'", house_ID,  date);
+				+ " WHERE house.house_ID = %d"
+				+ " AND billMonth.date = '%s'", house_ID, date);
 		
 		Connection conn = null;
 		try {

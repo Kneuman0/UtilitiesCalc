@@ -197,7 +197,7 @@ public class UtilitiesCalcController {
 				tenantTypeList.getValue());
 		dbUtil.addTenant(tenant);
 		userMessageLabelTenant.setText(String.format("%s has been added!",
-				tenant));
+				tenant.getName()));
 		resetComboBoxes();
 	}
 
@@ -275,11 +275,14 @@ public class UtilitiesCalcController {
 							houseID(houseAddresses.getValue()),
 							utilityParticipants.get(i).getFte(), tenantBill,
 							utilityParticipants.get(i).getTenant_ID()));
+			
 		}
 
 		userLabelUtilCalc.setText(String.format("Bill for %s has been processed and saved to database!",
-				modifyBillDate(billDate.getText())));
+				billDate.getText()));
 		dbUtil.addBillPerTenantEntry(thisMonthsTenants);
+//		resetComboBoxes();
+		clearInformationForBillCalculation();
 
 	}
 
@@ -417,7 +420,7 @@ public class UtilitiesCalcController {
 	 * Tested/Working
 	 */
 	private void queueUpSubletComboBox() {
-
+		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
 		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'"
 				+ " AND active = true";
 		ArrayList<Tenant> sublets = dbUtil
@@ -434,7 +437,8 @@ public class UtilitiesCalcController {
 	 * Tested/Working
 	 */
 	private void queueUpTenantComboBox() {
-
+		tenantsList.getItems().setAll(FXCollections.observableArrayList());
+		activeTenants.getItems().setAll(FXCollections.observableArrayList());
 		String allTenantsSQL = "SELECT * FROM tenant";
 		ArrayList<Tenant> allTenants = dbUtil
 				.fetchTenantSelection(allTenantsSQL);
@@ -461,6 +465,9 @@ public class UtilitiesCalcController {
 	 * Tested/Working
 	 */
 	private void queueUpAddressComboBox() {
+		addressComboBox.getItems().setAll(FXCollections.observableArrayList());
+		houseAddresses.getItems().addAll(FXCollections.observableArrayList());
+		receiptViewAddressComboBox.getItems().addAll(FXCollections.observableArrayList());
 		String allAddressesSQL = "SELECT * FROM house";
 		ArrayList<House> allHouses = dbUtil
 				.fetchHouseSelection(allAddressesSQL);
@@ -482,12 +489,6 @@ public class UtilitiesCalcController {
 	 * Tested/Working
 	 */
 	private void resetComboBoxes() {
-		tenantsList.getItems().setAll(FXCollections.observableArrayList());
-		activeTenants.getItems().setAll(FXCollections.observableArrayList());
-		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
-		addressComboBox.getItems().setAll(FXCollections.observableArrayList());
-		houseAddresses.getItems().addAll(FXCollections.observableArrayList());
-		receiptViewAddressComboBox.getItems().addAll(FXCollections.observableArrayList());
 		utilityParticipants = new ArrayList<Tenant>();
 		queueNONLandlordArrayList();
 		queueUpSubletComboBox();
@@ -649,9 +650,7 @@ public class UtilitiesCalcController {
 	 * @return
 	 */
 	private int billMonthID(String date) {
-		String billMonthIDSQL = String.format(
-				"SELECT * FROM billMonth WHERE date = '%s'", date);
-		return dbUtil.fetchBillMonth(billMonthIDSQL).get(0).getBillMonth_ID();
+		return dbUtil.fetchBillMonthID(date);
 	}
 
 	/**
@@ -814,8 +813,9 @@ public class UtilitiesCalcController {
 	
 	private void printHouseInfo(PrintWriter fileOut){
 		ArrayList<ReceiptHouseInfo> houseInformation = 
-				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(dateReceiptTextField.getText()), 
-						houseID(houseAddresses.getValue()));
+				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(dateReceiptTextField.getText()),
+					houseID(houseAddresses.getValue())
+								);
 		StringBuilder houseInfo = new StringBuilder();
 		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\n", "Address", "Total Bill", "Cost / sqft", "Cost / Room");
 		String dash = "";
@@ -838,8 +838,9 @@ public class UtilitiesCalcController {
 	
 	private void printreceiptHouseInfo(String tenantReceipt){
 		ArrayList<ReceiptHouseInfo> houseInformation = 
-				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(ReceiptViewDateTextField.getText()), 
-						houseID(receiptViewAddressComboBox.getValue()));
+				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(ReceiptViewDateTextField.getText())
+						, houseID(receiptViewAddressComboBox.getValue())
+						);
 		StringBuilder houseInfo = new StringBuilder();
 		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\n", "Address", "Total Bill", "Cost / sqft", "Cost / Room");
 		String dash = "";
@@ -928,7 +929,7 @@ public class UtilitiesCalcController {
 		}
 		
 		for(int i = 0; i < tenantInfo.size(); i++){
-			tenantSum.append(String.format("|%-20s|%-10s|%-15.2f|$ %-11.2f|\n",
+			tenantSum.append(String.format("|%-20s|%-10s|%-15.2f|$ %-10.2f|\n",
 					tenantInfo.get(i).getTenantName(), tenantInfo.get(i).getTenantType(),
 					tenantInfo.get(i).getFte(), tenantInfo.get(i).getBill()));
 		}
@@ -962,11 +963,22 @@ public class UtilitiesCalcController {
 				totalBill, totalFossilFuel, totalElectric, totalOther, sqFtAverage/houseInfo.size(),
 				roomAverage/houseInfo.size());
 		
-			houseSum.append(String.format("|%-25s|%-16.2f|%-15.2f|$%-10.2f|%-15.2f|%-15.2f|%-15.2f|\n",
+			houseSum.append(String.format("|$%-24s|$%-15.2f|$%-14.2f|$%-9.2f|$%-14.2f|$%-14.2f|$%-15.2f|\n",
 					h.getAddress(), h.getTotalBill(), h.getFossilFuel(), h.getElectric(),
 					h.getOtherBills(), h.getCostPerSqFt(), h.getCostPerRoom()));
 			
 			summaryTextArea.setText(houseSum.toString());
+	}
+	
+	private void clearInformationForBillCalculation(){
+		billDate.clear();
+		houseAddresses.getSelectionModel().clearSelection();
+		billAmount.clear();
+		fossilFuelBill.clear();
+		otherBills.clear();
+		fte.clear();
+		subletTenantList.getSelectionModel().clearSelection();
+		
 	}
 
 }

@@ -20,7 +20,7 @@ public class createDB {
 
 		final boolean DROP_TABLE = true;
 		final boolean RESET_DATABSE = false;
-		final boolean SHOW_ROW_COUNT = false;
+		final boolean SHOW_ROW_COUNT = true;
 		DatabaseUtility util = new DatabaseUtility();
 
 		final String DB_URL = "jdbc:derby:db/UtilitiesCalc;create=true;";
@@ -39,9 +39,12 @@ public class createDB {
 				createTenantTable(conn, DROP_TABLE);
 				util.inputSampleTenantEntries();
 				util.inputSampleHouseEntries();
-				util.inputSampleBillMonthEntries();
-				util.inputSampleBillPerTenantEntries();
+//				util.inputSampleBillMonthEntries();
+//				util.inputSampleBillPerTenantEntries();
 			}
+			//-----------------StartTest----------------------------------
+			
+			System.out.println(util.fetchBillMonthID("2015/09"));
 			
 			
 			//-----------------EndTest-------------------------------------
