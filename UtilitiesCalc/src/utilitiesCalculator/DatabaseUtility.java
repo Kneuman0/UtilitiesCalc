@@ -181,14 +181,14 @@ public class DatabaseUtility {
 		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO house (address, numRooms, sqFt)"
 				+ " VALUES('1800 Pensylvania Ave', 10, 10000)";
-		String insertSampleRow2 = "INSERT INTO house (address, numRooms, sqFt)"
-				+ " VALUES('1204 raymond Dr.', 3, 1700)";
+//		String insertSampleRow2 = "INSERT INTO house (address, numRooms, sqFt)"
+//				+ " VALUES('1204 raymond Dr.', 3, 1700)";
 
 		try {
 			conn = DriverManager.getConnection(DB_URL);
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(insertSampleRow1);
-			stmt.executeUpdate(insertSampleRow2);
+//			stmt.executeUpdate(insertSampleRow2);
 
 		} catch (SQLException e) {
 			// Auto-generated catch block
@@ -206,7 +206,7 @@ public class DatabaseUtility {
 		String insertSampleRow2 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
 				+ " VALUES('2015/10', 80.00, 91.00, 25.00, 196.0, 1)";
 		String insertSampleRow3 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
-				+ " VALUES('2015/11', 78.50, 85.40, 25.00, 188.9, 2)";
+				+ " VALUES('2015/11', 78.50, 85.40, 25.00, 188.9, 1)";
 
 		try {
 			conn = DriverManager.getConnection(DB_URL);
@@ -243,6 +243,9 @@ public class DatabaseUtility {
 			stmt.executeUpdate(insertSampleRow1a);
 			stmt.executeUpdate(insertSampleRow2a);
 			stmt.executeUpdate(insertSampleRow3a);
+			stmt.executeUpdate(insertSampleRow1b);
+			stmt.executeUpdate(insertSampleRow2b);
+			stmt.executeUpdate(insertSampleRow3b);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -533,7 +536,6 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-//				System.out.println(result.getString(0));
 				 houseInfo.add(new ReceiptHouseInfo(result.getString(1),
 				 result.getInt(2), result.getInt(3),
 				 result.getDouble(4), result.getDouble(5), result.getDouble(6),
@@ -576,6 +578,74 @@ public class DatabaseUtility {
 		String dbDate = date[1] + "/" + date[0];
 		return dbDate;
 
+	}
+	
+	public ArrayList<BillPerTenant> fetchTenantTotals(String tenantName){
+		ArrayList<BillPerTenant> tenantInfo = new ArrayList<BillPerTenant>();
+		String SQLStatement = String.format(
+				"SELECT billPerTenant.fte, billPerTenant.bill, "
+				+ " tenant.name, tenant.tenantType "
+				+ " FROM billPerTenant, tenant"
+				+ " WHERE billPerTenant.tenant_ID = tenant.tenant_ID "
+				+ " AND tenant.name = '%s'", tenantName);
+		
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(DB_URL);
+			Statement stmt = conn.createStatement();
+			ResultSet result = stmt.executeQuery(SQLStatement);
+			while (result.next()) {
+				 tenantInfo.add(new BillPerTenant(0, 0, 0, result.getDouble(1),
+						 result.getString(3), result.getDouble(2),result.getString(4)));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return tenantInfo;
+	}
+	
+	public ArrayList<ReceiptHouseInfo> fetchHouseSummary(String address){
+		ArrayList<ReceiptHouseInfo> tenantInfo = new ArrayList<ReceiptHouseInfo>();
+		String SQLStatement = String.format(
+				"SELECT house.numRooms, house.sqFt,"
+				+ " billMonth.totalBill, billMonth.fossilFuel, "
+				+ " billMonth.electric, billMonth.other"
+				+ " FROM billMonth, house"
+				+ " WHERE house.house_ID = billMonth.house_ID "
+				+ " AND house.address = '%s'", address);
+		
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(DB_URL);
+			Statement stmt = conn.createStatement();
+			ResultSet result = stmt.executeQuery(SQLStatement);
+			while (result.next()) {
+				 tenantInfo.add(new ReceiptHouseInfo(address,
+						 result.getInt(1), result.getInt(2),result.getDouble(3),
+						 result.getDouble(4), result.getDouble(5), result.getDouble(6), 0));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return tenantInfo;
 	}
 	
 	

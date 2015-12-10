@@ -7,6 +7,7 @@ public class BillPerTenant {
 	private double fte;
 	private String tenantName;
 	private double bill;
+	private String tenantType;
 	
 	/**
 	 * Need to make utility method that calculates tenants individual bill from the bill portion bill, and
@@ -23,8 +24,32 @@ public class BillPerTenant {
 		this.fte = fte;
 		this.tenant_ID = tenant_ID;
 	}
+	public BillPerTenant(int billMonth_ID, int house_ID, int tenant_ID, double fte, 
+			String tenantName, double bill, String tenantType){
+		this.billMonth_ID = billMonth_ID;
+		this.house_ID = house_ID;
+		this.tenant_ID = tenant_ID;
+		this.fte = fte;
+		this.bill = bill;
+		this.tenantName = tenantName;
+		this.tenantType = tenantType;
+		
+		
+	}
 
 	
+	/**
+	 * @return the tenantType
+	 */
+	public String getTenantType() {
+		return tenantType;
+	}
+	/**
+	 * @param tenantType the tenantType to set
+	 */
+	public void setTenantType(String tenantType) {
+		this.tenantType = tenantType;
+	}
 	/**
 	 * @return the billMonth_ID
 	 */

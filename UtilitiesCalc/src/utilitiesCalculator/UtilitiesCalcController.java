@@ -139,9 +139,6 @@ public class UtilitiesCalcController {
     private RadioButton billTotRadioButton;
 	
 	@FXML
-    private RadioButton houseSumRadioButton;
-	
-	@FXML
     private RadioButton tenSumRadioButton;
 	
 	@FXML
@@ -151,7 +148,7 @@ public class UtilitiesCalcController {
     private TextField ReceiptViewDateTextField;
 
     @FXML
-    private ComboBox<?> receiptViewAddressComboBox;
+    private ComboBox<String> receiptViewAddressComboBox;
     
     @FXML
     private RadioButton receiptViewRadioButton;
@@ -177,6 +174,14 @@ public class UtilitiesCalcController {
 		queueUpSubletComboBox();
 		queueUpAddressComboBox();
 		queueNONLandlordArrayList();
+		displayTenantSummary();
+		setHouseField();
+		receiptViewAddressComboBox.setDisable(true);
+		receiptViewAddressComboBox.setOpacity(10);
+		viewReceiptButton.setDisable(true);
+		viewReceiptButton.setOpacity(10);
+		ReceiptViewDateTextField.setDisable(true);
+		ReceiptViewDateTextField.setOpacity(10);
 //		summaryTextArea.setText();
 	}
 
@@ -218,6 +223,7 @@ public class UtilitiesCalcController {
 		houseUserLabel.setText(String.format("House at %s has been added!",
 				addressInput.getText()));
 		dbUtil.addHouseInfo(house);
+		setHouseField();
 	}
 
 	/**
@@ -257,7 +263,6 @@ public class UtilitiesCalcController {
 		queueAllTenantArrayList();
 		saveBillMonth();
 		double amtPerTen = getAmountPerTenant();
-		System.out.println("Amt per tenant: " + amtPerTen);
 		ArrayList<BillPerTenant> thisMonthsTenants = new ArrayList<BillPerTenant>();
 
 		// creates an arraylist of BillPerTenant objects and passes it to
@@ -374,24 +379,32 @@ public class UtilitiesCalcController {
 	}
 	
 	public void tenantSummaryRadioButtonListener(){
-		summaryTextArea.setText("Heres your stinking tenant summary");
+		displayTenantSummary();
 	}
-	
-	public void housingSummaryRadioButtonListener(){
-		summaryTextArea.setText("Heres your stinking house summary");
-	}
-	
+		
 	public void billTotStatRadioButtonListener(){
-		summaryTextArea.setText("Heres your stinking statistics summary");
+		displayHouseStatistics();
 	}
 	
 	public void receiptViewRadioButtonListener(){
-		summaryTextArea.setText("Please enter your that address and the date on the "
-				+ "receipt you'd like to view");
+		receiptViewAddressComboBox.setDisable(false);
+		receiptViewAddressComboBox.setOpacity(100);
+		viewReceiptButton.setDisable(false);
+		viewReceiptButton.setOpacity(100);
+		ReceiptViewDateTextField.setDisable(false);
+		ReceiptViewDateTextField.setOpacity(100);
+		summaryTextArea.setText("Please select the address and and date on the bill you would like to query");
 	}
 	
 	public void viewReceiptButton(){
-		summaryTextArea.setText("Heres your stinking receipt summary");
+		try {
+			printreceiptHouseInfo(printReceiptTenantInfo());
+			
+		} catch (InvalidUserEntryException e) {
+			summaryTextArea.setText("Your query returned no results, double check your date");
+			return;
+		}
+		
 	}
 	
 
@@ -457,6 +470,7 @@ public class UtilitiesCalcController {
 		}
 		addressComboBox.getItems().addAll(addresses);
 		houseAddresses.getItems().addAll(addresses);
+		receiptViewAddressComboBox.getItems().addAll(addresses);
 	}
 
 	/**
@@ -473,11 +487,14 @@ public class UtilitiesCalcController {
 		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
 		addressComboBox.getItems().setAll(FXCollections.observableArrayList());
 		houseAddresses.getItems().addAll(FXCollections.observableArrayList());
+		receiptViewAddressComboBox.getItems().addAll(FXCollections.observableArrayList());
 		utilityParticipants = new ArrayList<Tenant>();
 		queueNONLandlordArrayList();
 		queueUpSubletComboBox();
 		queueUpTenantComboBox();
 		queueUpAddressComboBox();
+		displayTenantSummary();
+		
 	}
 
 	/**
@@ -521,6 +538,16 @@ public class UtilitiesCalcController {
 							temp.get(i).getTenant_ID()));
 		}
 
+	}
+	
+	private void setHouseField(){
+		String houseSQL = "SELECT * FROM house";
+		ArrayList<House> houseInfo = dbUtil.fetchHouseSelection(houseSQL);
+		addressInput.setText(houseInfo.get(0).getAddress());
+		Integer sqFootage = houseInfo.get(0).getSqFt();
+		Integer numberOfRoomsInt = houseInfo.get(0).getNumRooms();
+		squareFootage.setText(sqFootage.toString());
+		numberOfRooms.setText(numberOfRoomsInt.toString());
 	}
 
 	/**
@@ -568,7 +595,6 @@ public class UtilitiesCalcController {
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			totalParticipateCoeff += utilityParticipants.get(i).getFte();
 		}
-		System.out.println(totalParticipateCoeff);
 
 		return totalBill / totalParticipateCoeff;
 	}
@@ -756,7 +782,7 @@ public class UtilitiesCalcController {
 		for(int i = 0; i < length;i++){
 			spaces += " ";
 		}
-		return spaces;
+		return s + spaces;
 	}
 	
 	private void printTenantInfo(PrintWriter fileOut) throws InvalidUserEntryException{
@@ -810,6 +836,56 @@ public class UtilitiesCalcController {
 		
 	}
 	
+	private void printreceiptHouseInfo(String tenantReceipt){
+		ArrayList<ReceiptHouseInfo> houseInformation = 
+				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(ReceiptViewDateTextField.getText()), 
+						houseID(receiptViewAddressComboBox.getValue()));
+		StringBuilder houseInfo = new StringBuilder();
+		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\n", "Address", "Total Bill", "Cost / sqft", "Cost / Room");
+		String dash = "";
+		for(int i = 2; i <= idHouse.length(); i++){
+			dash += "-";
+		}
+		houseInfo.append(idHouse);
+		houseInfo.append(String.format("%s\n", dash));
+		
+		for(int i = 0; i < houseInformation.size(); i++){
+		String tenantInfo = String.format("|%-22s|%-12.2f|%-12.2f|%-12.2f|\n",
+				 houseInformation.get(i).getAddress(), houseInformation.get(i).getTotalBill(), 
+				 houseInformation.get(i).getCostPerSqFt(),
+				 houseInformation.get(i).getCostPerRoom());
+		houseInfo.append(tenantInfo);
+		}
+		summaryTextArea.setText(tenantReceipt + houseInfo.toString());
+	}
+	
+	private String printReceiptTenantInfo() throws InvalidUserEntryException{
+		StringBuilder tenantInfo = new StringBuilder();
+		String date = String.format("Date: %s\n\n", ReceiptViewDateTextField.getText());
+		tenantInfo.append(date);
+		String header = String.format("|%-20s|%-5s|%-15s|%-8s|\n", 
+				"Tenant Name", "FTE", "Tenant Type", "Owed");
+		tenantInfo.append(header);
+		String lineBreak = "";
+		for(int i = 0; i < header.length(); i++){
+			lineBreak += "-";
+		}
+		tenantInfo.append(String.format("%s\n", lineBreak));
+		ArrayList<ReceiptTenantInfo> tens = 
+				dbUtil.fetchReceiptInfoForTenant(modifyBillDate(ReceiptViewDateTextField.getText()));
+		if(tens.size() == 0){
+			throw new InvalidUserEntryException(ReceiptViewDateTextField.getText());
+		}
+		for(int i = 0; i < tens.size(); i++){
+			String stuff = String.format("|%-20s|%-5.2f|%-15s|$%-7.2f|\n",
+					tens.get(i).getName(), tens.get(i).getFte(), 
+					tens.get(i).getTenantType(), tens.get(i).getAmountOwed());
+			tenantInfo.append(stuff);
+		}
+		tenantInfo.append("\n\n\n\n");
+		return tenantInfo.toString();
+	}
+	
 	private boolean ensureAllEntriesLoggedReceipt(){
 		boolean notifyUser = false;
 		if(houseAddresses.getSelectionModel().isEmpty()){
@@ -821,6 +897,76 @@ public class UtilitiesCalcController {
 			notifyUser = true;
 		}
 		return notifyUser;
+	}
+	
+	private String getHeaderBreak(String header){
+		String dash = "";
+		for(int i = 0; i < header.length(); i++){
+			dash += "-";
+		}
+		return String.format("%s\n", dash);
+	}
+	
+	private void displayTenantSummary(){
+		StringBuilder tenantSum = new StringBuilder();
+		String header = String.format("|%-20s|%-10s|%-15s|%-12s|\n", "Name", "type", "Months Paid", "Total Paid");
+		tenantSum.append(header);
+		String SQL = "SELECT * FROM tenant";
+		ArrayList<Tenant> names = dbUtil.fetchTenantSelection(SQL);
+		ArrayList<BillPerTenant> tenantInfo = new ArrayList<BillPerTenant>();
+		tenantSum.append(getHeaderBreak(header));
+		for(int i = 0; i < names.size(); i++){
+			ArrayList<BillPerTenant> totalEntries = dbUtil.fetchTenantTotals(names.get(i).getName());
+			double amountPaid = 0;
+			double totalStay = 0;
+			for(int index = 0; index < totalEntries.size(); index++){
+				amountPaid += totalEntries.get(index).getBill();
+				totalStay += totalEntries.get(index).getFte();
+			}
+			tenantInfo.add(new BillPerTenant(0, 0, 0, totalStay, names.get(i).getName(),
+					amountPaid, names.get(i).getTenantType()));
+		}
+		
+		for(int i = 0; i < tenantInfo.size(); i++){
+			tenantSum.append(String.format("|%-20s|%-10s|%-15.2f|$ %-11.2f|\n",
+					tenantInfo.get(i).getTenantName(), tenantInfo.get(i).getTenantType(),
+					tenantInfo.get(i).getFte(), tenantInfo.get(i).getBill()));
+		}
+		
+		summaryTextArea.setText(tenantSum.toString());
+	}
+	
+	private void displayHouseStatistics(){
+		ArrayList<ReceiptHouseInfo> houseInfo = dbUtil.fetchHouseSummary("1800 Pensylvania Ave");
+		StringBuilder houseSum = new StringBuilder();
+		String header = String.format("|%-25s|%-16s|%-15s|%-10s|%-15s|%-15s|%-15s|\n", "Address", "Utility Total", "Fossil Fuel",
+				"Electric", "Other", "Sq Ft Average", "Average Per Room");
+		houseSum.append(header);
+		houseSum.append(getHeaderBreak(header));
+		double totalBill = 0;
+		double totalFossilFuel = 0;
+		double totalElectric = 0;
+		double totalOther = 0;
+		double sqFtAverage = 0;
+		double roomAverage = 0;
+		for(int i = 0; i < houseInfo.size(); i++){
+			totalBill += houseInfo.get(i).getTotalBill();
+			totalFossilFuel += houseInfo.get(i).getFossilFuel();
+			totalElectric += houseInfo.get(i).getElectric();
+			totalOther += houseInfo.get(i).getOtherBills();
+			sqFtAverage += houseInfo.get(i).getCostPerSqFt();
+			roomAverage += houseInfo.get(i).getCostPerRoom();
+			
+		}
+		ReceiptHouseInfo h = new ReceiptHouseInfo(houseInfo.get(0).getAddress(),
+				totalBill, totalFossilFuel, totalElectric, totalOther, sqFtAverage/houseInfo.size(),
+				roomAverage/houseInfo.size());
+		
+			houseSum.append(String.format("|%-25s|%-16.2f|%-15.2f|$%-10.2f|%-15.2f|%-15.2f|%-15.2f|\n",
+					h.getAddress(), h.getTotalBill(), h.getFossilFuel(), h.getElectric(),
+					h.getOtherBills(), h.getCostPerSqFt(), h.getCostPerRoom()));
+			
+			summaryTextArea.setText(houseSum.toString());
 	}
 
 }

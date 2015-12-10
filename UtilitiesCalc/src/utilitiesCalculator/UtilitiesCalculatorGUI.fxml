@@ -133,14 +133,16 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextArea fx:id="summaryTextArea" layoutX="-1.0" layoutY="8.0" prefHeight="340.0" prefWidth="600.0" />
+                        <TextArea fx:id="summaryTextArea" layoutX="-1.0" layoutY="8.0" prefHeight="340.0" prefWidth="600.0">
+                           <font>
+                              <Font name="Lucida Console" size="12.0" />
+                           </font></TextArea>
                         <RadioButton fx:id="tenSumRadioButton" layoutX="10.0" layoutY="352.0" mnemonicParsing="false" onAction="#tenantSummaryRadioButtonListener" selected="true" text="Tenant Summary">
                            <toggleGroup>
                               <ToggleGroup fx:id="summary" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="houseSumRadioButton" layoutX="10.0" layoutY="382.0" mnemonicParsing="false" onAction="#housingSummaryRadioButtonListener" text="Housing Summary" toggleGroup="$summary" />
-                        <RadioButton fx:id="billTotRadioButton" layoutX="10.0" layoutY="412.0" mnemonicParsing="false" onAction="#billTotStatRadioButtonListener" text="Bill Totals and Statistics" toggleGroup="$summary" />
+                        <RadioButton fx:id="billTotRadioButton" layoutX="10.0" layoutY="391.0" mnemonicParsing="false" onAction="#billTotStatRadioButtonListener" text="Bill Totals and Statistics" toggleGroup="$summary" />
                         <Pane layoutX="349.0" layoutY="354.0" prefHeight="90.0" prefWidth="250.0" style="-fx-border-color: black;">
                            <children>
                               <RadioButton fx:id="receiptViewRadioButton" layoutX="9.0" layoutY="6.0" mnemonicParsing="false" onAction="#receiptViewRadioButtonListener" text="Receipt View" toggleGroup="$summary" />

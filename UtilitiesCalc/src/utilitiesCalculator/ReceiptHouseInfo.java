@@ -22,6 +22,17 @@ public class ReceiptHouseInfo {
 		this.house_ID = house_ID;
 	}
 	
+	public ReceiptHouseInfo(String address, double totalBill, double fossilFuel, 
+			double electric, double otherBills, double costPerSqFt, double costPerRoom){
+		this.address = address;
+		this.costPerRoom = costPerRoom;
+		this.costPerSqFt = costPerSqFt;
+		this.totalBill = totalBill;
+		this.fossilFuel = fossilFuel;
+		this.electric = electric;
+		this.otherBills = otherBills;
+	}
+	
 	
 
 	/**

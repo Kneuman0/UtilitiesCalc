@@ -8,6 +8,7 @@ public class BillMonth {
 	private double totalBill;
 	private int billMonth_ID;
 	private int house_ID;
+	private String address;
 	
 	public BillMonth(String date, double fossilFuelBill, 
 			double electricityBill, double otherBill, double totalBill, int house_ID){
@@ -30,9 +31,46 @@ public class BillMonth {
 		this.house_ID = house_ID;
 	}
 	
+	public BillMonth(double fossilFuelBill, double electricityBill, 
+			double otherBill, double totalBill, String address){
+		this.fossilFuelBill = fossilFuelBill;
+		this.electricityBill = electricityBill;
+		this.otherBill = otherBill;
+		this.totalBill = totalBill;
+		this.address = address;
+	}
 	
 	
 	
+	
+	/**
+	 * @return the house_ID
+	 */
+	public int getHouse_ID() {
+		return house_ID;
+	}
+
+	/**
+	 * @param house_ID the house_ID to set
+	 */
+	public void setHouse_ID(int house_ID) {
+		this.house_ID = house_ID;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	/**
 	 * @return the totalBill
 	 */
