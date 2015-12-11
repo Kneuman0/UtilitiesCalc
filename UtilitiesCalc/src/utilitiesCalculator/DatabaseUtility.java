@@ -259,7 +259,7 @@ public class DatabaseUtility {
 	 * @param SQLStatement
 	 * @return
 	 */
-	public ArrayList<Tenant> fetchTenantSelection(String SQLStatement) {
+	public ArrayList<Tenant> fetchTenantSelection(String SQLStatement) {    //REQ#8
 		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<Tenant> ten = new ArrayList<>();

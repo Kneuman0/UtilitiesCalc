@@ -198,6 +198,7 @@ public class UtilitiesCalcController {
 		dbUtil.addTenant(tenant);
 		userMessageLabelTenant.setText(String.format("%s has been added!",
 				tenant.getName()));
+		nameTextBox.clear();
 		resetComboBoxes();
 	}
 
@@ -224,6 +225,7 @@ public class UtilitiesCalcController {
 				addressInput.getText()));
 		dbUtil.addHouseInfo(house);
 		setHouseField();
+		resetComboBoxes();
 	}
 
 	/**
@@ -440,8 +442,14 @@ public class UtilitiesCalcController {
 		tenantsList.getItems().setAll(FXCollections.observableArrayList());
 		activeTenants.getItems().setAll(FXCollections.observableArrayList());
 		String allTenantsSQL = "SELECT * FROM tenant";
-		ArrayList<Tenant> allTenants = dbUtil
-				.fetchTenantSelection(allTenantsSQL);
+		ArrayList<Tenant> allTenants = null;
+		try {
+			allTenants = dbUtil
+					.fetchTenantSelection(allTenantsSQL);
+		} catch (NullPointerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		tenants = FXCollections.observableArrayList();
 		for (int i = 0; i < allTenants.size(); i++) {
 			tenants.add(allTenants.get(i).getName());
@@ -465,9 +473,9 @@ public class UtilitiesCalcController {
 	 * Tested/Working
 	 */
 	private void queueUpAddressComboBox() {
-		addressComboBox.getItems().setAll(FXCollections.observableArrayList());
-		houseAddresses.getItems().addAll(FXCollections.observableArrayList());
-		receiptViewAddressComboBox.getItems().addAll(FXCollections.observableArrayList());
+		addressComboBox.getItems().clear();
+		houseAddresses.getItems().clear();
+		receiptViewAddressComboBox.getItems().clear();
 		String allAddressesSQL = "SELECT * FROM house";
 		ArrayList<House> allHouses = dbUtil
 				.fetchHouseSelection(allAddressesSQL);
@@ -490,6 +498,7 @@ public class UtilitiesCalcController {
 	 */
 	private void resetComboBoxes() {
 		utilityParticipants = new ArrayList<Tenant>();
+		
 		queueNONLandlordArrayList();
 		queueUpSubletComboBox();
 		queueUpTenantComboBox();
@@ -544,9 +553,15 @@ public class UtilitiesCalcController {
 	private void setHouseField(){
 		String houseSQL = "SELECT * FROM house";
 		ArrayList<House> houseInfo = dbUtil.fetchHouseSelection(houseSQL);
-		addressInput.setText(houseInfo.get(0).getAddress());
-		Integer sqFootage = houseInfo.get(0).getSqFt();
-		Integer numberOfRoomsInt = houseInfo.get(0).getNumRooms();
+		Integer sqFootage = 0;
+		Integer numberOfRoomsInt = 0;
+		try {
+			addressInput.setText(houseInfo.get(0).getAddress());
+			sqFootage = houseInfo.get(0).getSqFt();
+			numberOfRoomsInt = houseInfo.get(0).getNumRooms();
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println("No Addresses Found");
+		}
 		squareFootage.setText(sqFootage.toString());
 		numberOfRooms.setText(numberOfRoomsInt.toString());
 	}
@@ -943,7 +958,8 @@ public class UtilitiesCalcController {
 	}
 	
 	private void displayHouseStatistics(){
-		ArrayList<ReceiptHouseInfo> houseInfo = dbUtil.fetchHouseSummary("1800 Pensylvania Ave");
+		String getAllHouses = "SELECT * FROM house";
+		ArrayList<ReceiptHouseInfo> houseInfo = dbUtil.fetchHouseSummary(dbUtil.fetchHouseSelection(getAllHouses).get(0).getAddress());
 		StringBuilder houseSum = new StringBuilder();
 		String header = String.format("|%-25s|%-16s|%-15s|%-10s|%-15s|%-15s|%-15s|\n", "Address", "Utility Total", "Fossil Fuel",
 				"Electric", "Other", "Sq Ft Average", "Average Per Room");
@@ -968,7 +984,7 @@ public class UtilitiesCalcController {
 				totalBill, totalFossilFuel, totalElectric, totalOther, sqFtAverage/houseInfo.size(),
 				roomAverage/houseInfo.size());
 		
-			houseSum.append(String.format("|$%-24s|$%-15.2f|$%-14.2f|$%-9.2f|$%-14.2f|$%-14.2f|$%-15.2f|\n",
+			houseSum.append(String.format("|%-25s|$%-15.2f|$%-14.2f|$%-9.2f|$%-14.2f|$%-14.2f|$%-15.2f|\n",
 					h.getAddress(), h.getTotalBill(), h.getFossilFuel(), h.getElectric(),
 					h.getOtherBills(), h.getCostPerSqFt(), h.getCostPerRoom()));
 			

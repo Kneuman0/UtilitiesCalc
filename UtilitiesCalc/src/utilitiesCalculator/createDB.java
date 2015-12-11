@@ -37,8 +37,8 @@ public class createDB {
 				createBillMonthTable(conn, DROP_TABLE);
 				createBillMonthPerTenant(conn, DROP_TABLE);
 				createTenantTable(conn, DROP_TABLE);
-				util.inputSampleTenantEntries();
-				util.inputSampleHouseEntries();
+//				util.inputSampleTenantEntries();
+//				util.inputSampleHouseEntries();
 //				util.inputSampleBillMonthEntries();
 //				util.inputSampleBillPerTenantEntries();
 			}
