@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projectile.ProjectileCalcController">
+   <children>
+      <Button fx:id="calculateButton" layoutX="227.0" layoutY="321.0" mnemonicParsing="false" onAction="#calcButtonListener" prefHeight="47.0" prefWidth="147.0" text="Calculate" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="174.0" layoutY="22.0" prefHeight="37.0" prefWidth="254.0" text="Bullet Finder 1.0">
+         <font>
+            <Font name="Blackadder ITC" size="34.0" />
+         </font>
+      </Label>
+      <Label layoutX="18.0" layoutY="145.0" text="Enter Zero Distance Here" />
+      <TextField fx:id="zeroDistText" layoutX="18.0" layoutY="160.0" />
+      <RadioButton fx:id="zeroYrdsTog" layoutX="18.0" layoutY="184.0" mnemonicParsing="false" selected="true" text="Yards">
+         <toggleGroup>
+            <ToggleGroup fx:id="zeroDistance" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="zeroMtrsTog" layoutX="105.0" layoutY="184.0" mnemonicParsing="false" text="Meters" toggleGroup="$zeroDistance" />
+      <Label layoutX="443.0" layoutY="145.0" text="Enter Muzzle Velocity Here" />
+      <TextField fx:id="muzzleVelocText" layoutX="440.0" layoutY="160.0" />
+      <RadioButton fx:id="muzzleFtPSecTog" layoutX="440.0" layoutY="184.0" mnemonicParsing="false" selected="true" text="ft/sec">
+         <toggleGroup>
+            <ToggleGroup fx:id="muzzleVelocity" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="muzzleMtrsPSecTog" layoutX="507.0" layoutY="184.0" mnemonicParsing="false" text="meters/sec" toggleGroup="$muzzleVelocity" />
+      <Label layoutX="15.0" layoutY="53.0" prefHeight="57.0" prefWidth="156.0" text="*Enter the distance you have zeroed your weapon at" textFill="#f50202" wrapText="true" />
+      <Label layoutX="445.0" layoutY="11.0" prefHeight="124.0" prefWidth="156.0" text="*Enter the muzzle velocity of your weapon with your particular ammunition for best results. (enter muzzle velocity as stated by manufacturer otherwise)" textFill="#fc0303" wrapText="true" />
+      <Label layoutX="448.0" layoutY="368.0" text="Created by: Kyle Neuman" />
+      <Label layoutX="18.0" layoutY="250.0" text="Enter The distance you'd like to calculate for" />
+      <TextField fx:id="calcDistText" layoutX="18.0" layoutY="267.0" onAction="#calcButtonListener" prefHeight="25.0" prefWidth="156.0" />
+      <RadioButton fx:id="calcDistYrdsTog" layoutX="18.0" layoutY="292.0" mnemonicParsing="false" selected="true" text="Yards">
+         <toggleGroup>
+            <ToggleGroup fx:id="calcDistance" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="calcDistMtrsTog" layoutX="113.0" layoutY="292.0" mnemonicParsing="false" text="Meters" toggleGroup="$calcDistance" />
+      <Label fx:id="answerLabel" layoutX="340.0" layoutY="239.0" prefHeight="75.0" prefWidth="254.0" wrapText="true">
+         <font>
+            <Font name="Cambria" size="18.0" />
+         </font>
+      </Label>
+      <Pane layoutX="200.0" layoutY="93.0" prefHeight="138.0" prefWidth="200.0" style="-fx-border-image-width: 5;">
+         <children>
+            <Label alignment="CENTER" layoutX="-27.0" layoutY="14.0" prefHeight="25.0" prefWidth="254.0" text="Disclaimer" textFill="#f50606">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="8.0" layoutY="49.0" prefHeight="75.0" prefWidth="185.0" text="- This program assumes the shooter has zeroed his or her weapon at some distance (usually 100 yards)" wrapText="true" />
+         </children>
+      </Pane>
+      <Label fx:id="timeLabel" layoutX="18.0" layoutY="321.0" prefHeight="65.0" prefWidth="185.0" textFill="#07430d" />
+   </children>
+</AnchorPane>
