@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.StringTokenizer;
@@ -169,6 +172,7 @@ public class UtilitiesCalcController {
 	public void initialize() {
 		dbUtil = new DatabaseUtility();
 		utilityParticipants = new ArrayList<Tenant>();
+		checkDBStatus();
 		queueUpTenantTypesComboBox();
 		queueUpTenantComboBox();
 		queueUpSubletComboBox();
@@ -176,13 +180,9 @@ public class UtilitiesCalcController {
 		queueNONLandlordArrayList();
 		displayTenantSummary();
 		setHouseField();
-		receiptViewAddressComboBox.setDisable(true);
-		receiptViewAddressComboBox.setOpacity(10);
-		viewReceiptButton.setDisable(true);
-		viewReceiptButton.setOpacity(10);
-		ReceiptViewDateTextField.setDisable(true);
-		ReceiptViewDateTextField.setOpacity(10);
-//		summaryTextArea.setText();
+		initalizeReceiptView();
+		
+		
 	}
 
 	/**
@@ -249,8 +249,6 @@ public class UtilitiesCalcController {
 		dbUtil.deleteHouse(deleteHouse);
 		houseUserLabel.setText(String.format("House a %s has been deleted!",
 				deleteHouse));
-		houseUserLabel.setText(String.format("House at %s has been added!",
-				deleteHouse));
 		resetComboBoxes();
 	}
 
@@ -283,7 +281,6 @@ public class UtilitiesCalcController {
 		userLabelUtilCalc.setText(String.format("Bill for %s has been processed and saved to database!",
 				billDate.getText()));
 		dbUtil.addBillPerTenantEntry(thisMonthsTenants);
-//		resetComboBoxes();
 		clearInformationForBillCalculation();
 
 	}
@@ -672,19 +669,6 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * returns the tenant ID based on the name passed in. Ignores the
-	 * possibility of duplicate names 
-	 * 
-	 * @param name
-	 * @return
-	 */
-//	private int tenantID(String name) {
-//		String tenantIDSQL = String.format(
-//				"SELECT * FROM tenant WHERE name = '%s'", name);
-//		return dbUtil.fetchTenantSelection(tenantIDSQL).get(0).getTenant_ID();
-//	}
-
-	/**
 	 * returns the house ID of the first house in the db. assumes only 1 house
 	 * exists in DB
 	 * 
@@ -1000,6 +984,25 @@ public class UtilitiesCalcController {
 		fte.clear();
 		subletTenantList.getSelectionModel().clearSelection();
 		
+	}
+	
+	private void initalizeReceiptView(){
+		receiptViewAddressComboBox.setDisable(true);
+		receiptViewAddressComboBox.setOpacity(10);
+		viewReceiptButton.setDisable(true);
+		viewReceiptButton.setOpacity(10);
+		ReceiptViewDateTextField.setDisable(true);
+		ReceiptViewDateTextField.setOpacity(10);
+
+	}
+	
+	private void checkDBStatus(){
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(dbUtil.DB_URL);
+		} catch (SQLException e) {
+			dbUtil.createDBTables();
+		}
 	}
 
 }

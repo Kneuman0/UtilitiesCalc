@@ -18,8 +18,9 @@ public class createDB {
 
 	public static void main(String[] args) {
 
+		final boolean DROP_DATABASE = true;
 		final boolean DROP_TABLE = true;
-		final boolean RESET_DATABSE = false;
+		final boolean RESET_DATABSE_DUMMY_VALUES= true;
 		final boolean SHOW_ROW_COUNT = true;
 		DatabaseUtility util = new DatabaseUtility();
 
@@ -32,15 +33,15 @@ public class createDB {
 			// util.dropTable("tenant");
 			//
 			// }
-			if (RESET_DATABSE) {
+			if (RESET_DATABSE_DUMMY_VALUES) {
 				createHouseTable(conn, DROP_TABLE);
 				createBillMonthTable(conn, DROP_TABLE);
 				createBillMonthPerTenant(conn, DROP_TABLE);
 				createTenantTable(conn, DROP_TABLE);
-//				util.inputSampleTenantEntries();
-//				util.inputSampleHouseEntries();
-//				util.inputSampleBillMonthEntries();
-//				util.inputSampleBillPerTenantEntries();
+				util.inputSampleTenantEntries();
+				util.inputSampleHouseEntries();
+				util.inputSampleBillMonthEntries();
+				util.inputSampleBillPerTenantEntries();
 			}
 			//-----------------StartTest----------------------------------
 			
