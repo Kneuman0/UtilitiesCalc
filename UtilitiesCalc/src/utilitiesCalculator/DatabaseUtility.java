@@ -1,11 +1,19 @@
 package utilitiesCalculator;
 
 import java.sql.Connection;
+import databaseModelClasses.*;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import databaseModelClasses.BillMonth;
+import databaseModelClasses.BillPerTenant;
+import databaseModelClasses.House;
+import databaseModelClasses.ReceiptHouseInfo;
+import databaseModelClasses.ReceiptTenantInfo;
+import databaseModelClasses.Tenant;
 
 public class DatabaseUtility {
 

@@ -1,6 +1,7 @@
 package utilitiesCalculator;
 
 import java.io.File;
+import databaseModelClasses.*;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +15,14 @@ import java.util.StringTokenizer;
 
 import javax.print.attribute.standard.MediaSize.Other;
 
+import databaseModelClasses.BillMonth;
+import databaseModelClasses.BillPerTenant;
+import databaseModelClasses.House;
+import databaseModelClasses.Landlord;
+import databaseModelClasses.ReceiptHouseInfo;
+import databaseModelClasses.ReceiptTenantInfo;
+import databaseModelClasses.Sublet;
+import databaseModelClasses.Tenant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
