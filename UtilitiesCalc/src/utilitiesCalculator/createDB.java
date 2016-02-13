@@ -1,18 +1,9 @@
 package utilitiesCalculator;
 
-import java.io.FileWriter;
-import databaseModelClasses.*;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Scanner;
-
-import javafx.collections.FXCollections;
-
 import org.apache.derby.iapi.store.raw.FetchDescriptor;
 
 public class createDB {

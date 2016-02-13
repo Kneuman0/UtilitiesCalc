@@ -8,13 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import databaseModelClasses.BillMonth;
-import databaseModelClasses.BillPerTenant;
-import databaseModelClasses.House;
-import databaseModelClasses.ReceiptHouseInfo;
-import databaseModelClasses.ReceiptTenantInfo;
-import databaseModelClasses.Tenant;
-
 public class DatabaseUtility {
 
 	final static String DB_URL = "jdbc:derby:db/UtilitiesCalc";
@@ -276,7 +269,6 @@ public class DatabaseUtility {
 			conn = DriverManager.getConnection(DB_URL);
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
-			int i = 0;
 			while (result.next()) {
 
 				ten.add(new Tenant(result.getString(1), result.getBoolean(2),

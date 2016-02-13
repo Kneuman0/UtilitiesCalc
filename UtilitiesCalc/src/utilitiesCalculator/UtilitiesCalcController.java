@@ -1,8 +1,6 @@
 package utilitiesCalculator;
 
-import java.io.File;
 import databaseModelClasses.*;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,32 +8,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.StringTokenizer;
-
-import javax.print.attribute.standard.MediaSize.Other;
-
-import databaseModelClasses.BillMonth;
-import databaseModelClasses.BillPerTenant;
-import databaseModelClasses.House;
-import databaseModelClasses.Landlord;
-import databaseModelClasses.ReceiptHouseInfo;
-import databaseModelClasses.ReceiptTenantInfo;
-import databaseModelClasses.Sublet;
-import databaseModelClasses.Tenant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -760,7 +740,7 @@ public class UtilitiesCalcController {
 			notifyUser = true;
 		}
 
-		return false;
+		return notifyUser;
 	}
 
 	/**
@@ -786,15 +766,20 @@ public class UtilitiesCalcController {
 		return notifyUser;
 	}
 	
-	private String getWhiteSpace(String s, int columnWidth){
-		int length = columnWidth - s.length();
-		String spaces = "";
-		for(int i = 0; i < length;i++){
-			spaces += " ";
-		}
-		return s + spaces;
-	}
+//	private String getWhiteSpace(String s, int columnWidth){
+//		int length = columnWidth - s.length();
+//		String spaces = "";
+//		for(int i = 0; i < length;i++){
+//			spaces += " ";
+//		}
+//		return s + spaces;
+//	}
 	
+	/**
+	 * prints the tenants info to a file
+	 * @param fileOut
+	 * @throws InvalidUserEntryException
+	 */
 	private void printTenantInfo(PrintWriter fileOut) throws InvalidUserEntryException{
 		
 		//StringBuilder REQ#2
@@ -824,6 +809,10 @@ public class UtilitiesCalcController {
 		fileOut.println(tenantInfo);
 	}
 	
+	/**
+	 * Prints house info to a file
+	 * @param fileOut
+	 */
 	private void printHouseInfo(PrintWriter fileOut){
 		ArrayList<ReceiptHouseInfo> houseInformation = 
 				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(dateReceiptTextField.getText()),
@@ -849,6 +838,11 @@ public class UtilitiesCalcController {
 		
 	}
 	
+	/**
+	 * Accepts string from printReceiptTenantInfo(), appends it to the house info and then
+	 * prints all info to text area
+	 * @param tenantReceipt
+	 */
 	private void printreceiptHouseInfo(String tenantReceipt){
 		ArrayList<ReceiptHouseInfo> houseInformation = 
 				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(ReceiptViewDateTextField.getText())
@@ -873,6 +867,11 @@ public class UtilitiesCalcController {
 		summaryTextArea.setText(tenantReceipt + houseInfo.toString());
 	}
 	
+	/**
+	 * generates tenant info string and should send to printReceiptHouseInfo()
+	 * @return
+	 * @throws InvalidUserEntryException
+	 */
 	private String printReceiptTenantInfo() throws InvalidUserEntryException{
 		StringBuilder tenantInfo = new StringBuilder();
 		String date = String.format("Date: %s\n\n", ReceiptViewDateTextField.getText());
@@ -900,6 +899,10 @@ public class UtilitiesCalcController {
 		return tenantInfo.toString();
 	}
 	
+	/**
+	 * check for all user input necessary for receipt
+	 * @return
+	 */
 	private boolean ensureAllEntriesLoggedReceipt(){
 		boolean notifyUser = false;
 		if(houseAddresses.getSelectionModel().isEmpty()){
@@ -913,6 +916,11 @@ public class UtilitiesCalcController {
 		return notifyUser;
 	}
 	
+	/**
+	 * generates a line between the header and the information to enhance readability
+	 * @param header
+	 * @return
+	 */
 	private String getHeaderBreak(String header){
 		String dash = "";
 		for(int i = 0; i < header.length(); i++){
@@ -921,6 +929,9 @@ public class UtilitiesCalcController {
 		return String.format("%s\n", dash);
 	}
 	
+	/**
+	 * Displays the tenant summary of all the living in the specified house
+	 */
 	private void displayTenantSummary(){
 		StringBuilder tenantSum = new StringBuilder();
 		String header = String.format("|%-20s|%-10s|%-15s|%-12s|\n", "Name", "type", "Months Paid", "Total Paid");
@@ -950,6 +961,9 @@ public class UtilitiesCalcController {
 		summaryTextArea.setText(tenantSum.toString());
 	}
 	
+	/**
+	 * displays the house statisics in the text area
+	 */
 	private void displayHouseStatistics(){
 		String getAllHouses = "SELECT * FROM house";
 		ArrayList<ReceiptHouseInfo> houseInfo = dbUtil.fetchHouseSummary(dbUtil.fetchHouseSelection(getAllHouses).get(0).getAddress());
@@ -984,6 +998,9 @@ public class UtilitiesCalcController {
 			summaryTextArea.setText(houseSum.toString());
 	}
 	
+	/**
+	 * clears all entries in the bill calculation
+	 */
 	private void clearInformationForBillCalculation(){
 		billDate.clear();
 		houseAddresses.getSelectionModel().clearSelection();
@@ -995,6 +1012,9 @@ public class UtilitiesCalcController {
 		
 	}
 	
+	/**
+	 * Initializes the look of the receipt view to emphasize the fact that its not in service unless selected
+	 */
 	private void initalizeReceiptView(){
 		receiptViewAddressComboBox.setDisable(true);
 		receiptViewAddressComboBox.setOpacity(10);
@@ -1005,12 +1025,22 @@ public class UtilitiesCalcController {
 
 	}
 	
+	/**
+	 * check is db exists, if not, method initializes a database
+	 */
 	private void checkDBStatus(){
 		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection(dbUtil.DB_URL);
+			conn = DriverManager.getConnection(DatabaseUtility.DB_URL);
 		} catch (SQLException e) {
 			dbUtil.createDBTables();
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
