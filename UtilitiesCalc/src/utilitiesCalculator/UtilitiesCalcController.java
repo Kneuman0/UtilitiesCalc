@@ -388,6 +388,9 @@ public class UtilitiesCalcController {
 	}
 	
 	public void viewReceiptButton(){
+		if(ensureAllUserEntriesLoggedReceiptView()){
+			return;
+		}
 		try {
 			printreceiptHouseInfo(printReceiptTenantInfo());
 			
@@ -672,6 +675,16 @@ public class UtilitiesCalcController {
 		String houseIDSQL = String.format(
 				"SELECT * FROM house WHERE address = '%s'", address);
 		return dbUtil.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
+	}
+	
+	private boolean ensureAllUserEntriesLoggedReceiptView(){
+		boolean notifyUser = false;
+		if(receiptViewAddressComboBox.getSelectionModel().isEmpty()){
+			summaryTextArea.setText("No Address Selected!");
+			notifyUser = true;
+		}
+		
+		return notifyUser;
 	}
 
 	/**
@@ -1031,7 +1044,7 @@ public class UtilitiesCalcController {
 	private void checkDBStatus(){
 		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection(DatabaseUtility.DB_URL);
+			conn = DriverManager.getConnection(DatabaseUtility.DB_URL_CREATE_DB);
 		} catch (SQLException e) {
 			dbUtil.createDBTables();
 		}finally{

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class DatabaseUtility {
 
-	final static String DB_URL = "jdbc:derby:db/UtilitiesCalc";
-	final static String DB_URL_CREATE_DB = "jdbc:derby:db/UtilitiesCalc;create=true";
+	final static String DB_URL = "jdbc:derby:data/UtilitiesCalc";
+	final static String DB_URL_CREATE_DB = "jdbc:derby:data/UtilitiesCalc;create=true";
 
 	/**
 	 * Populates tenant table using Tenant object passed in
