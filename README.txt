@@ -10,3 +10,5 @@ final boolean RESET_DATABSE_DUMMY_VALUES = true;
 final boolean SHOW_ROW_COUNT = true;
 
 This will insert mock data into the database. Then go to UtilitesCalcMain and run that class to to use this application with mock data.
+
+**To accurately run tests, you must insert mock data using the above instructions**
