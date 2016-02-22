@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import databaseModelClasses.*;
 import utilitiesCalculator.DatabaseUtility;
+import utilitiesCalculator.InvalidUserEntryException;
 
 public class DatabaseUtilityTest {
 
@@ -98,5 +99,20 @@ public class DatabaseUtilityTest {
 		assertThat(receiptTenant.getTenantType(), is("Landlord"));
 	}
 	
+	@Test
+	public void testModifyBillDateMethod(){
+		DatabaseUtility util = new DatabaseUtility();
+		assertThat(util.modifyBillDate("12/2016"), is("2016/12"));
+	}
 	
+	@Test
+	public void testModifyBillDateForInvalidUserInput(){
+		DatabaseUtility util = new DatabaseUtility();
+		try {
+			util.modifyBillDate("12/24/2015");
+			fail("InvalidUserInputException never thrown for date: 12/24/2015");
+		} catch (InvalidUserEntryException e) {
+			assertTrue(true);
+		}
+	}
 }

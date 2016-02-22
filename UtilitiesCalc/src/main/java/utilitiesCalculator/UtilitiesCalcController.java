@@ -1,6 +1,7 @@
 package utilitiesCalculator;
 
 import databaseModelClasses.*;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -257,14 +259,19 @@ public class UtilitiesCalcController {
 		// creates an arraylist of BillPerTenant objects and passes it to
 		// addBillPerTenantEntry
 		// which adds it to the database
-		for (int i = 0; i < utilityParticipants.size(); i++) {
-			double tenantBill = amtPerTen * utilityParticipants.get(i).getFte();
-			thisMonthsTenants
-					.add(new BillPerTenant(billMonthID(modifyBillDate(billDate.getText())),
-							houseID(houseAddresses.getValue()),
-							utilityParticipants.get(i).getFte(), tenantBill,
-							utilityParticipants.get(i).getTenant_ID()));
-			
+		try {
+			for (int i = 0; i < utilityParticipants.size(); i++) {
+				double tenantBill = amtPerTen * utilityParticipants.get(i).getFte();
+				thisMonthsTenants
+						.add(new BillPerTenant(billMonthID(modifyBillDate(billDate.getText())),
+								houseID(houseAddresses.getValue()),
+								utilityParticipants.get(i).getFte(), tenantBill,
+								utilityParticipants.get(i).getTenant_ID()));
+				
+			}
+		} catch (InvalidUserEntryException e) {
+			userLabelUtilCalc.setText(e.getMessage());
+			return;
 		}
 
 		userLabelUtilCalc.setText(String.format("Bill for %s has been processed and saved to database!",
@@ -628,6 +635,9 @@ public class UtilitiesCalcController {
 		} catch (NumberFormatException e) {
 			userLabelUtilCalc.setText("Non-number detected in bill field");
 			return;
+		} catch (InvalidUserEntryException e1){
+			userLabelUtilCalc.setText(e1.getMessage());
+			return;
 		}
 		dbUtil.addBillingMonthEntry(billMonth);
 	}
@@ -640,8 +650,13 @@ public class UtilitiesCalcController {
 	 * 
 	 * @return
 	 */
-	private String modifyBillDate(String dbDateIn) {
+	private String modifyBillDate(String dbDateIn) throws InvalidUserEntryException {
 		String[] date = dbDateIn.split("/");
+		
+		if(date.length != 2){
+			throw new InvalidUserEntryException(String.format("%s is not a valid date", dbDateIn));
+		}
+		
 		String dbDate = date[1] + "/" + date[0];
 		return dbDate;
 

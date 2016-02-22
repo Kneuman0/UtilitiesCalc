@@ -601,8 +601,13 @@ public class DatabaseUtility {
 	 * 
 	 * @return
 	 */
-	public String modifyBillDate(String dbDateIn) {
+	public String modifyBillDate(String dbDateIn) throws InvalidUserEntryException {
 		String[] date = dbDateIn.split("/");
+		
+		if(date.length != 2){
+			throw new InvalidUserEntryException(String.format("%s is not a valid date", dbDateIn));
+		}
+		
 		String dbDate = date[1] + "/" + date[0];
 		return dbDate;
 
