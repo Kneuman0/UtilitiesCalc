@@ -52,7 +52,7 @@ public class DatabaseUtility {
 			String insertHouse = "INSERT INTO house (address, numRooms, sqFt)"
 					+ String.format(" values ('%s', %d, %d)",
 							house.getAddress(), house.getNumRooms(),
-							house.getNumRooms());
+							house.getSqFt());
 
 			stmt.execute(insertHouse);
 
@@ -304,8 +304,8 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				hou.add(new House(result.getString(1), result.getInt(2), result
-						.getInt(3), result.getInt(4)));
+				hou.add(new House(result.getString("address"), result.getInt("numRooms"), result
+						.getInt("sqFt"), result.getInt("house_ID")));
 			}
 
 		} catch (SQLException e) {
