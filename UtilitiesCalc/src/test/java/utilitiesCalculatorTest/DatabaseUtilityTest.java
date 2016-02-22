@@ -15,11 +15,16 @@ public class DatabaseUtilityTest {
 
 	@Test
 	public void testBillMonthStorageAndRetrieval() {
+		//Store BillMonth
 		DatabaseUtility util = new DatabaseUtility();
 		BillMonth billIn = new BillMonth("2015/07", 100, 120, 25, 245, 15);
 		util.addBillingMonthEntry(billIn);
+		
+		//Retrieve same BillMonth
 		String SQLStatement = "SELECT * FROM billMonth WHERE date = '2015/07'";
 		BillMonth billOut = util.fetchBillMonth(SQLStatement).get(0);
+		
+		//Test Retrieved BillMonth against stored BillMonth
 		assertThat(billIn.getDate(), is(billOut.getDate()));
 		assertThat(billIn.getFossilFuelBill(), is(billOut.getFossilFuelBill()));
 		assertThat(billIn.getElectricityBill(), is(billOut.getElectricityBill()));
@@ -30,11 +35,16 @@ public class DatabaseUtilityTest {
 	
 	@Test
 	public void testTenantStorageAndRetrieval(){
+		//Store Tenant
 		DatabaseUtility util = new DatabaseUtility();
 		Tenant tenantIn = new Tenant("Darcy", true, "sublet");
 		util.addTenant(tenantIn);
+		
+		//Retrieve same Tenant
 		String SQLStatement = "SELECT * FROM tenant WHERE name = 'Darcy'";
 		Tenant tenantOut = util.fetchTenantSelection(SQLStatement).get(0);
+		
+		//Test Retrieved Tenant against stored Tenant
 		assertThat(tenantIn.getName(), is(tenantOut.getName()));
 		assertThat(tenantIn.isActive(), is(tenantOut.isActive()));
 		assertThat(tenantIn.tenantType, is(tenantOut.tenantType));
@@ -46,7 +56,7 @@ public class DatabaseUtilityTest {
 		DatabaseUtility util = new DatabaseUtility();
 		BillPerTenant bptIn = new BillPerTenant(10, 8, 1, 250, 5);
 		
-		//Initalize ArrayList to hold 1 BillPerTenant Object to test and add it
+		// Initialize ArrayList to hold 1 BillPerTenant Object to test and add it
 		ArrayList<BillPerTenant> tenantBillsIn = new ArrayList<>();
 		tenantBillsIn.add(bptIn);
 		
@@ -67,11 +77,16 @@ public class DatabaseUtilityTest {
 	
 	@Test
 	public void testHouseStorageAndRetrieval(){
+		//Store House
 		DatabaseUtility util = new DatabaseUtility();
 		House houseIn = new House("123 TestMe ct.", 5, 3600);
 		util.addHouseInfo(houseIn);
+		
+		//Retrieve same House
 		String SQLStatement = "SELECT * FROM house WHERE address = '123 TestMe ct.'";
 		House houseOut = util.fetchHouseSelection(SQLStatement).get(0);
+		
+		//Test Retrieved House against stored House
 		assertThat(houseIn.getAddress(), is(houseOut.getAddress()));
 		assertThat(houseIn.getNumRooms(), is(houseOut.getNumRooms()));
 		assertThat(houseIn.getSqFt(), is(houseOut.getSqFt()));
@@ -79,8 +94,11 @@ public class DatabaseUtilityTest {
 	
 	@Test
 	public void testReceiptHouseInfoRetrieval(){
+		// Populate ReceiptHouseInfo from database
 		DatabaseUtility util = new DatabaseUtility();
 		ReceiptHouseInfo receiptInfo = util.fetchHouseSummary("1800 Pensylvania Ave").get(0);
+		
+		// Validate ReceiptHouseInfo contents based off mock data
 		assertThat(receiptInfo.getElectric(), is(90.45));
 		assertThat(receiptInfo.getFossilFuel(), is(75.50));
 		assertThat(receiptInfo.getOtherBills(), is(25.0));
@@ -91,8 +109,11 @@ public class DatabaseUtilityTest {
 	
 	@Test
 	public void testReceiptTenantInfoRetrieval(){
+		// Populate ReceiptTenantInfo from database
 		DatabaseUtility util = new DatabaseUtility();
 		ReceiptTenantInfo receiptTenant = util.fetchReceiptInfoForTenant("2015/09").get(0);
+		
+		// Validate ReceiptTenantInfo contents based off mock data
 		assertThat(receiptTenant.getName(), is("Kyle Cricketface"));
 		assertThat(receiptTenant.getAmountOwed(), is(0.0));
 		assertThat(receiptTenant.getFte(), is(0.0));
