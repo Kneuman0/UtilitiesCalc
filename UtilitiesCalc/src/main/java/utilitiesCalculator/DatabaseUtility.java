@@ -336,13 +336,13 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				bm.add(new BillMonth(result.getString(1), result.getDouble(2),
-						result.getDouble(3), result.getDouble(4), result.getDouble(5),
-						result.getInt(5), result.getInt(6)));
+				bm.add(new BillMonth(result.getString("date"), result.getDouble("fossilFuel"),
+						result.getDouble("electric"), result.getDouble("other"), result.getDouble("totalBill"),
+						result.getInt("house_ID"), result.getInt("billMonth_ID")));
 			}
 
 		} catch (SQLException e) {
-
+			e.printStackTrace();
 		} finally {
 			try {
 				conn.close();

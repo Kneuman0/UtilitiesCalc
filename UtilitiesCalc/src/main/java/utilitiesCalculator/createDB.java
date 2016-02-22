@@ -10,7 +10,7 @@ public class createDB {
 
 	public static void main(String[] args) {
 		
-		final boolean DROP_TABLE = false;
+		final boolean DROP_TABLE = true;
 		final boolean RESET_DATABSE_DUMMY_VALUES = true;
 		final boolean SHOW_ROW_COUNT = true;
 		DatabaseUtility util = new DatabaseUtility();
