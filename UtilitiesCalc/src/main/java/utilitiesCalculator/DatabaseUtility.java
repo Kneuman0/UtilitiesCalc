@@ -511,7 +511,8 @@ public class DatabaseUtility {
 				+ " WHERE billPerTenant.tenant_ID = tenant.tenant_ID"
 				+ " AND billMonth.billMonth_ID = billPerTenant.billMonth_ID"
 				+ " AND house.house_ID = billPerTenant.house_ID"
-				+ " AND billMonth.date = '%s'", date);
+				+ " AND billMonth.date = '%s'"
+				+ " ORDER BY tenant.name ASC", date);
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(DB_URL);
@@ -554,7 +555,8 @@ public class DatabaseUtility {
 				+ " billMonth.other, house.house_ID"
 				+ " FROM billMonth, house"
 				+ " WHERE house.house_ID = %d"
-				+ " AND billMonth.date = '%s'", house_ID, date);
+				+ " AND billMonth.date = '%s'"
+				+ " ORDER BY billMonth.date ASC", house_ID, date);
 		
 		Connection conn = null;
 		try {

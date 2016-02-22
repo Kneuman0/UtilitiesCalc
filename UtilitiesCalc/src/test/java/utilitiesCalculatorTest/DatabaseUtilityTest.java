@@ -76,5 +76,27 @@ public class DatabaseUtilityTest {
 		assertThat(houseIn.getSqFt(), is(houseOut.getSqFt()));
 	}
 	
+	@Test
+	public void testReceiptHouseInfoRetrieval(){
+		DatabaseUtility util = new DatabaseUtility();
+		ReceiptHouseInfo receiptInfo = util.fetchHouseSummary("1800 Pensylvania Ave").get(0);
+		assertThat(receiptInfo.getElectric(), is(90.45));
+		assertThat(receiptInfo.getFossilFuel(), is(75.50));
+		assertThat(receiptInfo.getOtherBills(), is(25.0));
+		assertThat(receiptInfo.getTotalBill(), is(190.95));
+		assertThat(receiptInfo.getAddress(), is("1800 Pensylvania Ave"));
+		
+	}
+	
+	@Test
+	public void testReceiptTenantInfoRetrieval(){
+		DatabaseUtility util = new DatabaseUtility();
+		ReceiptTenantInfo receiptTenant = util.fetchReceiptInfoForTenant("2015/09").get(0);
+		assertThat(receiptTenant.getName(), is("Kyle Cricketface"));
+		assertThat(receiptTenant.getAmountOwed(), is(0.0));
+		assertThat(receiptTenant.getFte(), is(0.0));
+		assertThat(receiptTenant.getTenantType(), is("Landlord"));
+	}
+	
 	
 }
