@@ -1,4 +1,4 @@
-package utilitiesCalculator;
+package biz.personalAcademics.utilitiesCalculator;
 
 import java.io.IOException;
 

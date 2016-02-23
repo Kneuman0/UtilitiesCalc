@@ -1,4 +1,4 @@
-package databaseModelClasses;
+package biz.personalAcademics.databaseModelClasses;
 
 public class House {
 	private String address;

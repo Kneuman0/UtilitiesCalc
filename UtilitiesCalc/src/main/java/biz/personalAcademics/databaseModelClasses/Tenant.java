@@ -1,4 +1,4 @@
-package databaseModelClasses;
+package biz.personalAcademics.databaseModelClasses;
 
 
 	//#REQ3 REQ#4 #REQ5

@@ -1,4 +1,4 @@
-package utilitiesCalculator;
+package biz.personalAcademics.utilitiesCalculator;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

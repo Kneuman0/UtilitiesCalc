@@ -1,4 +1,4 @@
-package utilitiesCalculator;
+package biz.personalAcademics.utilitiesCalculator;
 
 @SuppressWarnings("serial")
 public class InvalidUserEntryException extends RuntimeException{

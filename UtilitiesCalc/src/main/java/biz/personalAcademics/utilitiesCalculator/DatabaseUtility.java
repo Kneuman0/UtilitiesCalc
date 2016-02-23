@@ -1,7 +1,7 @@
-package utilitiesCalculator;
+package biz.personalAcademics.utilitiesCalculator;
 
 import java.sql.Connection;
-import databaseModelClasses.*;
+import biz.personalAcademics.databaseModelClasses.*;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;

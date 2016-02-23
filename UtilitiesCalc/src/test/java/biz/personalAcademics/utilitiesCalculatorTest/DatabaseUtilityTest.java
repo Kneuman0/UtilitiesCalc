@@ -1,17 +1,22 @@
-package utilitiesCalculatorTest;
+package biz.personalAcademics.utilitiesCalculatorTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.*; 
 import static org.hamcrest.CoreMatchers.*;
-
+import static org.hamcrest.core.StringContains.containsString;
 import java.util.ArrayList;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import databaseModelClasses.*;
-import utilitiesCalculator.DatabaseUtility;
-import utilitiesCalculator.InvalidUserEntryException;
+import biz.personalAcademics.databaseModelClasses.*;
+import biz.personalAcademics.utilitiesCalculator.DatabaseUtility;
+import biz.personalAcademics.utilitiesCalculator.InvalidUserEntryException;
 
 public class DatabaseUtilityTest {
+	
+	@Rule
+	public ExpectedException badInput = ExpectedException.none();
 
 	@Test
 	public void testBillMonthStorageAndRetrieval() {
@@ -129,11 +134,9 @@ public class DatabaseUtilityTest {
 	@Test
 	public void testModifyBillDateForInvalidUserInput(){
 		DatabaseUtility util = new DatabaseUtility();
-		try {
-			util.modifyBillDate("12/24/2015");
-			fail("InvalidUserInputException never thrown for date: 12/24/2015");
-		} catch (InvalidUserEntryException e) {
-			assertTrue(true);
-		}
+		badInput.expect(InvalidUserEntryException.class);
+		badInput.expectMessage(containsString("12/24/2015"));
+		util.modifyBillDate("12/24/2015");
+		
 	}
 }

@@ -172,8 +172,6 @@ public class UtilitiesCalcController {
 		displayTenantSummary();
 		setHouseField();
 		initalizeReceiptView();
-		
-		
 	}
 
 	/**
