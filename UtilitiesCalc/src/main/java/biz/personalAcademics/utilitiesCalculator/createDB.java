@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
+
 import org.apache.derby.iapi.store.raw.FetchDescriptor;
 
 public class createDB {
@@ -21,10 +23,13 @@ public class createDB {
 
 		Connection conn = null;
 		try {
+			Properties p = System.getProperties();
+			p.setProperty("derby.system.home", "../UtilitiesCalc/src/main/java/resources");
 
 			conn = DriverManager.getConnection(DB_URL);
 			
 			if (RESET_DATABSE_DUMMY_VALUES) {
+				
 				createHouseTable(conn, DROP_TABLE);
 				createBillMonthTable(conn, DROP_TABLE);
 				createBillMonthPerTenant(conn, DROP_TABLE);

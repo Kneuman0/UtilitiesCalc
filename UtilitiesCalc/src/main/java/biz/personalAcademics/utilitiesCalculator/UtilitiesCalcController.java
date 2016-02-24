@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -312,7 +313,7 @@ public class UtilitiesCalcController {
 		FileWriter tenantReceipt;
 		PrintWriter fileOut= null;
 		String date = dateReceiptTextField.getText().replace("/", "-");
-		String filePath = String.format("C:\\%s%s.txt", 
+		String filePath = String.format("../%s%s.txt", 
 				"BillsFor", date);
 		try {
 			
@@ -1058,6 +1059,8 @@ public class UtilitiesCalcController {
 	private void checkDBStatus(){
 		Connection conn = null;
 		try {
+			Properties p = System.getProperties();
+			p.setProperty("derby.system.home", "../UtilitiesCalc/src/main/java/resources");
 			conn = DriverManager.getConnection(DatabaseUtility.DB_URL_CREATE_DB);
 		} catch (SQLException e) {
 			dbUtil.createDBTables();
