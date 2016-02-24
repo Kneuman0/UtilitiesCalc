@@ -1,0 +1,16 @@
+Date: 09/2015
+
+|Tenant Name         |FTE  |Tenant Type    |Owed    |
+------------------------------------------------------
+|Kyle Cricketface    |0.00 |Landlord       |$0.00   |
+|Rebecca Raferty     |1.00 |Standard       |$176.00 |
+|Telemundo Deltoro   |0.25 |Sublet         |$44.00  |
+
+
+
+
+
+|Address               |Total Bill  |Cost / sqft |Cost / Room |
+---------------------------------------------------------------
+|1800 Pensylvania Ave  |190.95      |0.02        |19.10       |
+
