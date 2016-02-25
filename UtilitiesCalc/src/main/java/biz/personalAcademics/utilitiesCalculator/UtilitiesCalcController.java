@@ -154,7 +154,6 @@ public class UtilitiesCalcController {
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
 	ObservableList<String> addresses;
-	DatabaseUtility dbUtil;
 	ArrayList<Tenant> utilityParticipants;
 	
 
@@ -162,7 +161,6 @@ public class UtilitiesCalcController {
 	 * Tested/working
 	 */
 	public void initialize() {
-		dbUtil = new DatabaseUtility();
 		utilityParticipants = new ArrayList<Tenant>();
 		checkDBStatus();
 		queueUpTenantTypesComboBox();
@@ -187,7 +185,11 @@ public class UtilitiesCalcController {
 		Tenant tenant = new Tenant(nameTextBox.getText(),
 				newTenantActiveRadioButton.isSelected(),
 				tenantTypeList.getValue());
-		dbUtil.addTenant(tenant);
+		try {
+			DatabaseUtility.addTenant(tenant);
+		} catch (SQLException e) {
+			userMessageLabelTenant.setText(e.getMessage());
+		}
 		userMessageLabelTenant.setText(String.format("%s has been added!",
 				tenant.getName()));
 		nameTextBox.clear();
@@ -215,7 +217,7 @@ public class UtilitiesCalcController {
 
 		houseUserLabel.setText(String.format("House at %s has been added!",
 				addressInput.getText()));
-		dbUtil.addHouseInfo(house);
+		DatabaseUtility.addHouseInfo(house);
 		setHouseField();
 		resetComboBoxes();
 	}
@@ -227,7 +229,7 @@ public class UtilitiesCalcController {
 	public void deleteTenantButtonListener() {
 		String deleteTen = tenantsList.getValue();
 
-		dbUtil.deleteTenant(deleteTen);
+		DatabaseUtility.deleteTenant(deleteTen);
 		userMessageLabelTenant.setText(String.format(
 				"%s has been deleted from the database!", deleteTen));
 		resetComboBoxes();
@@ -238,7 +240,7 @@ public class UtilitiesCalcController {
 	 */
 	public void deleteHouseButtonListener() {
 		String deleteHouse = addressComboBox.getValue();
-		dbUtil.deleteHouse(deleteHouse);
+		DatabaseUtility.deleteHouse(deleteHouse);
 		houseUserLabel.setText(String.format("House a %s has been deleted!",
 				deleteHouse));
 		resetComboBoxes();
@@ -277,7 +279,7 @@ public class UtilitiesCalcController {
 
 		userLabelUtilCalc.setText(String.format("Bill for %s has been processed and saved to database!",
 				billDate.getText()));
-		dbUtil.addBillPerTenantEntry(thisMonthsTenants);
+		DatabaseUtility.addBillPerTenantEntry(thisMonthsTenants);
 		clearInformationForBillCalculation();
 
 	}
@@ -349,13 +351,15 @@ public class UtilitiesCalcController {
 				activeTenants.getValue());
 
 		try {
-			if (dbUtil.fetchTenantSelection(getTenant).get(0).isActive()) {
+			if (DatabaseUtility.fetchTenantSelection(getTenant).get(0).isActive()) {
 				activeTenantRadioButton.setSelected(true);
 			} else {
 				deactivateTenantRadioButton.setSelected(true);
 			}
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println("Exception due to something with radio buttons");
+		} catch (SQLException e) {
+			userMessageLabelTenant.setText(e.getMessage());
 		}
 	}
 
@@ -374,7 +378,7 @@ public class UtilitiesCalcController {
 			userMessageLabelTenant.setText(String.format(
 					"%s has been deactivated!", activeTenants.getValue()));
 		}
-		dbUtil.modifyDatabase(updateTenant);
+		DatabaseUtility.modifyDatabase(updateTenant);
 	}
 	
 	public void tenantSummaryRadioButtonListener(){
@@ -422,8 +426,13 @@ public class UtilitiesCalcController {
 		subletTenantList.getItems().setAll(FXCollections.observableArrayList());
 		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'"
 				+ " AND active = true";
-		ArrayList<Tenant> sublets = dbUtil
-				.fetchTenantSelection(allSubletTenants);
+		ArrayList<Tenant> sublets = null;
+		try {
+			sublets = DatabaseUtility
+					.fetchTenantSelection(allSubletTenants);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		subs = FXCollections.observableArrayList();
 		for (int i = 0; i < sublets.size(); i++) {
 			subs.add(sublets.get(i).getName());
@@ -441,10 +450,13 @@ public class UtilitiesCalcController {
 		String allTenantsSQL = "SELECT * FROM tenant";
 		ArrayList<Tenant> allTenants = null;
 		try {
-			allTenants = dbUtil
+			allTenants = DatabaseUtility
 					.fetchTenantSelection(allTenantsSQL);
+			
 		} catch (NullPointerException e) {
 			e.printStackTrace();
+		} catch (SQLException e) {
+			userMessageLabelTenant.setText(e.getMessage());
 		}
 		tenants = FXCollections.observableArrayList();
 		for (int i = 0; i < allTenants.size(); i++) {
@@ -473,7 +485,7 @@ public class UtilitiesCalcController {
 		houseAddresses.getItems().clear();
 		receiptViewAddressComboBox.getItems().clear();
 		String allAddressesSQL = "SELECT * FROM house";
-		ArrayList<House> allHouses = dbUtil
+		ArrayList<House> allHouses = DatabaseUtility
 				.fetchHouseSelection(allAddressesSQL);
 		addresses = FXCollections.observableArrayList();
 		for (int i = 0; i < allHouses.size(); i++) {
@@ -517,7 +529,12 @@ public class UtilitiesCalcController {
 	private void queueNONLandlordArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
-		ArrayList<Tenant> temp = dbUtil.fetchTenantSelection(landlordQuery);		//REQ#10
+		ArrayList<Tenant> temp = null;
+		try {
+			temp = DatabaseUtility.fetchTenantSelection(landlordQuery);
+		} catch (SQLException e) {
+			userMessageLabelTenant.setText("Error in queueNONLandlordArrayList()");
+		}		//REQ#10
 		for (int i = 0; i < temp.size(); i++) {
 			utilityParticipants.add(new Sublet(temp.get(i).getName(), true, 
 					temp.get(i).getTenant_ID()));
@@ -538,7 +555,12 @@ public class UtilitiesCalcController {
 	private void queueAllTenantArrayList() {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
 				+ " AND active = true";
-		ArrayList<Tenant> temp = dbUtil.fetchTenantSelection(landlordQuery);		//REQ#10
+		ArrayList<Tenant> temp = null;
+		try {
+			temp = DatabaseUtility.fetchTenantSelection(landlordQuery);
+		} catch (SQLException e) {
+			userMessageLabelTenant.setText(e.getMessage());
+		}		//REQ#10
 		for (int i = 0; i < temp.size(); i++) {
 			utilityParticipants.add(new Landlord(temp.get(i).getName(), true, 
 							temp.get(i).getTenant_ID()));
@@ -548,7 +570,7 @@ public class UtilitiesCalcController {
 	
 	private void setHouseField(){
 		String houseSQL = "SELECT * FROM house";
-		ArrayList<House> houseInfo = dbUtil.fetchHouseSelection(houseSQL);
+		ArrayList<House> houseInfo = DatabaseUtility.fetchHouseSelection(houseSQL);
 		Integer sqFootage = 0;
 		Integer numberOfRoomsInt = 0;
 		try {
@@ -639,7 +661,7 @@ public class UtilitiesCalcController {
 			userLabelUtilCalc.setText(e1.getMessage());
 			return;
 		}
-		dbUtil.addBillingMonthEntry(billMonth);
+		DatabaseUtility.addBillingMonthEntry(billMonth);
 	}
 
 	/**
@@ -672,7 +694,7 @@ public class UtilitiesCalcController {
 	 * @return
 	 */
 	private int billMonthID(String date) {
-		return dbUtil.fetchBillMonthID(date);
+		return DatabaseUtility.fetchBillMonthID(date);
 	}
 
 	/**
@@ -689,7 +711,7 @@ public class UtilitiesCalcController {
 	private int houseID(String address) {
 		String houseIDSQL = String.format(
 				"SELECT * FROM house WHERE address = '%s'", address);
-		return dbUtil.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
+		return DatabaseUtility.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
 	}
 	
 	private boolean ensureAllUserEntriesLoggedReceiptView(){
@@ -823,7 +845,7 @@ public class UtilitiesCalcController {
 		}
 		tenantInfo.append(String.format("%s\n", lineBreak));
 		ArrayList<ReceiptTenantInfo> tens = 
-				dbUtil.fetchReceiptInfoForTenant(modifyBillDate(dateReceiptTextField.getText()));
+				DatabaseUtility.fetchReceiptInfoForTenant(modifyBillDate(dateReceiptTextField.getText()));
 		if(tens.size() == 0){
 			throw new InvalidUserEntryException(dateReceiptTextField.getText());
 		}
@@ -843,7 +865,7 @@ public class UtilitiesCalcController {
 	 */
 	private void printHouseInfo(PrintWriter fileOut){
 		ArrayList<ReceiptHouseInfo> houseInformation = 
-				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(dateReceiptTextField.getText()),
+				DatabaseUtility.fetchReceiptInfoForHouse(modifyBillDate(dateReceiptTextField.getText()),
 					houseID(houseAddresses.getValue())
 								);
 		StringBuilder houseInfo = new StringBuilder();			//REQ#2
@@ -873,7 +895,7 @@ public class UtilitiesCalcController {
 	 */
 	private void printreceiptHouseInfo(String tenantReceipt){
 		ArrayList<ReceiptHouseInfo> houseInformation = 
-				dbUtil.fetchReceiptInfoForHouse(modifyBillDate(ReceiptViewDateTextField.getText())
+				DatabaseUtility.fetchReceiptInfoForHouse(modifyBillDate(ReceiptViewDateTextField.getText())
 						, houseID(receiptViewAddressComboBox.getValue())
 						);
 		StringBuilder houseInfo = new StringBuilder();
@@ -913,7 +935,7 @@ public class UtilitiesCalcController {
 		}
 		tenantInfo.append(String.format("%s\n", lineBreak));
 		ArrayList<ReceiptTenantInfo> tens = 
-				dbUtil.fetchReceiptInfoForTenant(modifyBillDate(ReceiptViewDateTextField.getText()));
+				DatabaseUtility.fetchReceiptInfoForTenant(modifyBillDate(ReceiptViewDateTextField.getText()));
 		if(tens.size() == 0){
 			throw new InvalidUserEntryException(ReceiptViewDateTextField.getText());
 		}
@@ -965,11 +987,16 @@ public class UtilitiesCalcController {
 		String header = String.format("|%-20s|%-10s|%-15s|%-12s|\n", "Name", "type", "Months Paid", "Total Paid");
 		tenantSum.append(header);
 		String SQL = "SELECT * FROM tenant";
-		ArrayList<Tenant> names = dbUtil.fetchTenantSelection(SQL);
+		ArrayList<Tenant> names = null;
+		try {
+			names = DatabaseUtility.fetchTenantSelection(SQL);
+		} catch (SQLException e) {
+			userLabelUtilCalc.setText(e.getMessage());
+		}
 		ArrayList<BillPerTenant> tenantInfo = new ArrayList<BillPerTenant>();
 		tenantSum.append(getHeaderBreak(header));
 		for(int i = 0; i < names.size(); i++){
-			ArrayList<BillPerTenant> totalEntries = dbUtil.fetchTenantTotals(names.get(i).getName());
+			ArrayList<BillPerTenant> totalEntries = DatabaseUtility.fetchTenantTotals(names.get(i).getName());
 			double amountPaid = 0;
 			double totalStay = 0;
 			for(int index = 0; index < totalEntries.size(); index++){
@@ -994,7 +1021,7 @@ public class UtilitiesCalcController {
 	 */
 	private void displayHouseStatistics(){
 		String getAllHouses = "SELECT * FROM house";
-		ArrayList<ReceiptHouseInfo> houseInfo = dbUtil.fetchHouseSummary(dbUtil.fetchHouseSelection(getAllHouses).get(0).getAddress());
+		ArrayList<ReceiptHouseInfo> houseInfo = DatabaseUtility.fetchHouseSummary(DatabaseUtility.fetchHouseSelection(getAllHouses).get(0).getAddress());
 		StringBuilder houseSum = new StringBuilder();
 		String header = String.format("|%-25s|%-16s|%-15s|%-10s|%-15s|%-15s|%-15s|\n", "Address", "Utility Total", "Fossil Fuel",
 				"Electric", "Other", "Sq Ft Average", "Average Per Room");
@@ -1061,15 +1088,10 @@ public class UtilitiesCalcController {
 		try {
 			Properties p = System.getProperties();
 			p.setProperty("derby.system.home", "../UtilitiesCalc/src/main/java/resources");
-			conn = DriverManager.getConnection(DatabaseUtility.DB_URL_CREATE_DB);
+			conn = DriverManager.getConnection(DatabaseUtility.DB_URL);
+			conn.close();
 		} catch (SQLException e) {
-			dbUtil.createDBTables();
-		}finally{
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			DatabaseUtility.createDBTables();
 		}
 	}
 

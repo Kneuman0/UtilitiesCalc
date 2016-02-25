@@ -18,7 +18,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param tenant
 	 */
-	public void addTenant(Tenant tenant) {
+	public static void addTenant(Tenant tenant) throws SQLException {
 		try {
 
 			Connection conn = DriverManager.getConnection(DB_URL);
@@ -42,7 +42,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param house
 	 */
-	public void addHouseInfo(House house) {
+	public static void addHouseInfo(House house) {
 
 		try {
 			Connection conn = DriverManager.getConnection(DB_URL);
@@ -67,7 +67,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param billMonth
 	 */
-	public void addBillingMonthEntry(BillMonth billMonth) {				//REQ#7
+	public static void addBillingMonthEntry(BillMonth billMonth) {				//REQ#7
 
 		try {
 			Connection conn = DriverManager.getConnection(DB_URL);
@@ -95,7 +95,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param thisMonthsTenants
 	 */
-	public void addBillPerTenantEntry(ArrayList<BillPerTenant> thisMonthsTenants) {			//REQ#7
+	public static void addBillPerTenantEntry(ArrayList<BillPerTenant> thisMonthsTenants) {			//REQ#7
 
 		try {
 			Connection conn = DriverManager.getConnection(DB_URL);
@@ -126,7 +126,7 @@ public class DatabaseUtility {
 	 * Used to modify rows in the db. Must pass in a complete and executable SQL statement
 	 * @param SQLStatement
 	 */
-	public void modifyDatabase(String SQLStatement) {
+	public static void modifyDatabase(String SQLStatement) {
 		Connection conn = null;
 
 		try {
@@ -150,7 +150,7 @@ public class DatabaseUtility {
 	/**
 	 * Inserts 5 dummy tenant rows into the tenant table of the db for testing purposes
 	 */
-	public void inputSampleTenantEntries() {
+	public static void inputSampleTenantEntries() {
 		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO tenant (name, active, tenantType)"
 				+ " VALUES('Telemundo Deltoro', true, 'Sublet')";
@@ -179,7 +179,7 @@ public class DatabaseUtility {
 	/**
 	 * Inserts dummy house entries into the house table in the db for testing purposes
 	 */
-	public void inputSampleHouseEntries() {
+	public static void inputSampleHouseEntries() {
 		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO house (address, numRooms, sqFt)"
 				+ " VALUES('1800 Pensylvania Ave', 10, 10000)";
@@ -201,7 +201,7 @@ public class DatabaseUtility {
 	/**
 	 * Inserts dummy bill month entries into the billMonth table of the db for testing purposes
 	 */
-	public void inputSampleBillMonthEntries() {
+	public static void inputSampleBillMonthEntries() {
 		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
 				+ " VALUES('2015/09', 75.50, 90.45, 25.00, 190.95, 1)";
@@ -223,7 +223,7 @@ public class DatabaseUtility {
 		}
 	}
 	
-	public void inputSampleBillPerTenantEntries(){
+	public static void inputSampleBillPerTenantEntries(){
 		Connection conn = null;
 		String insertSampleRow1a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
 				+ " VALUES(1, 1, .25, 44.0, 1)";
@@ -260,12 +260,13 @@ public class DatabaseUtility {
 	 * 
 	 * @param SQLStatement
 	 * @return
+	 * @throws SQLException 
 	 */
-	public ArrayList<Tenant> fetchTenantSelection(String SQLStatement) {    //REQ#8
+	public static ArrayList<Tenant> fetchTenantSelection(String SQLStatement) throws SQLException {    //REQ#8
 		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<Tenant> ten = new ArrayList<>();
-		try {
+//		try {
 			conn = DriverManager.getConnection(DB_URL);
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
@@ -276,16 +277,16 @@ public class DatabaseUtility {
 				
 			}
 
-		} catch (SQLException e) {
-
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				conn.close();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		return ten;
 	}
 
@@ -295,7 +296,7 @@ public class DatabaseUtility {
 	 * @param SQLStatement
 	 * @return
 	 */
-	public ArrayList<House> fetchHouseSelection(String SQLStatement) {
+	public static ArrayList<House> fetchHouseSelection(String SQLStatement) {
 		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<House> hou = new ArrayList<>();
@@ -327,7 +328,7 @@ public class DatabaseUtility {
 	 * @param SQLStatement
 	 * @return
 	 */
-	public ArrayList<BillMonth> fetchBillMonth(String SQLStatement) {
+	public static ArrayList<BillMonth> fetchBillMonth(String SQLStatement) {
 		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<BillMonth> bm = new ArrayList<>();
@@ -354,7 +355,7 @@ public class DatabaseUtility {
 		return bm;
 	}
 	
-	public int fetchBillMonthID(String date){
+	public static int fetchBillMonthID(String date){
 		Connection conn = null;
 		ResultSet result = null;
 		String getBMID = String.format("SELECT billMonth_ID FROM billMonth WHERE date = '%s'", date);
@@ -387,7 +388,7 @@ public class DatabaseUtility {
 	 * @param SQLStatement
 	 * @return
 	 */
-	public ArrayList<BillPerTenant> fetchBillPerMonth(String SQLStatement) {
+	public static ArrayList<BillPerTenant> fetchBillPerMonth(String SQLStatement) {
 		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<BillPerTenant> bpt = new ArrayList<>();
@@ -419,7 +420,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param tableName
 	 */
-	public void dropTable(String tableName) {
+	public static void dropTable(String tableName) {
 		String dropTable = String.format("DROP TABLE %s", tableName);
 		Connection conn = null;
 		try {
@@ -445,7 +446,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param tenantName
 	 */
-	public void deleteTenant(String tenantName) {
+	public static void deleteTenant(String tenantName) {
 		Connection conn = null;
 		String deleteTenant = String.format("DELETE FROM tenant"
 				+ " WHERE name = '%s'", tenantName);
@@ -472,7 +473,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param address
 	 */
-	public void deleteHouse(String address){
+	public static void deleteHouse(String address){
 		Connection conn = null;
 		String deleteHouse = String.format("DELETE FROM house"
 				+ " WHERE address = '%s'", address);
@@ -499,7 +500,7 @@ public class DatabaseUtility {
 	 * 
 	 * @return
 	 */
-	public ArrayList<ReceiptTenantInfo> fetchReceiptInfoForTenant(String date){			//REQ#8
+	public static ArrayList<ReceiptTenantInfo> fetchReceiptInfoForTenant(String date){			//REQ#8
 		ArrayList<ReceiptTenantInfo> tenantInfo = new ArrayList<ReceiptTenantInfo>();
 		String SQLStatement = String.format(
 				"SELECT tenant.name, "
@@ -545,7 +546,7 @@ public class DatabaseUtility {
 	 * 
 	 * @return
 	 */
-	public ArrayList<ReceiptHouseInfo> fetchReceiptInfoForHouse(String date, int house_ID){
+	public static ArrayList<ReceiptHouseInfo> fetchReceiptInfoForHouse(String date, int house_ID){
 		ArrayList<ReceiptHouseInfo> houseInfo = new ArrayList<ReceiptHouseInfo>();
 		String SQLStatement = String.format(
 				"SELECT house.address, "
@@ -584,7 +585,7 @@ public class DatabaseUtility {
 		return houseInfo;
 	}
 	
-	public String getWhiteSpace(String s, int columnWidth){
+	public static String getWhiteSpace(String s, int columnWidth){
 		int length = columnWidth - s.length();
 		String spaces = "";
 		for(int i = 0; i < length;i++){
@@ -601,7 +602,7 @@ public class DatabaseUtility {
 	 * 
 	 * @return
 	 */
-	public String modifyBillDate(String dbDateIn) throws InvalidUserEntryException {
+	public static String modifyBillDate(String dbDateIn) throws InvalidUserEntryException {
 		String[] date = dbDateIn.split("/");
 		
 		if(date.length != 2){
@@ -613,7 +614,7 @@ public class DatabaseUtility {
 
 	}
 	
-	public ArrayList<BillPerTenant> fetchTenantTotals(String tenantName){
+	public static ArrayList<BillPerTenant> fetchTenantTotals(String tenantName){
 		ArrayList<BillPerTenant> tenantInfo = new ArrayList<BillPerTenant>();
 		String SQLStatement = String.format(
 				"SELECT billPerTenant.fte, billPerTenant.bill, "
@@ -646,7 +647,7 @@ public class DatabaseUtility {
 		return tenantInfo;
 	}
 	
-	public ArrayList<ReceiptHouseInfo> fetchHouseSummary(String address){
+	public static ArrayList<ReceiptHouseInfo> fetchHouseSummary(String address){
 		ArrayList<ReceiptHouseInfo> tenantInfo = new ArrayList<ReceiptHouseInfo>();
 		String SQLStatement = String.format(
 				"SELECT house.numRooms, house.sqFt,"
@@ -681,7 +682,7 @@ public class DatabaseUtility {
 		return tenantInfo;
 	}
 	
-	public void createDBTables(){
+	public static void createDBTables(){
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(DB_URL_CREATE_DB);

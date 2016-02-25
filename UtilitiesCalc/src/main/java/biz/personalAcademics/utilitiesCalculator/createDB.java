@@ -15,7 +15,6 @@ public class createDB {
 		final boolean DROP_TABLE = true;
 		final boolean RESET_DATABSE_DUMMY_VALUES = true;
 		final boolean SHOW_ROW_COUNT = true;
-		DatabaseUtility util = new DatabaseUtility();
 
 		final String DB_URL = "jdbc:derby:data/UtilitiesCalc;"
 				+ "create=true;"
@@ -34,10 +33,10 @@ public class createDB {
 				createBillMonthTable(conn, DROP_TABLE);
 				createBillMonthPerTenant(conn, DROP_TABLE);
 				createTenantTable(conn, DROP_TABLE);
-				util.inputSampleTenantEntries();
-				util.inputSampleHouseEntries();
-				util.inputSampleBillMonthEntries();
-				util.inputSampleBillPerTenantEntries();
+				DatabaseUtility.inputSampleTenantEntries();
+				DatabaseUtility.inputSampleHouseEntries();
+				DatabaseUtility.inputSampleBillMonthEntries();
+				DatabaseUtility.inputSampleBillPerTenantEntries();
 			}
 			conn.close();
 		} catch (SQLException e) {
@@ -55,19 +54,19 @@ public class createDB {
 			if (SHOW_ROW_COUNT) {
 				String testH = String.format("SELECT * FROM house");
 				System.out.println("Houses: "
-						+ util.fetchTenantSelection(testH).size());
+						+ DatabaseUtility.fetchTenantSelection(testH).size());
 
 				String testBM = String.format("SELECT * FROM billMonth");
 				System.out.println("BillMonths: "
-						+ util.fetchTenantSelection(testBM).size());
+						+ DatabaseUtility.fetchTenantSelection(testBM).size());
 
 				String testBPT = String.format("SELECT * FROM billPerTenant");
 				System.out.println("BillPerTenants: "
-						+ util.fetchBillPerMonth(testBPT).size());
+						+ DatabaseUtility.fetchBillPerMonth(testBPT).size());
 
 				String test1 = String.format("SELECT * FROM tenant");
 				System.out.println("Tenants: "
-						+ util.fetchTenantSelection(test1).size());
+						+ DatabaseUtility.fetchTenantSelection(test1).size());
 			}
 			// ----------------DO NO DELETE--------------------------------
 
