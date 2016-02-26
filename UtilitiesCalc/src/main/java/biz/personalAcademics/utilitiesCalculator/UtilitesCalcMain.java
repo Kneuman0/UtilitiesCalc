@@ -13,7 +13,7 @@ public class UtilitesCalcMain extends Application{
 	public void start(Stage stage) {
 		Parent parent = null;
 		try {
-			parent = FXMLLoader.load(getClass().getResource("UtilitiesCalculatorGUI.fxml"));	//REQ#1		//REQ#9
+			parent = FXMLLoader.load(getClass().getResource("/UtilitiesCalculatorGUI.fxml"));	//REQ#1		//REQ#9
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("error in parent declaration");

@@ -1073,7 +1073,7 @@ public class UtilitiesCalcController {
 		Connection conn = null;
 		try {
 			Properties p = System.getProperties();
-			p.setProperty("derby.system.home", "../UtilitiesCalc/src/main/java/resources");
+			p.setProperty("derby.system.home", "../UtilitiesCalc/resources");
 			conn = DriverManager.getConnection(DatabaseUtility.DB_URL);
 			conn.close();
 		} catch (SQLException e) {
