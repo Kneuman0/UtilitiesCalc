@@ -2,6 +2,7 @@ package biz.personalAcademics.utilitiesCalculator;
 
 import biz.personalAcademics.databaseModelClasses.*;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -310,10 +311,14 @@ public class UtilitiesCalcController {
 		if(ensureAllEntriesLoggedReceipt()){
 			return;
 		}
+		File currentJavaJarFile = new File(UtilitesCalcMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());   
+		String currentJavaJarFilePath = currentJavaJarFile.getAbsolutePath();
+		String currentRootDirectoryPath = currentJavaJarFilePath.replace(currentJavaJarFile.getName(), "");
+		
 		FileWriter tenantReceipt;
 		PrintWriter fileOut= null;
 		String date = dateReceiptTextField.getText().replace("/", "-");
-		String filePath = String.format("../%s%s.txt", 
+		String filePath = String.format("%s%s%s.txt", currentRootDirectoryPath,
 				"BillsFor", date);
 		try {
 			
@@ -1070,6 +1075,7 @@ public class UtilitiesCalcController {
 	 * check is db exists, if not, method initializes a database
 	 */
 	private void checkDBStatus(){
+		
 		Connection conn = null;
 		try {
 			Properties p = System.getProperties();
