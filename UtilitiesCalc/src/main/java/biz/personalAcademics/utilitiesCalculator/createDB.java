@@ -52,11 +52,11 @@ public class createDB {
 			if (SHOW_ROW_COUNT) {
 				String testH = String.format("SELECT * FROM house");
 				System.out.println("Houses: "
-						+ DatabaseUtility.fetchTenantSelection(testH).size());
+						+ DatabaseUtility.fetchHouseSelection(testH).size());
 
 				String testBM = String.format("SELECT * FROM billMonth");
 				System.out.println("BillMonths: "
-						+ DatabaseUtility.fetchTenantSelection(testBM).size());
+						+ DatabaseUtility.fetchBillMonth(testBM).size());
 
 				String testBPT = String.format("SELECT * FROM billPerTenant");
 				System.out.println("BillPerTenants: "
@@ -188,8 +188,11 @@ public class createDB {
 		}
 
 		String createTableSQL = "CREATE TABLE billPerTenant ("
-				+ " billMonth_ID integer," + " house_ID integer,"
-				+ " fte double," + " bill double," + " tenant_ID integer" + ")";
+				+ " billMonth_ID integer,"
+				+ " house_ID integer,"
+				+ " fte double,"
+				+ " bill double,"
+				+ " tenant_ID integer" + ")";
 
 		stmt.execute(createTableSQL);
 	}

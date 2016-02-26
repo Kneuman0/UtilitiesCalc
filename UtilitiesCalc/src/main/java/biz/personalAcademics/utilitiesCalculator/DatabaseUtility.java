@@ -272,8 +272,8 @@ public class DatabaseUtility {
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
 
-				ten.add(new Tenant(result.getString(1), result.getBoolean(2),
-						result.getString(3), result.getInt(4)));
+				ten.add(new Tenant(result.getString("name"), result.getBoolean("active"),
+						result.getString("tenantType"), result.getInt("tenant_ID")));
 				
 			}
 
@@ -397,9 +397,9 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				 bpt.add(new BillPerTenant(result.getInt(1),
-				 result.getInt(2), result.getDouble(3),
-				 result.getDouble(4), result.getInt(5)));
+				 bpt.add(new BillPerTenant(result.getInt("billMonth_ID"),
+				 result.getInt("house_ID"), result.getDouble("fte"),
+				 result.getDouble("bill"), result.getInt("tenant_ID")));
 			}
 
 		} catch (SQLException e) {
@@ -520,9 +520,9 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				 tenantInfo.add(new ReceiptTenantInfo(result.getString(1),
-				 result.getString(2), result.getString(3),
-				 result.getDouble(4), result.getDouble(5), result.getInt(6)));
+				 tenantInfo.add(new ReceiptTenantInfo(result.getString("name"),
+				 result.getString("date"), result.getString("tenantType"),
+				 result.getDouble("fte"), result.getDouble("bill"), result.getInt("house_ID")));
 			}
 
 		} catch (SQLException e) {
@@ -565,10 +565,10 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				 houseInfo.add(new ReceiptHouseInfo(result.getString(1),
-				 result.getInt(2), result.getInt(3),
-				 result.getDouble(4), result.getDouble(5), result.getDouble(6),
-						 result.getDouble(7), result.getInt(8)));
+				 houseInfo.add(new ReceiptHouseInfo(result.getString("address"),
+				 result.getInt("numRooms"), result.getInt("sqFt"),
+				 result.getDouble("totalBill"), result.getDouble("fossilFuel"), result.getDouble("electric"),
+						 result.getDouble("other"), result.getInt("house_ID")));
 			}
 
 		} catch (SQLException e) {
@@ -629,8 +629,8 @@ public class DatabaseUtility {
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				 tenantInfo.add(new BillPerTenant(0, 0, 0, result.getDouble(1),
-						 result.getString(3), result.getDouble(2),result.getString(4)));
+				 tenantInfo.add(new BillPerTenant(0, 0, 0, result.getDouble("fte"),
+						 result.getString("name"), result.getDouble("bill"),result.getString("tenantType")));
 			}
 
 		} catch (SQLException e) {
@@ -664,8 +664,8 @@ public class DatabaseUtility {
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
 				 tenantInfo.add(new ReceiptHouseInfo(address,
-						 result.getInt(1), result.getInt(2),result.getDouble(3),
-						 result.getDouble(4), result.getDouble(5), result.getDouble(6), 0));
+						 result.getInt("numRooms"), result.getInt("sqFt"),result.getDouble("totalBill"),
+						 result.getDouble("fossilFuel"), result.getDouble("electric"), result.getDouble("other"), 0));
 			}
 
 		} catch (SQLException e) {
