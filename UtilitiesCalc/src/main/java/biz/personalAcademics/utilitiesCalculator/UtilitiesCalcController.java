@@ -185,11 +185,9 @@ public class UtilitiesCalcController {
 		Tenant tenant = new Tenant(nameTextBox.getText(),
 				newTenantActiveRadioButton.isSelected(),
 				tenantTypeList.getValue());
-		try {
-			DatabaseUtility.addTenant(tenant);
-		} catch (SQLException e) {
-			userMessageLabelTenant.setText(e.getMessage());
-		}
+		
+		DatabaseUtility.addTenant(tenant);
+		
 		userMessageLabelTenant.setText(String.format("%s has been added!",
 				tenant.getName()));
 		nameTextBox.clear();
@@ -358,8 +356,6 @@ public class UtilitiesCalcController {
 			}
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println("Exception due to something with radio buttons");
-		} catch (SQLException e) {
-			userMessageLabelTenant.setText(e.getMessage());
 		}
 	}
 
@@ -427,12 +423,10 @@ public class UtilitiesCalcController {
 		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'"
 				+ " AND active = true";
 		ArrayList<Tenant> sublets = null;
-		try {
-			sublets = DatabaseUtility
+		
+		sublets = DatabaseUtility
 					.fetchTenantSelection(allSubletTenants);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
 		subs = FXCollections.observableArrayList();
 		for (int i = 0; i < sublets.size(); i++) {
 			subs.add(sublets.get(i).getName());
@@ -455,8 +449,6 @@ public class UtilitiesCalcController {
 			
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
-			userMessageLabelTenant.setText(e.getMessage());
 		}
 		tenants = FXCollections.observableArrayList();
 		for (int i = 0; i < allTenants.size(); i++) {
@@ -530,11 +522,9 @@ public class UtilitiesCalcController {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
 		ArrayList<Tenant> temp = null;
-		try {
-			temp = DatabaseUtility.fetchTenantSelection(landlordQuery);
-		} catch (SQLException e) {
-			userMessageLabelTenant.setText("Error in queueNONLandlordArrayList()");
-		}		//REQ#10
+		
+		temp = DatabaseUtility.fetchTenantSelection(landlordQuery);
+			//REQ#10
 		for (int i = 0; i < temp.size(); i++) {
 			utilityParticipants.add(new Sublet(temp.get(i).getName(), true, 
 					temp.get(i).getTenant_ID()));
@@ -556,11 +546,9 @@ public class UtilitiesCalcController {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
 				+ " AND active = true";
 		ArrayList<Tenant> temp = null;
-		try {
-			temp = DatabaseUtility.fetchTenantSelection(landlordQuery);
-		} catch (SQLException e) {
-			userMessageLabelTenant.setText(e.getMessage());
-		}		//REQ#10
+		
+		temp = DatabaseUtility.fetchTenantSelection(landlordQuery);
+			//REQ#10
 		for (int i = 0; i < temp.size(); i++) {
 			utilityParticipants.add(new Landlord(temp.get(i).getName(), true, 
 							temp.get(i).getTenant_ID()));
@@ -988,11 +976,9 @@ public class UtilitiesCalcController {
 		tenantSum.append(header);
 		String SQL = "SELECT * FROM tenant";
 		ArrayList<Tenant> names = null;
-		try {
-			names = DatabaseUtility.fetchTenantSelection(SQL);
-		} catch (SQLException e) {
-			userLabelUtilCalc.setText(e.getMessage());
-		}
+		
+		names = DatabaseUtility.fetchTenantSelection(SQL);
+		
 		ArrayList<BillPerTenant> tenantInfo = new ArrayList<BillPerTenant>();
 		tenantSum.append(getHeaderBreak(header));
 		for(int i = 0; i < names.size(); i++){

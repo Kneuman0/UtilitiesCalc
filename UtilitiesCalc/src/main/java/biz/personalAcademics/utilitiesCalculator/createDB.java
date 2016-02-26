@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-import org.apache.derby.iapi.store.raw.FetchDescriptor;
-
 public class createDB {
 
 	public static void main(String[] args) {
@@ -78,22 +76,22 @@ public class createDB {
 
 	}
 
-	private static String getHeaderBreak(String header) {
-		String dash = "";
-		for (int i = 0; i < header.length(); i++) {
-			dash += "-";
-		}
-		return String.format("%s\n", dash);
-	}
+//	private static String getHeaderBreak(String header) {
+//		String dash = "";
+//		for (int i = 0; i < header.length(); i++) {
+//			dash += "-";
+//		}
+//		return String.format("%s\n", dash);
+//	}
 
-	private static String getWhiteSpace(String s, int columnWidth) {
-		int length = columnWidth - s.length();
-		String spaces = "";
-		for (int i = 0; i < length; i++) {
-			spaces += " ";
-		}
-		return s + spaces;
-	}
+//	private static String getWhiteSpace(String s, int columnWidth) {
+//		int length = columnWidth - s.length();
+//		String spaces = "";
+//		for (int i = 0; i < length; i++) {
+//			spaces += " ";
+//		}
+//		return s + spaces;
+//	}
 
 	private static void createTenantTable(Connection conn, boolean input)
 			throws SQLException {

@@ -18,7 +18,7 @@ public class DatabaseUtility {
 	 * 
 	 * @param tenant
 	 */
-	public static void addTenant(Tenant tenant) throws SQLException {
+	public static void addTenant(Tenant tenant) {
 		try {
 
 			Connection conn = DriverManager.getConnection(DB_URL);
@@ -262,11 +262,11 @@ public class DatabaseUtility {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public static ArrayList<Tenant> fetchTenantSelection(String SQLStatement) throws SQLException {    //REQ#8
+	public static ArrayList<Tenant> fetchTenantSelection(String SQLStatement){    //REQ#8
 		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<Tenant> ten = new ArrayList<>();
-//		try {
+		try {
 			conn = DriverManager.getConnection(DB_URL);
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
@@ -277,16 +277,16 @@ public class DatabaseUtility {
 				
 			}
 
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				conn.close();
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return ten;
 	}
 
