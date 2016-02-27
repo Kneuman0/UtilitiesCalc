@@ -3,6 +3,7 @@ package biz.personalAcademics.utilitiesCalculator;
 import biz.personalAcademics.databaseModelClasses.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Scanner;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -313,7 +315,9 @@ public class UtilitiesCalcController {
 		}
 		File currentJavaJarFile = new File(UtilitesCalcMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());   
 		String currentJavaJarFilePath = currentJavaJarFile.getAbsolutePath();
+		System.out.println(currentJavaJarFilePath);
 		String currentRootDirectoryPath = currentJavaJarFilePath.replace(currentJavaJarFile.getName(), "");
+		System.out.println(currentRootDirectoryPath);
 		
 		FileWriter tenantReceipt;
 		PrintWriter fileOut= null;
@@ -1079,9 +1083,25 @@ public class UtilitiesCalcController {
 		Connection conn = null;
 		try {
 			Properties p = System.getProperties();
-			p.setProperty("derby.system.home", "../UtilitiesCalc/resources");
+			File currentJavaJarFile = new File(UtilitesCalcMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());   
+			String currentJavaJarFilePath = currentJavaJarFile.getAbsolutePath();
+			String currentRootDirectoryPath = currentJavaJarFilePath.replace(currentJavaJarFile.getName(), "");
+			
+			// Checks if program is executing in jar file for IDE and creates the database in the appropriate location
+			try{
+				File checkIfInJar = new File("../UtilitiesCalc/database/CHECKME.txt");
+				Scanner check = new Scanner(checkIfInJar);
+				currentRootDirectoryPath = "../UtilitiesCalc";
+				check.close();
+			} catch(FileNotFoundException e1){
+				System.out.println("File Not Found");
+			}
+			
+			// Sets the appropriate path
+			p.setProperty("derby.system.home", currentRootDirectoryPath + "/database");
 			conn = DriverManager.getConnection(DatabaseUtility.DB_URL);
 			conn.close();
+			
 		} catch (SQLException e) {
 			DatabaseUtility.createDBTables();
 		}
