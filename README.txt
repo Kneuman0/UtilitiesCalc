@@ -12,3 +12,13 @@ final boolean SHOW_ROW_COUNT = true;
 This will insert mock data into the database. Then go to UtilitesCalcMain and run that class to to use this application with mock data.
 
 **To accurately run tests, you must insert mock data using the above instructions**
+
+-------------------------------------------------------------------------------------
+
+USING THE APPLICATION IN A JAR
+Once exported, the application will create a database folder next to the jar file containing all the database files.
+The database will be completely empty. Do not relocate the database outside of the folder it is created in. Doing this will
+eliminate all your data and the application will create a new databse folder where the old one was. 
+
+PRINTING RECEIPTS
+All receipts printed from the application will be saved next to the jar file.
