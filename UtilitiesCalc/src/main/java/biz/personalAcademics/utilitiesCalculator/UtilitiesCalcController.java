@@ -158,6 +158,7 @@ public class UtilitiesCalcController {
 	ObservableList<String> subs;
 	ObservableList<String> addresses;
 	ArrayList<Tenant> utilityParticipants;
+	boolean executingInIDE;
 	
 
 	/**
@@ -165,6 +166,7 @@ public class UtilitiesCalcController {
 	 */
 	public void initialize() {
 		utilityParticipants = new ArrayList<Tenant>();
+		setExecutionEnvironment();
 		checkDBStatus();
 		queueUpTenantTypesComboBox();
 		queueUpTenantComboBox();
@@ -174,7 +176,6 @@ public class UtilitiesCalcController {
 		displayTenantSummary();
 		setHouseField();
 		initalizeReceiptView();
-		
 		
 	}
 
@@ -315,9 +316,11 @@ public class UtilitiesCalcController {
 		}
 		File currentJavaJarFile = new File(UtilitesCalcMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());   
 		String currentJavaJarFilePath = currentJavaJarFile.getAbsolutePath();
-		System.out.println(currentJavaJarFilePath);
 		String currentRootDirectoryPath = currentJavaJarFilePath.replace(currentJavaJarFile.getName(), "");
-		System.out.println(currentRootDirectoryPath);
+		
+		if(executingInIDE){
+			currentRootDirectoryPath = "../UtilitiesCalc/src/main/java/resources/receipts/";
+		}
 		
 		FileWriter tenantReceipt;
 		PrintWriter fileOut= null;
@@ -1086,15 +1089,10 @@ public class UtilitiesCalcController {
 			File currentJavaJarFile = new File(UtilitesCalcMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());   
 			String currentJavaJarFilePath = currentJavaJarFile.getAbsolutePath();
 			String currentRootDirectoryPath = currentJavaJarFilePath.replace(currentJavaJarFile.getName(), "");
-			
-			// Checks if program is executing in jar file for IDE and creates the database in the appropriate location
-			try{
-				File checkIfInJar = new File("../UtilitiesCalc/database/CHECKME.txt");
-				Scanner check = new Scanner(checkIfInJar);
+
+			if(executingInIDE){
 				currentRootDirectoryPath = "../UtilitiesCalc";
-				check.close();
-			} catch(FileNotFoundException e1){
-				System.out.println("File Not Found");
+				System.out.println("executing in IDE");
 			}
 			
 			// Sets the appropriate path
@@ -1104,6 +1102,21 @@ public class UtilitiesCalcController {
 			
 		} catch (SQLException e) {
 			DatabaseUtility.createDBTables();
+		}
+	}
+	/**
+	 * Checks if program is executing in jar file for IDE and sets the boolean for
+	 * file management accordingly
+	 */
+	private void setExecutionEnvironment(){
+		try{
+			File checkIfInJar = new File("../UtilitiesCalc/database/CHECKME.txt");
+			Scanner check = new Scanner(checkIfInJar);
+			check.close();
+			executingInIDE = true;
+		} catch(FileNotFoundException e1){
+			System.out.println("File Not Found");
+			executingInIDE = false;
 		}
 	}
 

@@ -39,7 +39,7 @@
                         </RadioButton>
                         <RadioButton fx:id="deactivateTenantRadioButton" layoutX="301.0" layoutY="389.0" mnemonicParsing="false" text="Deactivate" toggleGroup="$activeTenant" />
                         <Button fx:id="activateDeactivateButton" layoutX="407.0" layoutY="385.0" mnemonicParsing="false" onAction="#activateDeactivateButtonListener" text="Activate/Deactivate" />
-                        <Label fx:id="userMessageLabelTenant" alignment="CENTER" layoutX="95.0" layoutY="240.0" prefHeight="60.0" prefWidth="381.0" textFill="#f80303" wrapText="true" />
+                        <Label fx:id="userMessageLabelTenant" alignment="CENTER" layoutY="240.0" prefHeight="60.0" prefWidth="600.0" textFill="#f80303" wrapText="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                         <RadioButton fx:id="newTenantActiveRadioButton" layoutX="389.0" layoutY="117.0" mnemonicParsing="false" selected="true" text="Active">
                            <toggleGroup>
                               <ToggleGroup fx:id="initalTenantActive" />

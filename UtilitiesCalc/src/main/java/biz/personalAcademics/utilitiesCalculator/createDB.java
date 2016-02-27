@@ -21,7 +21,7 @@ public class createDB {
 		Connection conn = null;
 		try {
 			Properties p = System.getProperties();
-			p.setProperty("derby.system.home", "../database");
+			p.setProperty("derby.system.home", "../UtilitiesCalc/database");
 
 			conn = DriverManager.getConnection(DB_URL);
 			
