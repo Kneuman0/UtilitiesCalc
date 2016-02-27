@@ -18,7 +18,6 @@ public class UtilitesCalcMain extends Application{
 		parent =  FXMLLoader.load(this.getClass().getResource("/resources/UtilitiesCalculatorGUI.fxml"));
 		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Scene scene = new Scene(parent);
