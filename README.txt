@@ -13,6 +13,8 @@ This will insert mock data into the database. Then go to UtilitesCalcMain and ru
 
 **To accurately run tests, you must insert mock data using the above instructions**
 
+If executing program in IDE, receipts will be saved in package next to source code named resources.receipts
+
 -------------------------------------------------------------------------------------
 
 USING THE APPLICATION IN A JAR
