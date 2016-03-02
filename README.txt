@@ -4,7 +4,6 @@ Fully functioning stand alone application (once exported to a runnable .jar file
 To test a dry run, run the class named UtilitiesCalcMain. This will initalize the db and run the GUI.
 To test the application with mock data, go to createDB class and  set: 
 
-final boolean DROP_DATABASE = false;
 final boolean DROP_TABLE = true;
 final boolean RESET_DATABSE_DUMMY_VALUES = true;
 final boolean SHOW_ROW_COUNT = true;
