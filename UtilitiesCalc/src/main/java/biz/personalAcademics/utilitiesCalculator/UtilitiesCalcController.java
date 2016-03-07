@@ -29,11 +29,11 @@ import javafx.scene.control.ToggleGroup;
 public class UtilitiesCalcController {
 
 	@FXML
-    private Tab summaryTable;
-	
+	private Tab summaryTable;
+
 	@FXML
 	private ToggleGroup summary;
-	 
+
 	@FXML
 	private Label houseUserLabel;
 
@@ -132,34 +132,33 @@ public class UtilitiesCalcController {
 
 	@FXML
 	private Label userLabelUtilCalc;
-	
-	@FXML
-    private RadioButton billTotRadioButton;
-	
-	@FXML
-    private RadioButton tenSumRadioButton;
-	
-	@FXML
-    private TextArea summaryTextArea;
-	
-	@FXML
-    private TextField ReceiptViewDateTextField;
 
-    @FXML
-    private ComboBox<String> receiptViewAddressComboBox;
-    
-    @FXML
-    private RadioButton receiptViewRadioButton;
-    
-    @FXML
-    private Button viewReceiptButton;
+	@FXML
+	private RadioButton billTotRadioButton;
+
+	@FXML
+	private RadioButton tenSumRadioButton;
+
+	@FXML
+	private TextArea summaryTextArea;
+
+	@FXML
+	private TextField ReceiptViewDateTextField;
+
+	@FXML
+	private ComboBox<String> receiptViewAddressComboBox;
+
+	@FXML
+	private RadioButton receiptViewRadioButton;
+
+	@FXML
+	private Button viewReceiptButton;
 
 	ObservableList<String> tenants;
 	ObservableList<String> subs;
 	ObservableList<String> addresses;
 	ArrayList<Tenant> utilityParticipants;
 	boolean executingInIDE;
-	
 
 	/**
 	 * Tested/working
@@ -176,7 +175,7 @@ public class UtilitiesCalcController {
 		displayTenantSummary();
 		setHouseField();
 		initalizeReceiptView();
-		
+
 	}
 
 	/**
@@ -189,9 +188,9 @@ public class UtilitiesCalcController {
 		Tenant tenant = new Tenant(nameTextBox.getText(),
 				newTenantActiveRadioButton.isSelected(),
 				tenantTypeList.getValue());
-		
+
 		DatabaseUtility.addTenant(tenant);
-		
+
 		userMessageLabelTenant.setText(String.format("%s has been added!",
 				tenant.getName()));
 		nameTextBox.clear();
@@ -208,8 +207,8 @@ public class UtilitiesCalcController {
 		House house = null;
 		try {
 			house = new House(addressInput.getText(),
-					Integer.parseInt(squareFootage.getText()),
-					Integer.parseInt(numberOfRooms.getText()));
+					Integer.parseInt(numberOfRooms.getText()),
+					Integer.parseInt(squareFootage.getText()));
 		} catch (NumberFormatException e) {
 			houseUserLabel
 					.setText("Non-number detected in 'Number of Rooms' field"
@@ -266,20 +265,22 @@ public class UtilitiesCalcController {
 		// which adds it to the database
 		try {
 			for (int i = 0; i < utilityParticipants.size(); i++) {
-				double tenantBill = amtPerTen * utilityParticipants.get(i).getFte();
-				thisMonthsTenants
-						.add(new BillPerTenant(billMonthID(modifyBillDate(billDate.getText())),
-								houseID(houseAddresses.getValue()),
-								utilityParticipants.get(i).getFte(), tenantBill,
-								utilityParticipants.get(i).getTenant_ID()));
-				
+				double tenantBill = amtPerTen
+						* utilityParticipants.get(i).getFte();
+				thisMonthsTenants.add(new BillPerTenant(
+						billMonthID(modifyBillDate(billDate.getText())),
+						houseID(houseAddresses.getValue()), utilityParticipants
+								.get(i).getFte(), tenantBill,
+						utilityParticipants.get(i).getTenant_ID()));
+
 			}
 		} catch (InvalidUserEntryException e) {
 			userLabelUtilCalc.setText(e.getMessage());
 			return;
 		}
 
-		userLabelUtilCalc.setText(String.format("Bill for %s has been processed and saved to database!",
+		userLabelUtilCalc.setText(String.format(
+				"Bill for %s has been processed and saved to database!",
 				billDate.getText()));
 		DatabaseUtility.addBillPerTenantEntry(thisMonthsTenants);
 		clearInformationForBillCalculation();
@@ -293,12 +294,13 @@ public class UtilitiesCalcController {
 		try {
 			modifyTenantFTE();
 		} catch (InvalidUserEntryException e) {
-			userLabelUtilCalc.setText(String
-					.format("%s is not a valid portion of occupancy", e.getMessage()));
+			userLabelUtilCalc.setText(String.format(
+					"%s is not a valid portion of occupancy", e.getMessage()));
 			return;
 		}
-		userLabelUtilCalc.setText(String.format("Occupancy for %s saved as %.2f", 
-				subletTenantList.getValue(), Double.parseDouble(fte.getText())));
+		userLabelUtilCalc.setText(String.format(
+				"Occupancy for %s saved as %.2f", subletTenantList.getValue(),
+				Double.parseDouble(fte.getText())));
 		// Deletes each sublet from combo box after FTE has been recorded
 		String subTenantFTERecorded = subletTenantList.getValue();
 		for (int i = 0; i < subs.size(); i++) {
@@ -311,44 +313,39 @@ public class UtilitiesCalcController {
 	}
 
 	public void printReceiptButtonListener() {
-		if(ensureAllEntriesLoggedReceipt()){
+		if (ensureAllEntriesLoggedReceipt()) {
 			return;
 		}
-		File currentJavaJarFile = new File(UtilitesCalcMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());   
+		File currentJavaJarFile = new File(UtilitesCalcMain.class
+				.getProtectionDomain().getCodeSource().getLocation().getPath());
 		String currentJavaJarFilePath = currentJavaJarFile.getAbsolutePath();
-		String currentRootDirectoryPath = currentJavaJarFilePath.replace(currentJavaJarFile.getName(), "");
-		
-		if(executingInIDE){
+		String currentRootDirectoryPath = currentJavaJarFilePath.replace(
+				currentJavaJarFile.getName(), "");
+
+		if (executingInIDE) {
 			currentRootDirectoryPath = "../UtilitiesCalc/src/main/java/resources/receipts/";
 		}
-		
-		FileWriter tenantReceipt;
-		PrintWriter fileOut= null;
+
 		String date = dateReceiptTextField.getText().replace("/", "-");
 		String filePath = String.format("%s%s%s.txt", currentRootDirectoryPath,
 				"BillsFor", date);
-		try {
-			
-			tenantReceipt = new FileWriter(filePath);
-			fileOut = new PrintWriter(tenantReceipt);
-		} catch (IOException e1) {
-			System.out.println("File Not Found");
-			e1.printStackTrace();
-		}
 		
+		PrintWriter fileOut = null;
 		try {
-			printTenantInfo(fileOut);
-		} catch (InvalidUserEntryException e) {		//REQ#12
-			userLabelUtilCalc.setText(String.format("%s was not found in the databse."
-					+ " No receipt printed.",
-					e.getMessage()));
+			// stores PrintWriter object that was used to print the receipt info
+			// This will be passed to printHouseInfo() method
+			fileOut = printTenantInfo(filePath);
+		} catch (InvalidUserEntryException e) { // REQ#12
+			userLabelUtilCalc.setText(String
+					.format("%s was not found in the databse."
+							+ " No receipt printed.", e.getMessage()));
 			return;
 		}
 		printHouseInfo(fileOut);
-		userLabelUtilCalc.setText(String.format("Receipt Processed! File saved at %s\n"
-				+ "(For best results, open with MS Word)", filePath));
+		userLabelUtilCalc.setText(String.format(
+				"Receipt Processed! File saved at %s\r\n"
+						+ "(For best results, open with MS Word)", filePath));
 		fileOut.close();
-		
 
 	}
 
@@ -361,7 +358,8 @@ public class UtilitiesCalcController {
 				activeTenants.getValue());
 
 		try {
-			if (DatabaseUtility.fetchTenantSelection(getTenant).get(0).isActive()) {
+			if (DatabaseUtility.fetchTenantSelection(getTenant).get(0)
+					.isActive()) {
 				activeTenantRadioButton.setSelected(true);
 			} else {
 				deactivateTenantRadioButton.setSelected(true);
@@ -388,39 +386,40 @@ public class UtilitiesCalcController {
 		}
 		DatabaseUtility.modifyDatabase(updateTenant);
 	}
-	
-	public void tenantSummaryRadioButtonListener(){
+
+	public void tenantSummaryRadioButtonListener() {
 		displayTenantSummary();
 	}
-		
-	public void billTotStatRadioButtonListener(){
+
+	public void billTotStatRadioButtonListener() {
 		displayHouseStatistics();
 	}
-	
-	public void receiptViewRadioButtonListener(){
+
+	public void receiptViewRadioButtonListener() {
 		receiptViewAddressComboBox.setDisable(false);
 		receiptViewAddressComboBox.setOpacity(100);
 		viewReceiptButton.setDisable(false);
 		viewReceiptButton.setOpacity(100);
 		ReceiptViewDateTextField.setDisable(false);
 		ReceiptViewDateTextField.setOpacity(100);
-		summaryTextArea.setText("Please select the address and and date on the bill you would like to query");
+		summaryTextArea
+				.setText("Please select the address and and date on the bill you would like to query");
 	}
-	
-	public void viewReceiptButton(){
-		if(ensureAllUserEntriesLoggedReceiptView()){
+
+	public void viewReceiptButton() {
+		if (ensureAllUserEntriesLoggedReceiptView()) {
 			return;
 		}
 		try {
 			printreceiptHouseInfo(printReceiptTenantInfo());
-			
+
 		} catch (InvalidUserEntryException e) {
-			summaryTextArea.setText("Your query returned no results, double check your date");
+			summaryTextArea
+					.setText("Your query returned no results, double check your date");
 			return;
 		}
-		
+
 	}
-	
 
 	// ----------------controller utility methods--------------------
 
@@ -435,10 +434,9 @@ public class UtilitiesCalcController {
 		String allSubletTenants = "SELECT * FROM tenant WHERE tenantType = 'Sublet'"
 				+ " AND active = true";
 		ArrayList<Tenant> sublets = null;
-		
-		sublets = DatabaseUtility
-					.fetchTenantSelection(allSubletTenants);
-		
+
+		sublets = DatabaseUtility.fetchTenantSelection(allSubletTenants);
+
 		subs = FXCollections.observableArrayList();
 		for (int i = 0; i < sublets.size(); i++) {
 			subs.add(sublets.get(i).getName());
@@ -447,8 +445,7 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Loads all tenant names into the combo boxes labeled tenant
-	 * Tested/Working
+	 * Loads all tenant names into the combo boxes labeled tenant Tested/Working
 	 */
 	private void queueUpTenantComboBox() {
 		tenantsList.getItems().setAll(FXCollections.observableArrayList());
@@ -456,9 +453,8 @@ public class UtilitiesCalcController {
 		String allTenantsSQL = "SELECT * FROM tenant";
 		ArrayList<Tenant> allTenants = null;
 		try {
-			allTenants = DatabaseUtility
-					.fetchTenantSelection(allTenantsSQL);
-			
+			allTenants = DatabaseUtility.fetchTenantSelection(allTenantsSQL);
+
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -510,13 +506,13 @@ public class UtilitiesCalcController {
 	 */
 	private void resetComboBoxes() {
 		utilityParticipants = new ArrayList<Tenant>();
-		
+
 		queueNONLandlordArrayList();
 		queueUpSubletComboBox();
 		queueUpTenantComboBox();
 		queueUpAddressComboBox();
 		displayTenantSummary();
-		
+
 	}
 
 	/**
@@ -534,11 +530,11 @@ public class UtilitiesCalcController {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType NOT IN ('Landlord')"
 				+ " AND active = true";
 		ArrayList<Tenant> temp = null;
-		
+
 		temp = DatabaseUtility.fetchTenantSelection(landlordQuery);
-			//REQ#10
+		// REQ#10
 		for (int i = 0; i < temp.size(); i++) {
-			utilityParticipants.add(new Sublet(temp.get(i).getName(), true, 
+			utilityParticipants.add(new Sublet(temp.get(i).getName(), true,
 					temp.get(i).getTenant_ID()));
 		}
 	}
@@ -550,7 +546,7 @@ public class UtilitiesCalcController {
 	 * tenants have FTEs of 0 (see landlord class constructor)
 	 * 
 	 * Must be called after queueNONLandlordArrayList() and after all FTEs have
-	 * been modified Must be called in submitBillButtonlistener() 
+	 * been modified Must be called in submitBillButtonlistener()
 	 * 
 	 * Tested/Working
 	 */
@@ -558,19 +554,20 @@ public class UtilitiesCalcController {
 		String landlordQuery = "Select * FROM tenant WHERE tenantType IN ('Landlord')"
 				+ " AND active = true";
 		ArrayList<Tenant> temp = null;
-		
+
 		temp = DatabaseUtility.fetchTenantSelection(landlordQuery);
-			//REQ#10
+		// REQ#10
 		for (int i = 0; i < temp.size(); i++) {
-			utilityParticipants.add(new Landlord(temp.get(i).getName(), true, 
-							temp.get(i).getTenant_ID()));
+			utilityParticipants.add(new Landlord(temp.get(i).getName(), true,
+					temp.get(i).getTenant_ID()));
 		}
 
 	}
-	
-	private void setHouseField(){
+
+	private void setHouseField() {
 		String houseSQL = "SELECT * FROM house";
-		ArrayList<House> houseInfo = DatabaseUtility.fetchHouseSelection(houseSQL);
+		ArrayList<House> houseInfo = DatabaseUtility
+				.fetchHouseSelection(houseSQL);
 		Integer sqFootage = 0;
 		Integer numberOfRoomsInt = 0;
 		try {
@@ -595,9 +592,8 @@ public class UtilitiesCalcController {
 	 * @throws InvalidUserEntryException
 	 * 
 	 */
-	
-	
-	private void modifyTenantFTE() throws InvalidUserEntryException {	// REQ #11
+
+	private void modifyTenantFTE() throws InvalidUserEntryException { // REQ #11
 		for (int i = 0; i < utilityParticipants.size(); i++) {
 			if (utilityParticipants.get(i).getName()
 					.equals(subletTenantList.getValue())) {
@@ -615,10 +611,9 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * totals the bill and divides that by the total FTE of all tenants.
-	 * Must be used after all sublet FTEs have been entered by the user. 
-	 * Must use in submitBillButtonListener(). 
-	 * Must use after queueAllTenantArrayList().
+	 * totals the bill and divides that by the total FTE of all tenants. Must be
+	 * used after all sublet FTEs have been entered by the user. Must use in
+	 * submitBillButtonListener(). Must use after queueAllTenantArrayList().
 	 * 
 	 * Tested/Working
 	 * 
@@ -638,7 +633,7 @@ public class UtilitiesCalcController {
 
 	/**
 	 * saves billMonth in database from GUI items. Must use in
-	 * submitBillButtonListener() 
+	 * submitBillButtonListener()
 	 * 
 	 * Tested/Working
 	 */
@@ -646,18 +641,18 @@ public class UtilitiesCalcController {
 
 		BillMonth billMonth = null;
 		try {
-			double totalBill = Double.parseDouble(fossilFuelBill.getText()) +
-					Double.parseDouble(billAmount.getText()) +
-					Double.parseDouble(otherBills.getText());
+			double totalBill = Double.parseDouble(fossilFuelBill.getText())
+					+ Double.parseDouble(billAmount.getText())
+					+ Double.parseDouble(otherBills.getText());
 			billMonth = new BillMonth(modifyBillDate(billDate.getText()),
 					Double.parseDouble(fossilFuelBill.getText()),
 					Double.parseDouble(billAmount.getText()),
-					Double.parseDouble(otherBills.getText()), totalBill, 
+					Double.parseDouble(otherBills.getText()), totalBill,
 					houseID(houseAddresses.getValue()));
 		} catch (NumberFormatException e) {
 			userLabelUtilCalc.setText("Non-number detected in bill field");
 			return;
-		} catch (InvalidUserEntryException e1){
+		} catch (InvalidUserEntryException e1) {
 			userLabelUtilCalc.setText(e1.getMessage());
 			return;
 		}
@@ -672,13 +667,15 @@ public class UtilitiesCalcController {
 	 * 
 	 * @return
 	 */
-	private String modifyBillDate(String dbDateIn) throws InvalidUserEntryException {
+	private String modifyBillDate(String dbDateIn)
+			throws InvalidUserEntryException {
 		String[] date = dbDateIn.split("/");
-		
-		if(date.length != 2){
-			throw new InvalidUserEntryException(String.format("%s is not a valid date", dbDateIn));
+
+		if (date.length != 2) {
+			throw new InvalidUserEntryException(String.format(
+					"%s is not a valid date", dbDateIn));
 		}
-		
+
 		String dbDate = date[1] + "/" + date[0];
 		return dbDate;
 
@@ -686,7 +683,7 @@ public class UtilitiesCalcController {
 
 	/**
 	 * Returns the billMonth ID based on the date. Date must be modified from
-	 * the date the user enters. use modifyBillDate() method 
+	 * the date the user enters. use modifyBillDate() method
 	 * 
 	 * Tested/Working
 	 * 
@@ -702,7 +699,7 @@ public class UtilitiesCalcController {
 	 * exists in DB
 	 * 
 	 * will be modified to accept an address that will be stored in a combobox
-	 * in the GUI 
+	 * in the GUI
 	 * 
 	 * Tested/Working
 	 * 
@@ -711,16 +708,17 @@ public class UtilitiesCalcController {
 	private int houseID(String address) {
 		String houseIDSQL = String.format(
 				"SELECT * FROM house WHERE address = '%s'", address);
-		return DatabaseUtility.fetchHouseSelection(houseIDSQL).get(0).getHouse_ID();
+		return DatabaseUtility.fetchHouseSelection(houseIDSQL).get(0)
+				.getHouse_ID();
 	}
-	
-	private boolean ensureAllUserEntriesLoggedReceiptView(){
+
+	private boolean ensureAllUserEntriesLoggedReceiptView() {
 		boolean notifyUser = false;
-		if(receiptViewAddressComboBox.getSelectionModel().isEmpty()){
+		if (receiptViewAddressComboBox.getSelectionModel().isEmpty()) {
 			summaryTextArea.setText("No Address Selected!");
 			notifyUser = true;
 		}
-		
+
 		return notifyUser;
 	}
 
@@ -794,8 +792,8 @@ public class UtilitiesCalcController {
 	}
 
 	/**
-	 * Checks all fields necessary to add a full Tenant object to database. 
-	 * If any field is empty, user will be notified and no code executed
+	 * Checks all fields necessary to add a full Tenant object to database. If
+	 * any field is empty, user will be notified and no code executed
 	 * 
 	 * Method must be used at the every beginning of the listener
 	 * 
@@ -815,214 +813,250 @@ public class UtilitiesCalcController {
 		}
 		return notifyUser;
 	}
-	
-//	private String getWhiteSpace(String s, int columnWidth){
-//		int length = columnWidth - s.length();
-//		String spaces = "";
-//		for(int i = 0; i < length;i++){
-//			spaces += " ";
-//		}
-//		return s + spaces;
-//	}
-	
+
+	// private String getWhiteSpace(String s, int columnWidth){
+	// int length = columnWidth - s.length();
+	// String spaces = "";
+	// for(int i = 0; i < length;i++){
+	// spaces += " ";
+	// }
+	// return s + spaces;
+	// }
+
 	/**
 	 * prints the tenants info to a file
+	 * 
 	 * @param fileOut
 	 * @throws InvalidUserEntryException
 	 */
-	private void printTenantInfo(PrintWriter fileOut) throws InvalidUserEntryException{
-		
-		//StringBuilder REQ#2
-		StringBuilder tenantInfo = new StringBuilder();	
-		String date = String.format("Date: %s\n\n", dateReceiptTextField.getText());
+	private PrintWriter printTenantInfo(String filePath)
+			throws InvalidUserEntryException {
+
+		// StringBuilder REQ#2
+		StringBuilder tenantInfo = new StringBuilder();
+		String date = String.format("Date: %s\r\n\r\n",
+				dateReceiptTextField.getText());
 		tenantInfo.append(date);
-		String header = String.format("|%-20s|%-5s|%-15s|%-8s|\n", 
+		String header = String.format("|%-20s|%-5s|%-15s|%-8s|\r\n",
 				"Tenant Name", "FTE", "Tenant Type", "Owed");
 		tenantInfo.append(header);
 		String lineBreak = "";
-		for(int i = 0; i < header.length(); i++){
+		for (int i = 0; i < header.length(); i++) {
 			lineBreak += "-";
 		}
-		tenantInfo.append(String.format("%s\n", lineBreak));
-		ArrayList<ReceiptTenantInfo> tens = 
-				DatabaseUtility.fetchReceiptInfoForTenant(modifyBillDate(dateReceiptTextField.getText()));
-		if(tens.size() == 0){
+		tenantInfo.append(String.format("%s\r\n", lineBreak));
+		ArrayList<ReceiptTenantInfo> tens = DatabaseUtility
+				.fetchReceiptInfoForTenant(modifyBillDate(dateReceiptTextField
+						.getText()));
+		if (tens.size() == 0) {
 			throw new InvalidUserEntryException(dateReceiptTextField.getText());
 		}
-		for(int i = 0; i < tens.size(); i++){
-			String stuff = String.format("|%-20s|%-5.2f|%-15s|$%-7.2f|\n",
-					tens.get(i).getName(), tens.get(i).getFte(), 
-					tens.get(i).getTenantType(), tens.get(i).getAmountOwed());
+		for (int i = 0; i < tens.size(); i++) {
+			String stuff = String.format("|%-20s|%-5.2f|%-15s|$%-7.2f|\r\n",
+					tens.get(i).getName(), tens.get(i).getFte(), tens.get(i)
+							.getTenantType(), tens.get(i).getAmountOwed());
 			tenantInfo.append(stuff);
 		}
-		tenantInfo.append("\n\n\n\n");
-		fileOut.println(tenantInfo);
+		tenantInfo.append("\r\n\r\n\r\n\r\n");
+		
+		/*
+		 * gets the PrintWriter AFTER database is queried
+		 * this same PrintWriter object will be passed to the printHouseReceiptInfo() method
+		 * in the listener method
+		 */
+		PrintWriter passToHouseInfo = getReceiptPrintWriter(filePath);
+		passToHouseInfo.println(tenantInfo);
+		
+		return passToHouseInfo;
 	}
-	
+
 	/**
 	 * Prints house info to a file
+	 * 
 	 * @param fileOut
 	 */
-	private void printHouseInfo(PrintWriter fileOut){
-		ArrayList<ReceiptHouseInfo> houseInformation = 
-				DatabaseUtility.fetchReceiptInfoForHouse(modifyBillDate(dateReceiptTextField.getText()),
-					houseID(houseAddresses.getValue())
-								);
-		StringBuilder houseInfo = new StringBuilder();			//REQ#2
-		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\n", "Address", "Total Bill", "Cost / sqft", "Cost / Room");
+	private void printHouseInfo(PrintWriter fileOut) {
+		ArrayList<ReceiptHouseInfo> houseInformation = DatabaseUtility
+				.fetchReceiptInfoForHouse(
+						modifyBillDate(dateReceiptTextField.getText()),
+						houseID(houseAddresses.getValue()));
+		StringBuilder houseInfo = new StringBuilder(); // REQ#2
+		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\r\n",
+				"Address", "Total Bill", "Cost / sqft", "Cost / Room");
 		String dash = "";
-		for(int i = 2; i <= idHouse.length(); i++){
+		for (int i = 2; i <= idHouse.length(); i++) {
 			dash += "-";
 		}
 		houseInfo.append(idHouse);
-		houseInfo.append(String.format("%s\n", dash));
-		
-		for(int i = 0; i < houseInformation.size(); i++){
-		String tenantInfo = String.format("|%-22s|%-12.2f|%-12.2f|%-12.2f|\n",
-				 houseInformation.get(i).getAddress(), houseInformation.get(i).getTotalBill(), 
-				 houseInformation.get(i).getCostPerSqFt(),
-				 houseInformation.get(i).getCostPerRoom());
-		houseInfo.append(tenantInfo);
+		houseInfo.append(String.format("%s\r\n", dash));
+
+		for (int i = 0; i < houseInformation.size(); i++) {
+			String tenantInfo = String.format(
+					"|%-22s|%-12.2f|%-12.2f|%-12.2f|\r\n", houseInformation
+							.get(i).getAddress(), houseInformation.get(i)
+							.getTotalBill(), houseInformation.get(i)
+							.getCostPerSqFt(), houseInformation.get(i)
+							.getCostPerRoom());
+			houseInfo.append(tenantInfo);
 		}
 		fileOut.println(houseInfo);
-		
+
 	}
-	
+
 	/**
-	 * Accepts string from printReceiptTenantInfo(), appends it to the house info and then
-	 * prints all info to text area
+	 * Accepts string from printReceiptTenantInfo(), appends it to the house
+	 * info and then prints all info to text area
+	 * 
 	 * @param tenantReceipt
 	 */
-	private void printreceiptHouseInfo(String tenantReceipt){
-		ArrayList<ReceiptHouseInfo> houseInformation = 
-				DatabaseUtility.fetchReceiptInfoForHouse(modifyBillDate(ReceiptViewDateTextField.getText())
-						, houseID(receiptViewAddressComboBox.getValue())
-						);
+	private void printreceiptHouseInfo(String tenantReceipt) {
+		ArrayList<ReceiptHouseInfo> houseInformation = DatabaseUtility
+				.fetchReceiptInfoForHouse(
+						modifyBillDate(ReceiptViewDateTextField.getText()),
+						houseID(receiptViewAddressComboBox.getValue()));
 		StringBuilder houseInfo = new StringBuilder();
-		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\n", "Address", "Total Bill", "Cost / sqft", "Cost / Room");
+		String idHouse = String.format("|%-22s|%-12s|%-12s|%-12s|\r\n",
+				"Address", "Total Bill", "Cost / sqft", "Cost / Room");
 		String dash = "";
-		for(int i = 2; i <= idHouse.length(); i++){
+		for (int i = 2; i <= idHouse.length(); i++) {
 			dash += "-";
 		}
 		houseInfo.append(idHouse);
-		houseInfo.append(String.format("%s\n", dash));
-		
-		for(int i = 0; i < houseInformation.size(); i++){
-		String tenantInfo = String.format("|%-22s|%-12.2f|%-12.2f|%-12.2f|\n",
-				 houseInformation.get(i).getAddress(), houseInformation.get(i).getTotalBill(), 
-				 houseInformation.get(i).getCostPerSqFt(),
-				 houseInformation.get(i).getCostPerRoom());
-		houseInfo.append(tenantInfo);
+		houseInfo.append(String.format("%s\r\n", dash));
+
+		for (int i = 0; i < houseInformation.size(); i++) {
+			String tenantInfo = String.format(
+					"|%-22s|%-12.2f|%-12.2f|%-12.2f|\r\n", houseInformation
+							.get(i).getAddress(), houseInformation.get(i)
+							.getTotalBill(), houseInformation.get(i)
+							.getCostPerSqFt(), houseInformation.get(i)
+							.getCostPerRoom());
+			houseInfo.append(tenantInfo);
 		}
 		summaryTextArea.setText(tenantReceipt + houseInfo.toString());
 	}
-	
+
 	/**
 	 * generates tenant info string and should send to printReceiptHouseInfo()
+	 * 
 	 * @return
 	 * @throws InvalidUserEntryException
 	 */
-	private String printReceiptTenantInfo() throws InvalidUserEntryException{
+	private String printReceiptTenantInfo() throws InvalidUserEntryException {
 		StringBuilder tenantInfo = new StringBuilder();
-		String date = String.format("Date: %s\n\n", ReceiptViewDateTextField.getText());
+		String date = String.format("Date: %s\r\n\r\n",
+				ReceiptViewDateTextField.getText());
 		tenantInfo.append(date);
-		String header = String.format("|%-20s|%-5s|%-15s|%-8s|\n", 
+		String header = String.format("|%-20s|%-5s|%-15s|%-8s|\r\n",
 				"Tenant Name", "FTE", "Tenant Type", "Owed");
 		tenantInfo.append(header);
 		String lineBreak = "";
-		for(int i = 0; i < header.length(); i++){
+		for (int i = 0; i < header.length(); i++) {
 			lineBreak += "-";
 		}
-		tenantInfo.append(String.format("%s\n", lineBreak));
-		ArrayList<ReceiptTenantInfo> tens = 
-				DatabaseUtility.fetchReceiptInfoForTenant(modifyBillDate(ReceiptViewDateTextField.getText()));
-		if(tens.size() == 0){
-			throw new InvalidUserEntryException(ReceiptViewDateTextField.getText());
+		tenantInfo.append(String.format("%s\r\n", lineBreak));
+		ArrayList<ReceiptTenantInfo> tens = DatabaseUtility
+				.fetchReceiptInfoForTenant(modifyBillDate(ReceiptViewDateTextField
+						.getText()));
+		if (tens.size() == 0) {
+			throw new InvalidUserEntryException(
+					ReceiptViewDateTextField.getText());
 		}
-		for(int i = 0; i < tens.size(); i++){
-			String stuff = String.format("|%-20s|%-5.2f|%-15s|$%-7.2f|\n",
-					tens.get(i).getName(), tens.get(i).getFte(), 
-					tens.get(i).getTenantType(), tens.get(i).getAmountOwed());
+		for (int i = 0; i < tens.size(); i++) {
+			String stuff = String.format("|%-20s|%-5.2f|%-15s|$%-7.2f|\r\n",
+					tens.get(i).getName(), tens.get(i).getFte(), tens.get(i)
+							.getTenantType(), tens.get(i).getAmountOwed());
 			tenantInfo.append(stuff);
 		}
-		tenantInfo.append("\n\n\n\n");
+		tenantInfo.append("\r\n\r\n\r\n\r\n");
 		return tenantInfo.toString();
 	}
-	
+
 	/**
 	 * check for all user input necessary for receipt
+	 * 
 	 * @return
 	 */
-	private boolean ensureAllEntriesLoggedReceipt(){
+	private boolean ensureAllEntriesLoggedReceipt() {
 		boolean notifyUser = false;
-		if(houseAddresses.getSelectionModel().isEmpty()){
+		if (houseAddresses.getSelectionModel().isEmpty()) {
 			userLabelUtilCalc.setText("No house address selected");
 			notifyUser = true;
 		}
-		if(dateReceiptTextField.getText().equals("")){
+		if (dateReceiptTextField.getText().equals("")) {
 			userLabelUtilCalc.setText("No date entered");
 			notifyUser = true;
 		}
 		return notifyUser;
 	}
-	
+
 	/**
-	 * generates a line between the header and the information to enhance readability
+	 * generates a line between the header and the information to enhance
+	 * readability
+	 * 
 	 * @param header
 	 * @return
 	 */
-	private String getHeaderBreak(String header){
+	private String getHeaderBreak(String header) {
 		String dash = "";
-		for(int i = 0; i < header.length(); i++){
+		for (int i = 0; i < header.length(); i++) {
 			dash += "-";
 		}
-		return String.format("%s\n", dash);
+		return String.format("%s\r\n", dash);
 	}
-	
+
 	/**
 	 * Displays the tenant summary of all the living in the specified house
 	 */
-	private void displayTenantSummary(){
+	private void displayTenantSummary() {
 		StringBuilder tenantSum = new StringBuilder();
-		String header = String.format("|%-20s|%-10s|%-15s|%-12s|\n", "Name", "type", "Months Paid", "Total Paid");
+		String header = String.format("|%-20s|%-10s|%-15s|%-12s|\r\n", "Name",
+				"type", "Months Paid", "Total Paid");
 		tenantSum.append(header);
 		String SQL = "SELECT * FROM tenant";
 		ArrayList<Tenant> names = null;
-		
+
 		names = DatabaseUtility.fetchTenantSelection(SQL);
-		
+
 		ArrayList<BillPerTenant> tenantInfo = new ArrayList<BillPerTenant>();
 		tenantSum.append(getHeaderBreak(header));
-		for(int i = 0; i < names.size(); i++){
-			ArrayList<BillPerTenant> totalEntries = DatabaseUtility.fetchTenantTotals(names.get(i).getName());
+		for (int i = 0; i < names.size(); i++) {
+			ArrayList<BillPerTenant> totalEntries = DatabaseUtility
+					.fetchTenantTotals(names.get(i).getName());
 			double amountPaid = 0;
 			double totalStay = 0;
-			for(int index = 0; index < totalEntries.size(); index++){
+			for (int index = 0; index < totalEntries.size(); index++) {
 				amountPaid += totalEntries.get(index).getBill();
 				totalStay += totalEntries.get(index).getFte();
 			}
-			tenantInfo.add(new BillPerTenant(0, 0, 0, totalStay, names.get(i).getName(),
-					amountPaid, names.get(i).getTenantType()));
+			tenantInfo.add(new BillPerTenant(0, 0, 0, totalStay, names.get(i)
+					.getName(), amountPaid, names.get(i).getTenantType()));
 		}
-		
-		for(int i = 0; i < tenantInfo.size(); i++){
-			tenantSum.append(String.format("|%-20s|%-10s|%-15.2f|$ %-10.2f|\n",
-					tenantInfo.get(i).getTenantName(), tenantInfo.get(i).getTenantType(),
-					tenantInfo.get(i).getFte(), tenantInfo.get(i).getBill()));
+
+		for (int i = 0; i < tenantInfo.size(); i++) {
+			tenantSum.append(String.format(
+					"|%-20s|%-10s|%-15.2f|$ %-10.2f|\r\n", tenantInfo.get(i)
+							.getTenantName(),
+					tenantInfo.get(i).getTenantType(), tenantInfo.get(i)
+							.getFte(), tenantInfo.get(i).getBill()));
 		}
-		
+
 		summaryTextArea.setText(tenantSum.toString());
 	}
-	
+
 	/**
 	 * displays the house statisics in the text area
 	 */
-	private void displayHouseStatistics(){
+	private void displayHouseStatistics() {
 		String getAllHouses = "SELECT * FROM house";
-		ArrayList<ReceiptHouseInfo> houseInfo = DatabaseUtility.fetchHouseSummary(DatabaseUtility.fetchHouseSelection(getAllHouses).get(0).getAddress());
+		ArrayList<ReceiptHouseInfo> houseInfo = DatabaseUtility
+				.fetchHouseSummary(DatabaseUtility
+						.fetchHouseSelection(getAllHouses).get(0).getAddress());
 		StringBuilder houseSum = new StringBuilder();
-		String header = String.format("|%-25s|%-16s|%-15s|%-10s|%-15s|%-15s|%-15s|\n", "Address", "Utility Total", "Fossil Fuel",
-				"Electric", "Other", "Sq Ft Average", "Average Per Room");
+		String header = String.format(
+				"|%-25s|%-16s|%-15s|%-10s|%-15s|%-15s|%-15s|\r\n", "Address",
+				"Utility Total", "Fossil Fuel", "Electric", "Other",
+				"Sq Ft Average", "Average Per Room");
 		houseSum.append(header);
 		houseSum.append(getHeaderBreak(header));
 		double totalBill = 0;
@@ -1031,30 +1065,33 @@ public class UtilitiesCalcController {
 		double totalOther = 0;
 		double sqFtAverage = 0;
 		double roomAverage = 0;
-		for(int i = 0; i < houseInfo.size(); i++){
+		for (int i = 0; i < houseInfo.size(); i++) {
 			totalBill += houseInfo.get(i).getTotalBill();
 			totalFossilFuel += houseInfo.get(i).getFossilFuel();
 			totalElectric += houseInfo.get(i).getElectric();
 			totalOther += houseInfo.get(i).getOtherBills();
 			sqFtAverage += houseInfo.get(i).getCostPerSqFt();
 			roomAverage += houseInfo.get(i).getCostPerRoom();
-			
+
 		}
-		ReceiptHouseInfo h = new ReceiptHouseInfo(houseInfo.get(0).getAddress(),
-				totalBill, totalFossilFuel, totalElectric, totalOther, sqFtAverage/houseInfo.size(),
-				roomAverage/houseInfo.size());
-		
-			houseSum.append(String.format("|%-25s|$%-15.2f|$%-14.2f|$%-9.2f|$%-14.2f|$%-14.2f|$%-15.2f|\n",
-					h.getAddress(), h.getTotalBill(), h.getFossilFuel(), h.getElectric(),
-					h.getOtherBills(), h.getCostPerSqFt(), h.getCostPerRoom()));
-			
-			summaryTextArea.setText(houseSum.toString());
+		ReceiptHouseInfo h = new ReceiptHouseInfo(
+				houseInfo.get(0).getAddress(), totalBill, totalFossilFuel,
+				totalElectric, totalOther, sqFtAverage / houseInfo.size(),
+				roomAverage / houseInfo.size());
+
+		houseSum.append(String
+				.format("|%-25s|$%-15.2f|$%-14.2f|$%-9.2f|$%-14.2f|$%-14.2f|$%-15.2f|\r\n",
+						h.getAddress(), h.getTotalBill(), h.getFossilFuel(),
+						h.getElectric(), h.getOtherBills(), h.getCostPerSqFt(),
+						h.getCostPerRoom()));
+
+		summaryTextArea.setText(houseSum.toString());
 	}
-	
+
 	/**
 	 * clears all entries in the bill calculation
 	 */
-	private void clearInformationForBillCalculation(){
+	private void clearInformationForBillCalculation() {
 		billDate.clear();
 		houseAddresses.getSelectionModel().clearSelection();
 		billAmount.clear();
@@ -1062,13 +1099,14 @@ public class UtilitiesCalcController {
 		otherBills.clear();
 		fte.clear();
 		subletTenantList.getSelectionModel().clearSelection();
-		
+
 	}
-	
+
 	/**
-	 * Initializes the look of the receipt view to emphasize the fact that its not in service unless selected
+	 * Initializes the look of the receipt view to emphasize the fact that its
+	 * not in service unless selected
 	 */
-	private void initalizeReceiptView(){
+	private void initalizeReceiptView() {
 		receiptViewAddressComboBox.setDisable(true);
 		receiptViewAddressComboBox.setOpacity(10);
 		viewReceiptButton.setDisable(true);
@@ -1077,47 +1115,77 @@ public class UtilitiesCalcController {
 		ReceiptViewDateTextField.setOpacity(10);
 
 	}
-	
+
 	/**
 	 * check is db exists, if not, method initializes a database
 	 */
-	private void checkDBStatus(){
-		
+	private void checkDBStatus() {
+
 		Connection conn = null;
 		try {
 			Properties p = System.getProperties();
-			File currentJavaJarFile = new File(UtilitesCalcMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());   
-			String currentJavaJarFilePath = currentJavaJarFile.getAbsolutePath();
-			String currentRootDirectoryPath = currentJavaJarFilePath.replace(currentJavaJarFile.getName(), "");
+			File currentJavaJarFile = new File(UtilitesCalcMain.class
+					.getProtectionDomain().getCodeSource().getLocation()
+					.getPath());
+			String currentJavaJarFilePath = currentJavaJarFile
+					.getAbsolutePath();
+			String currentRootDirectoryPath = currentJavaJarFilePath.replace(
+					currentJavaJarFile.getName(), "");
 
-			if(executingInIDE){
+			if (executingInIDE) {
 				currentRootDirectoryPath = "../UtilitiesCalc";
 				System.out.println("executing in IDE");
 			}
-			
+
 			// Sets the appropriate path
-			p.setProperty("derby.system.home", currentRootDirectoryPath + "/database");
+			p.setProperty("derby.system.home", currentRootDirectoryPath
+					+ "/database");
 			conn = DriverManager.getConnection(DatabaseUtility.DB_URL);
 			conn.close();
-			
+
 		} catch (SQLException e) {
 			DatabaseUtility.createDBTables();
 		}
 	}
+
 	/**
-	 * Checks if program is executing in jar file for IDE and sets the boolean for
-	 * file management accordingly
+	 * Checks if program is executing in jar file for IDE and sets the boolean
+	 * for file management accordingly
 	 */
-	private void setExecutionEnvironment(){
-		try{
-			File checkIfInJar = new File("../UtilitiesCalc/database/CHECKME.txt");
+	private void setExecutionEnvironment() {
+		try {
+			File checkIfInJar = new File(
+					"../UtilitiesCalc/database/CHECKME.txt");
 			Scanner check = new Scanner(checkIfInJar);
 			check.close();
 			executingInIDE = true;
-		} catch(FileNotFoundException e1){
+		} catch (FileNotFoundException e1) {
 			System.out.println("File Not Found");
 			executingInIDE = false;
 		}
+	}
+
+	/**
+	 * Returns a PrintWriter that will save a file in the package
+	 * resources.receipts if the program is executing inside of an IDE or next
+	 * to the jar file is executing in a jar
+	 * 
+	 * @return
+	 */
+	private PrintWriter getReceiptPrintWriter(String filePath) {
+
+		FileWriter tenantReceipt;
+		PrintWriter fileOut = null;
+		try {
+
+			tenantReceipt = new FileWriter(filePath);
+			fileOut = new PrintWriter(tenantReceipt);
+		} catch (IOException e1) {
+			System.out.println("File Not Found");
+			e1.printStackTrace();
+		}
+
+		return fileOut;
 	}
 
 }
