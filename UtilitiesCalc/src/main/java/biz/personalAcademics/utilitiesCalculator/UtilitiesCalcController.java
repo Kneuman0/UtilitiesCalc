@@ -1177,7 +1177,6 @@ public class UtilitiesCalcController {
 		FileWriter tenantReceipt;
 		PrintWriter fileOut = null;
 		try {
-
 			tenantReceipt = new FileWriter(filePath);
 			fileOut = new PrintWriter(tenantReceipt);
 		} catch (IOException e1) {

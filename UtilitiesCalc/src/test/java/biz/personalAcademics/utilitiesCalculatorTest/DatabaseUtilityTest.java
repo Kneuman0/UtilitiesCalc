@@ -3,8 +3,15 @@ package biz.personalAcademics.utilitiesCalculatorTest;
 import static org.junit.Assert.*; 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.StringContains.containsString;
-import java.util.ArrayList;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -12,12 +19,39 @@ import org.junit.rules.ExpectedException;
 import biz.personalAcademics.databaseModelClasses.*;
 import biz.personalAcademics.utilitiesCalculator.DatabaseUtility;
 import biz.personalAcademics.utilitiesCalculator.InvalidUserEntryException;
+import biz.personalAcademics.utilitiesCalculator.UtilitesCalcMain;
 
 public class DatabaseUtilityTest {
 	
 	@Rule
 	public ExpectedException badInput = ExpectedException.none();
 
+	/**
+	 * Setup connection to database for testing
+	 */
+	@Before
+	public void setSystemHome(){
+		Connection conn = null;
+		try {
+			Properties p = System.getProperties();
+			
+			// Sets the system home for the database
+			p.setProperty("derby.system.home", "../UtilitiesCalc/database");
+			conn = DriverManager.getConnection("jdbc:derby:data/UtilitiesCalc");
+
+		} catch (SQLException e) {
+			DatabaseUtility.createDBTables();
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
 	@Test
 	public void testBillMonthStorageAndRetrieval() {
 		//Store BillMonth
@@ -37,21 +71,21 @@ public class DatabaseUtilityTest {
 		assertThat(billIn.getHouse_ID(), is(billOut.getHouse_ID()));
 	}
 	
-//	@Test
-//	public void testTenantStorageAndRetrieval(){
-//		//Store Tenant
-//		Tenant tenantIn = new Tenant("Darcy", true, "sublet");
-//		DatabaseUtility.addTenant(tenantIn);
-//		
-//		//Retrieve same Tenant
-//		String SQLStatement = "SELECT * FROM tenant WHERE name = 'Darcy'";
-//		Tenant tenantOut = DatabaseUtility.fetchTenantSelection(SQLStatement).get(0);
-//		
-//		//Test Retrieved Tenant against stored Tenant
-//		assertThat(tenantIn.getName(), is(tenantOut.getName()));
-//		assertThat(tenantIn.isActive(), is(tenantOut.isActive()));
-//		assertThat(tenantIn.tenantType, is(tenantOut.tenantType));
-//	}
+	@Test
+	public void testTenantStorageAndRetrieval(){
+		//Store Tenant
+		Tenant tenantIn = new Tenant("Darcy", true, "sublet");
+		DatabaseUtility.addTenant(tenantIn);
+		
+		//Retrieve same Tenant
+		String SQLStatement = "SELECT * FROM tenant WHERE name = 'Darcy'";
+		Tenant tenantOut = DatabaseUtility.fetchTenantSelection(SQLStatement).get(0);
+		
+		//Test Retrieved Tenant against stored Tenant
+		assertThat(tenantIn.getName(), is(tenantOut.getName()));
+		assertThat(tenantIn.isActive(), is(tenantOut.isActive()));
+		assertThat(tenantIn.tenantType, is(tenantOut.tenantType));
+	}
 	
 	@Test
 	public void testBillPerTenantStorageAndRetrieval(){
