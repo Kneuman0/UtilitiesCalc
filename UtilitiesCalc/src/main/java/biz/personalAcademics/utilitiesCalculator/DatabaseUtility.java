@@ -19,9 +19,7 @@ public class DatabaseUtility {
 	 * @param tenant
 	 */
 	public static void addTenant(Tenant tenant) {
-		try {
-
-			Connection conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			String insertTenant = "INSERT INTO tenant (name, active, tenantType)"
 					+ String.format(" values ('%s', %b, '%s')",
@@ -30,7 +28,6 @@ public class DatabaseUtility {
 
 			stmt.execute(insertTenant);
 
-			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -44,8 +41,7 @@ public class DatabaseUtility {
 	 */
 	public static void addHouseInfo(House house) {
 
-		try {
-			Connection conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 
 			Statement stmt = conn.createStatement();
 
@@ -56,7 +52,6 @@ public class DatabaseUtility {
 
 			stmt.execute(insertHouse);
 
-			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -67,91 +62,81 @@ public class DatabaseUtility {
 	 * 
 	 * @param billMonth
 	 */
-	public static void addBillingMonthEntry(BillMonth billMonth) {				//REQ#7
+	public static void addBillingMonthEntry(BillMonth billMonth) { 
 
-		try {
-			Connection conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 
 			Statement stmt = conn.createStatement();
-			
 
 			String insertBillMonthEntry = "INSERT INTO billMonth(date, fossilFuel, electric, other, totalBill, house_ID)"
-					+ String.format(" values ('%s', %.2f, %.2f, %.2f, %.2f, %d)",
+					+ String.format(
+							" values ('%s', %.2f, %.2f, %.2f, %.2f, %d)",
 							billMonth.getDate(), billMonth.getFossilFuelBill(),
 							billMonth.getElectricityBill(),
-							billMonth.getOtherBill(), billMonth.getTotalBill(), billMonth.getHouse_ID());
+							billMonth.getOtherBill(), billMonth.getTotalBill(),
+							billMonth.getHouse_ID());
 
 			stmt.execute(insertBillMonthEntry);
 
-			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Inserts all active tenants living the specified house at the specified month into the db.
-	 * Must pass in a fully populated ArrayList of BillPerTenant objects
+	 * Inserts all active tenants living the specified house at the specified
+	 * month into the db. Must pass in a fully populated ArrayList of
+	 * BillPerTenant objects
 	 * 
 	 * @param thisMonthsTenants
 	 */
-	public static void addBillPerTenantEntry(ArrayList<BillPerTenant> thisMonthsTenants) {			//REQ#7
+	public static void addBillPerTenantEntry(
+			ArrayList<BillPerTenant> thisMonthsTenants) { // REQ#7
 
-		try {
-			Connection conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 
 			Statement stmt = conn.createStatement();
-			for(int i = 0; i < thisMonthsTenants.size(); i++){
-				String inserBillPerTenant = String.format("INSERT INTO billPerTenant("
-						+ " billMonth_ID, house_ID, fte, bill, tenant_ID)"
-						+ " VALUES(%d, %d, %f, %.2f, %d)",
-						thisMonthsTenants.get(i).getBillMonth_ID(),
-						thisMonthsTenants.get(i).getHouse_ID(),
-						thisMonthsTenants.get(i).getFte(),
-						thisMonthsTenants.get(i).getBill(),
-						thisMonthsTenants.get(i).getTenant_ID());
+			for (int i = 0; i < thisMonthsTenants.size(); i++) {
+				String inserBillPerTenant = String
+						.format("INSERT INTO billPerTenant("
+								+ " billMonth_ID, house_ID, fte, bill, tenant_ID)"
+								+ " VALUES(%d, %d, %f, %.2f, %d)",
+								thisMonthsTenants.get(i).getBillMonth_ID(),
+								thisMonthsTenants.get(i).getHouse_ID(),
+								thisMonthsTenants.get(i).getFte(),
+								thisMonthsTenants.get(i).getBill(),
+								thisMonthsTenants.get(i).getTenant_ID());
 				stmt.execute(inserBillPerTenant);
 			}
-			//
-			// 
-
 			
-			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Used to modify rows in the db. Must pass in a complete and executable SQL statement
+	 * Used to modify rows in the db. Must pass in a complete and executable SQL
+	 * statement
+	 * 
 	 * @param SQLStatement
 	 */
 	public static void modifyDatabase(String SQLStatement) {
-		Connection conn = null;
-
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(SQLStatement);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		} 
 	}
 
 	/**
-	 * Inserts 5 dummy tenant rows into the tenant table of the db for testing purposes
+	 * Inserts 5 dummy tenant rows into the tenant table of the db for testing
+	 * purposes
 	 */
 	public static void inputSampleTenantEntries() {
-		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO tenant (name, active, tenantType)"
 				+ " VALUES('Telemundo Deltoro', true, 'Sublet')";
 		String insertSampleRow2 = "INSERT INTO tenant (name, active, tenantType)"
@@ -162,8 +147,7 @@ public class DatabaseUtility {
 				+ " VALUES('Rebecca Raferty', true, 'Standard')";
 		String insertSampleRow5 = "INSERT INTO tenant (name, active, tenantType)"
 				+ " VALUES('Gilberto DeMayo', true, 'Sublet')";
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(insertSampleRow1);
 			stmt.executeUpdate(insertSampleRow2);
@@ -177,20 +161,17 @@ public class DatabaseUtility {
 	}
 
 	/**
-	 * Inserts dummy house entries into the house table in the db for testing purposes
+	 * Inserts dummy house entries into the house table in the db for testing
+	 * purposes
 	 */
 	public static void inputSampleHouseEntries() {
-		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO house (address, numRooms, sqFt)"
 				+ " VALUES('1800 Pensylvania Ave', 10, 10000)";
-//		String insertSampleRow2 = "INSERT INTO house (address, numRooms, sqFt)"
-//				+ " VALUES('1204 raymond Dr.', 3, 1700)";
 
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(insertSampleRow1);
-//			stmt.executeUpdate(insertSampleRow2);
+			// stmt.executeUpdate(insertSampleRow2);
 
 		} catch (SQLException e) {
 			// Auto-generated catch block
@@ -199,10 +180,10 @@ public class DatabaseUtility {
 	}
 
 	/**
-	 * Inserts dummy bill month entries into the billMonth table of the db for testing purposes
+	 * Inserts dummy bill month entries into the billMonth table of the db for
+	 * testing purposes
 	 */
 	public static void inputSampleBillMonthEntries() {
-		Connection conn = null;
 		String insertSampleRow1 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
 				+ " VALUES('2015/09', 75.50, 90.45, 25.00, 190.95, 1)";
 		String insertSampleRow2 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
@@ -210,8 +191,7 @@ public class DatabaseUtility {
 		String insertSampleRow3 = "INSERT INTO billMonth (date, fossilFuel, electric, other, totalBill, house_ID)"
 				+ " VALUES('2015/11', 78.50, 85.40, 25.00, 188.9, 1)";
 
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(insertSampleRow1);
 			stmt.executeUpdate(insertSampleRow2);
@@ -222,16 +202,15 @@ public class DatabaseUtility {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void inputSampleBillPerTenantEntries(){
-		Connection conn = null;
+
+	public static void inputSampleBillPerTenantEntries() {
 		String insertSampleRow1a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
 				+ " VALUES(1, 1, .25, 44.0, 1)";
 		String insertSampleRow2a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
 				+ " VALUES(1, 1, 0, 0, 2)";
 		String insertSampleRow3a = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
 				+ " VALUES(1, 1, 1, 176.0, 4)";
-		
+
 		String insertSampleRow1b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
 				+ " VALUES(2, 1, .25, 40.0, 1)";
 		String insertSampleRow2b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
@@ -239,8 +218,7 @@ public class DatabaseUtility {
 		String insertSampleRow3b = "INSERT INTO billPerTenant (billMonth_ID, house_ID, fte, bill, tenant_ID)"
 				+ " VALUES(2, 1, 1, 160.0, 4)";
 
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(insertSampleRow1a);
 			stmt.executeUpdate(insertSampleRow2a);
@@ -260,33 +238,27 @@ public class DatabaseUtility {
 	 * 
 	 * @param SQLStatement
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
-	public static ArrayList<Tenant> fetchTenantSelection(String SQLStatement){    //REQ#8
-		Connection conn = null;
+	public static ArrayList<Tenant> fetchTenantSelection(String SQLStatement) { 
 		ResultSet result = null;
 		ArrayList<Tenant> ten = new ArrayList<>();
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
 
-				ten.add(new Tenant(result.getString("name"), result.getBoolean("active"),
-						result.getString("tenantType"), result.getInt("tenant_ID")));
-				
+				ten.add(new Tenant(result.getString("name"), result
+						.getBoolean("active"), result.getString("tenantType"),
+						result.getInt("tenant_ID")));
+
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
+		
 		return ten;
 	}
 
@@ -297,28 +269,22 @@ public class DatabaseUtility {
 	 * @return
 	 */
 	public static ArrayList<House> fetchHouseSelection(String SQLStatement) {
-		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<House> hou = new ArrayList<>();
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				hou.add(new House(result.getString("address"), result.getInt("numRooms"), result
-						.getInt("sqFt"), result.getInt("house_ID")));
+				hou.add(new House(result.getString("address"), result
+						.getInt("numRooms"), result.getInt("sqFt"), result
+						.getInt("house_ID")));
 			}
 
 		} catch (SQLException e) {
-
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+			e.printStackTrace();
+		} 
+		
 		return hou;
 	}
 
@@ -329,39 +295,35 @@ public class DatabaseUtility {
 	 * @return
 	 */
 	public static ArrayList<BillMonth> fetchBillMonth(String SQLStatement) {
-		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<BillMonth> bm = new ArrayList<>();
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		
+		try (Connection conn = DriverManager.getConnection(DB_URL)){
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				bm.add(new BillMonth(result.getString("date"), result.getDouble("fossilFuel"),
-						result.getDouble("electric"), result.getDouble("other"), result.getDouble("totalBill"),
-						result.getInt("house_ID"), result.getInt("billMonth_ID")));
+				bm.add(new BillMonth(result.getString("date"), result
+						.getDouble("fossilFuel"), result.getDouble("electric"),
+						result.getDouble("other"), result
+								.getDouble("totalBill"), result
+								.getInt("house_ID"), result
+								.getInt("billMonth_ID")));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		} 
+		
 		return bm;
 	}
-	
-	public static int fetchBillMonthID(String date){
-		Connection conn = null;
+
+	public static int fetchBillMonthID(String date) {
 		ResultSet result = null;
-		String getBMID = String.format("SELECT billMonth_ID FROM billMonth WHERE date = '%s'", date);
+		String getBMID = String.format(
+				"SELECT billMonth_ID FROM billMonth WHERE date = '%s'", date);
+		
 		int id = 0;
-				try {
-			conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(getBMID);
 			while (result.next()) {
@@ -369,15 +331,9 @@ public class DatabaseUtility {
 			}
 
 		} catch (SQLException e) {
-
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
+
 		return id;
 	}
 
@@ -389,29 +345,23 @@ public class DatabaseUtility {
 	 * @return
 	 */
 	public static ArrayList<BillPerTenant> fetchBillPerMonth(String SQLStatement) {
-		Connection conn = null;
 		ResultSet result = null;
 		ArrayList<BillPerTenant> bpt = new ArrayList<>();
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
 			Statement stmt = conn.createStatement();
 			result = stmt.executeQuery(SQLStatement);
+
 			while (result.next()) {
-				 bpt.add(new BillPerTenant(result.getInt("billMonth_ID"),
-				 result.getInt("house_ID"), result.getDouble("fte"),
-				 result.getDouble("bill"), result.getInt("tenant_ID")));
+				bpt.add(new BillPerTenant(result.getInt("billMonth_ID"), result
+						.getInt("house_ID"), result.getDouble("fte"), result
+						.getDouble("bill"), result.getInt("tenant_ID")));
 			}
 
 		} catch (SQLException e) {
-
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
+
 		return bpt;
 	}
 
@@ -422,178 +372,140 @@ public class DatabaseUtility {
 	 */
 	public static void dropTable(String tableName) {
 		String dropTable = String.format("DROP TABLE %s", tableName);
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(dropTable);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
 	/**
-	 * Deletes all rows in the tenant table
-	 * in the db with the a name matching the string passed in
+	 * Deletes all rows in the tenant table in the db with the a name matching
+	 * the string passed in
 	 * 
 	 * @param tenantName
 	 */
 	public static void deleteTenant(String tenantName) {
-		Connection conn = null;
 		String deleteTenant = String.format("DELETE FROM tenant"
 				+ " WHERE name = '%s'", tenantName);
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(deleteTenant);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
-	
+
 	/**
-	 * Deletes all rows in the house table
-	 * in the db with the an address matching the string passed in
+	 * Deletes all rows in the house table in the db with the an address
+	 * matching the string passed in
 	 * 
 	 * @param address
 	 */
-	public static void deleteHouse(String address){
-		Connection conn = null;
+	public static void deleteHouse(String address) {
 		String deleteHouse = String.format("DELETE FROM house"
 				+ " WHERE address = '%s'", address);
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(deleteHouse);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
-	
+
 	/**
-	 * returns an arrayList of ReceiptTenantInfo objects
-	 * that relate to the date passed in
+	 * returns an arrayList of ReceiptTenantInfo objects that relate to the date
+	 * passed in
 	 * 
 	 * @return
 	 */
-	public static ArrayList<ReceiptTenantInfo> fetchReceiptInfoForTenant(String date){			//REQ#8
+	public static ArrayList<ReceiptTenantInfo> fetchReceiptInfoForTenant(
+			String date) { // REQ#8
 		ArrayList<ReceiptTenantInfo> tenantInfo = new ArrayList<ReceiptTenantInfo>();
-		String SQLStatement = String.format(
-				"SELECT tenant.name, "
+		String SQLStatement = String.format("SELECT tenant.name, "
 				+ " billMonth.date, "
 				+ " tenant.tenantType, billPerTenant.fte,"
 				+ "  billPerTenant.bill, house.house_ID"
-				+ " FROM tenant, billPerTenant, "
-				+ " billMonth, house"
+				+ " FROM tenant, billPerTenant, " + " billMonth, house"
 				+ " WHERE billPerTenant.tenant_ID = tenant.tenant_ID"
 				+ " AND billMonth.billMonth_ID = billPerTenant.billMonth_ID"
 				+ " AND house.house_ID = billPerTenant.house_ID"
-				+ " AND billMonth.date = '%s'"
-				+ " ORDER BY tenant.name ASC", date);
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+				+ " AND billMonth.date = '%s'" + " ORDER BY tenant.name ASC",
+				date);
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
+
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				 tenantInfo.add(new ReceiptTenantInfo(result.getString("name"),
-				 result.getString("date"), result.getString("tenantType"),
-				 result.getDouble("fte"), result.getDouble("bill"), result.getInt("house_ID")));
+				tenantInfo.add(new ReceiptTenantInfo(result.getString("name"),
+						result.getString("date"), result
+								.getString("tenantType"), result
+								.getDouble("fte"), result.getDouble("bill"),
+						result.getInt("house_ID")));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
+
 		return tenantInfo;
-		
+
 	}
-	
+
 	/**
-	 * returns an arrayList of ReceiptHouseInfo objects
-	 * that relate to the date passed in
+	 * returns an arrayList of ReceiptHouseInfo objects that relate to the date
+	 * passed in
 	 * 
 	 * @return
 	 */
-	public static ArrayList<ReceiptHouseInfo> fetchReceiptInfoForHouse(String date, int house_ID){
+	public static ArrayList<ReceiptHouseInfo> fetchReceiptInfoForHouse(
+			String date, int house_ID) {
 		ArrayList<ReceiptHouseInfo> houseInfo = new ArrayList<ReceiptHouseInfo>();
-		String SQLStatement = String.format(
-				"SELECT house.address, "
-				+ " house.numRooms,"
-				+ " house.sqFt, billMonth.totalBill,"
+		String SQLStatement = String.format("SELECT house.address, "
+				+ " house.numRooms," + " house.sqFt, billMonth.totalBill,"
 				+ " billMonth.fossilFuel, billMonth.electric,"
-				+ " billMonth.other, house.house_ID"
-				+ " FROM billMonth, house"
-				+ " WHERE house.house_ID = %d"
-				+ " AND billMonth.date = '%s'"
+				+ " billMonth.other, house.house_ID" + " FROM billMonth, house"
+				+ " WHERE house.house_ID = %d" + " AND billMonth.date = '%s'"
 				+ " ORDER BY billMonth.date ASC", house_ID, date);
-		
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
+
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				 houseInfo.add(new ReceiptHouseInfo(result.getString("address"),
-				 result.getInt("numRooms"), result.getInt("sqFt"),
-				 result.getDouble("totalBill"), result.getDouble("fossilFuel"), result.getDouble("electric"),
-						 result.getDouble("other"), result.getInt("house_ID")));
+				houseInfo
+						.add(new ReceiptHouseInfo(result.getString("address"),
+								result.getInt("numRooms"), result
+										.getInt("sqFt"), result
+										.getDouble("totalBill"), result
+										.getDouble("fossilFuel"), result
+										.getDouble("electric"), result
+										.getDouble("other"), result
+										.getInt("house_ID")));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
+
 		return houseInfo;
 	}
-	
-	public static String getWhiteSpace(String s, int columnWidth){
+
+	public static String getWhiteSpace(String s, int columnWidth) {
 		int length = columnWidth - s.length();
 		String spaces = "";
-		for(int i = 0; i < length;i++){
+		for (int i = 0; i < length; i++) {
 			spaces += " ";
 		}
 		return spaces;
 	}
-	
+
 	/**
 	 * Uses String.split to change the bill from month first year last to year
 	 * first month last for sorting purposes. Untested
@@ -602,90 +514,78 @@ public class DatabaseUtility {
 	 * 
 	 * @return
 	 */
-	public static String modifyBillDate(String dbDateIn) throws InvalidUserEntryException {
+	public static String modifyBillDate(String dbDateIn)
+			throws InvalidUserEntryException {
 		String[] date = dbDateIn.split("/");
-		
-		if(date.length != 2){
-			throw new InvalidUserEntryException(String.format("%s is not a valid date", dbDateIn));
+
+		if (date.length != 2) {
+			throw new InvalidUserEntryException(String.format(
+					"%s is not a valid date", dbDateIn));
 		}
-		
+
 		String dbDate = date[1] + "/" + date[0];
 		return dbDate;
 
 	}
-	
-	public static ArrayList<BillPerTenant> fetchTenantTotals(String tenantName){
+
+	public static ArrayList<BillPerTenant> fetchTenantTotals(String tenantName) {
 		ArrayList<BillPerTenant> tenantInfo = new ArrayList<BillPerTenant>();
 		String SQLStatement = String.format(
 				"SELECT billPerTenant.fte, billPerTenant.bill, "
-				+ " tenant.name, tenant.tenantType "
-				+ " FROM billPerTenant, tenant"
-				+ " WHERE billPerTenant.tenant_ID = tenant.tenant_ID "
-				+ " AND tenant.name = '%s'", tenantName);
-		
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+						+ " tenant.name, tenant.tenantType "
+						+ " FROM billPerTenant, tenant"
+						+ " WHERE billPerTenant.tenant_ID = tenant.tenant_ID "
+						+ " AND tenant.name = '%s'", tenantName);
+
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				 tenantInfo.add(new BillPerTenant(0, 0, 0, result.getDouble("fte"),
-						 result.getString("name"), result.getDouble("bill"),result.getString("tenantType")));
+				tenantInfo.add(new BillPerTenant(0, 0, 0, result
+						.getDouble("fte"), result.getString("name"), result
+						.getDouble("bill"), result.getString("tenantType")));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
+
 		return tenantInfo;
 	}
-	
-	public static ArrayList<ReceiptHouseInfo> fetchHouseSummary(String address){
+
+	public static ArrayList<ReceiptHouseInfo> fetchHouseSummary(String address) {
 		ArrayList<ReceiptHouseInfo> tenantInfo = new ArrayList<ReceiptHouseInfo>();
 		String SQLStatement = String.format(
 				"SELECT house.numRooms, house.sqFt,"
-				+ " billMonth.totalBill, billMonth.fossilFuel, "
-				+ " billMonth.electric, billMonth.other"
-				+ " FROM billMonth, house"
-				+ " WHERE house.house_ID = billMonth.house_ID "
-				+ " AND house.address = '%s'", address);
-		
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL);
+						+ " billMonth.totalBill, billMonth.fossilFuel, "
+						+ " billMonth.electric, billMonth.other"
+						+ " FROM billMonth, house"
+						+ " WHERE house.house_ID = billMonth.house_ID "
+						+ " AND house.address = '%s'", address);
+
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery(SQLStatement);
 			while (result.next()) {
-				 tenantInfo.add(new ReceiptHouseInfo(address,
-						 result.getInt("numRooms"), result.getInt("sqFt"),result.getDouble("totalBill"),
-						 result.getDouble("fossilFuel"), result.getDouble("electric"), result.getDouble("other"), 0));
+				tenantInfo.add(new ReceiptHouseInfo(address, result
+						.getInt("numRooms"), result.getInt("sqFt"), result
+						.getDouble("totalBill"),
+						result.getDouble("fossilFuel"), result
+								.getDouble("electric"), result
+								.getDouble("other"), 0));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
+
 		return tenantInfo;
 	}
-	
-	public static void createDBTables(){
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL_CREATE_DB);
+
+	public static void createDBTables() {
+		try (Connection conn = DriverManager.getConnection(DB_URL_CREATE_DB)) {
 			createBillMonthPerTenant(conn);
 			createBillMonthTable(conn);
 			createHouseTable(conn);
@@ -693,20 +593,12 @@ public class DatabaseUtility {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
-	
-	private static void createTenantTable(Connection conn)
-			throws SQLException {
+
+	private static void createTenantTable(Connection conn) throws SQLException {
 		Statement stmt = conn.createStatement();
-		
+
 		String createTableSQL = "CREATE TABLE tenant ("
 				+ " name varchar(100),"
 				+ " active boolean,"
@@ -717,11 +609,10 @@ public class DatabaseUtility {
 		stmt.execute(createTableSQL);
 	}
 
-	private static void createHouseTable(Connection conn)
-			throws SQLException {
+	private static void createHouseTable(Connection conn) throws SQLException {
 
 		Statement stmt = conn.createStatement();
-		
+
 		String createTableSQL = "CREATE TABLE house ("
 				+ " address varchar(100),"
 				+ " numRooms integer,"
@@ -736,7 +627,7 @@ public class DatabaseUtility {
 			throws SQLException {
 
 		Statement stmt = conn.createStatement();
-		
+
 		String createTableSQL = "CREATE TABLE billMonth ("
 				+ " date char(7),"
 				+ " fossilFuel double,"
@@ -745,8 +636,7 @@ public class DatabaseUtility {
 				+ " totalBill double,"
 				+ " house_ID int,"
 				+ " billMonth_ID int NOT NULL GENERATED BY DEFAULT AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-				+ " PRIMARY KEY(billMonth_ID)"
-				+ ")";
+				+ " PRIMARY KEY(billMonth_ID)" + ")";
 
 		stmt.execute(createTableSQL);
 	}
@@ -755,17 +645,12 @@ public class DatabaseUtility {
 			throws SQLException {
 
 		Statement stmt = conn.createStatement();
-		
+
 		String createTableSQL = "CREATE TABLE billPerTenant ("
-				+ " billMonth_ID integer," 
-				+ " house_ID integer,"
-				+ " fte double," 
-				+ " bill double," 
-				+ " tenant_ID integer" 
-				+ ")";
+				+ " billMonth_ID integer," + " house_ID integer,"
+				+ " fte double," + " bill double," + " tenant_ID integer" + ")";
 
 		stmt.execute(createTableSQL);
 	}
-	
-	
+
 }

@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.StringContains.containsString;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,7 +18,6 @@ import org.junit.rules.ExpectedException;
 import biz.personalAcademics.databaseModelClasses.*;
 import biz.personalAcademics.utilitiesCalculator.DatabaseUtility;
 import biz.personalAcademics.utilitiesCalculator.InvalidUserEntryException;
-import biz.personalAcademics.utilitiesCalculator.UtilitesCalcMain;
 
 public class DatabaseUtilityTest {
 	
