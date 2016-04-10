@@ -1,6 +1,7 @@
 package biz.personalAcademics.utilitiesCalculator;
 
 import biz.personalAcademics.databaseModelClasses.*;
+import biz.personalAcademics.lib.pathClasses.PathGetter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -316,11 +317,9 @@ public class UtilitiesCalcController {
 		if (ensureAllEntriesLoggedReceipt()) {
 			return;
 		}
-		File currentJavaJarFile = new File(UtilitesCalcMain.class
-				.getProtectionDomain().getCodeSource().getLocation().getPath());
-		String currentJavaJarFilePath = currentJavaJarFile.getAbsolutePath();
-		String currentRootDirectoryPath = currentJavaJarFilePath.replace(
-				currentJavaJarFile.getName(), "");
+		PathGetter path = new PathGetter(new UtilitesCalcMain());
+		
+		String currentRootDirectoryPath = path.getAbsoluteSubfolderPath();
 
 		if (executingInIDE) {
 			currentRootDirectoryPath = "../UtilitiesCalc/src/main/java/resources/receipts/";
@@ -1124,13 +1123,10 @@ public class UtilitiesCalcController {
 		Connection conn = null;
 		try {
 			Properties p = System.getProperties();
-			File currentJavaJarFile = new File(UtilitesCalcMain.class
-					.getProtectionDomain().getCodeSource().getLocation()
-					.getPath());
-			String currentJavaJarFilePath = currentJavaJarFile
-					.getAbsolutePath();
-			String currentRootDirectoryPath = currentJavaJarFilePath.replace(
-					currentJavaJarFile.getName(), "");
+			PathGetter path = new PathGetter(new UtilitesCalcMain());
+			
+			// gets path just outside jar file
+			String currentRootDirectoryPath = path.getAbsoluteSubfolderPath();
 
 			if (executingInIDE) {
 				currentRootDirectoryPath = "../UtilitiesCalc";
@@ -1155,7 +1151,8 @@ public class UtilitiesCalcController {
 	private void setExecutionEnvironment() {
 		try {
 			File checkIfInJar = new File(
-					"../UtilitiesCalc/database/CHECKME.txt");
+					"../UtilitiesCalc/database/" +
+					 "CHECKME.txt");
 			Scanner check = new Scanner(checkIfInJar);
 			check.close();
 			executingInIDE = true;

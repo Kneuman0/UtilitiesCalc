@@ -1,0 +1,11 @@
+DO NOT DELETE OR MOVE THIS FILE
+
+The purpose of this file is to identify whether this program is running inside of a jar file or IDE.
+
+If the program detects the existence of this file, the program is executing inside of an IDE.
+This will save the database next to this "CHECKME.txt" file in the database folder.
+
+If the program does not detect the existence of this file, the program is executing inside of a jar file.
+This will save the database folder next to the jar file in whatever folder the user sees fit. (If the user 
+saves the jar file on the desktop, the database folder will be saved on the desktop). 
+The database folder will contain all of the database files.
